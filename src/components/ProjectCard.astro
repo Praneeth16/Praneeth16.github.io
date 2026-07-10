@@ -1,0 +1,89 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  entry: CollectionEntry<'projects'>;
+  index?: number;
+}
+
+const { entry, index = 0 } = Astro.props;
+const { title, description, status, tags, githubUrl, demoUrl } = entry.data;
+---
+
+<article class="project-card">
+  <div class="project-number">{String(index + 1).padStart(2, '0')}</div>
+  <div class="project-body">
+    <div class="project-kicker">{status}</div>
+    <h3><a href={`/projects/${entry.id}/`}>{title}</a></h3>
+    <p>{description}</p>
+    <ul class="pill-list">
+      {tags.map((tag) => <li class="pill">{tag}</li>)}
+    </ul>
+  </div>
+  <div class="project-links">
+    {githubUrl && <a href={githubUrl}>Code ↗</a>}
+    {demoUrl && <a href={demoUrl}>Demo ↗</a>}
+  </div>
+</article>
+
+<style>
+  .project-card {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr) auto;
+    gap: 1.4rem;
+    padding: 2.25rem 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .project-number {
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+  }
+
+  .project-kicker {
+    color: var(--moss);
+    font-family: var(--mono);
+    font-size: 0.69rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  h3 {
+    margin: 0.45rem 0 0.65rem;
+    font-family: var(--serif);
+    font-size: clamp(1.75rem, 3.5vw, 3rem);
+    font-weight: 520;
+    letter-spacing: -0.035em;
+    line-height: 1;
+  }
+
+  h3 a {
+    text-decoration: none;
+  }
+
+  p {
+    max-width: 700px;
+    margin: 0 0 1.2rem;
+    color: var(--ink-soft);
+  }
+
+  .project-links {
+    display: flex;
+    gap: 1rem;
+    align-items: start;
+    font-size: 0.78rem;
+    font-weight: 650;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 680px) {
+    .project-card {
+      grid-template-columns: 32px minmax(0, 1fr);
+    }
+
+    .project-links {
+      grid-column: 2;
+    }
+  }
+</style>

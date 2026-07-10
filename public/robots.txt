@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://praneeth16.github.io/sitemap-index.xml

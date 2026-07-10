@@ -1,0 +1,65 @@
+<footer>
+  <div class="footer-inner container">
+    <div>
+      <p class="footer-note">Build carefully. Measure honestly. Share what worked.</p>
+      <p class="fine-print">© {new Date().getFullYear()} Praneeth Paikray. Opinions are my own.</p>
+    </div>
+    <nav class="socials" aria-label="Social links">
+      <a href="https://github.com/Praneeth16">GitHub</a>
+      <a href="https://www.linkedin.com/in/praneeth-paikray/">LinkedIn</a>
+      <a href="https://medium.com/@paikraypraneeth">Medium</a>
+      <a href="https://huggingface.co/Praneeth">Hugging Face</a>
+    </nav>
+  </div>
+</footer>
+
+<style>
+  footer {
+    padding: 3.5rem 0 4rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .footer-inner {
+    display: flex;
+    gap: 3rem;
+    align-items: end;
+    justify-content: space-between;
+  }
+
+  .footer-note {
+    max-width: 520px;
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(1.45rem, 2.6vw, 2.2rem);
+    line-height: 1.18;
+  }
+
+  .fine-print {
+    margin: 1.2rem 0 0;
+    color: var(--ink-faint);
+    font-size: 0.75rem;
+  }
+
+  .socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    justify-content: flex-end;
+  }
+
+  .socials a {
+    font-size: 0.82rem;
+    font-weight: 650;
+  }
+
+  @media (max-width: 720px) {
+    .footer-inner {
+      align-items: start;
+      flex-direction: column;
+    }
+
+    .socials {
+      justify-content: flex-start;
+    }
+  }
+</style>

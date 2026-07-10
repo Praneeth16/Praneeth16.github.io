@@ -1,0 +1,26 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout title="Projects" description="Open-source tools and research demos by Praneeth Paikray across AI agents, evaluation, and data systems.">
+  <header class="page-intro container">
+    <p class="eyebrow">Open source · demos · experiments</p>
+    <h1 class="page-title">Systems built to learn something.</h1>
+    <p class="page-deck">Some became reusable tools. Some tested a hypothesis. All of them were built to make an abstract AI question concrete enough to measure.</p>
+  </header>
+  <section class="project-list container" aria-labelledby="project-archive-heading">
+    <h2 id="project-archive-heading" class="sr-only">Project archive</h2>
+    {projects.map((entry, index) => <ProjectCard entry={entry} index={index} />)}
+  </section>
+</BaseLayout>
+
+<style>
+  .project-list {
+    padding-bottom: 7rem;
+    border-bottom: 1px solid var(--rule);
+  }
+</style>

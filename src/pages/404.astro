@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Page not found">
+  <section class="not-found container">
+    <p class="eyebrow">404 · missing trace</p>
+    <h1>This page did not survive evaluation.</h1>
+    <p>The link may be old, or the note may have moved.</p>
+    <a class="text-link" href="/">Return home</a>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    min-height: 70vh;
+    padding: 8rem 0;
+  }
+
+  h1 {
+    max-width: 850px;
+    margin: 0 0 1.5rem;
+    font-family: var(--serif);
+    font-size: clamp(3.4rem, 8vw, 7rem);
+    font-weight: 520;
+    letter-spacing: -0.05em;
+    line-height: 0.95;
+  }
+
+  p:not(.eyebrow) {
+    color: var(--ink-soft);
+    font-size: 1.1rem;
+  }
+</style>

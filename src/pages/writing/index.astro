@@ -1,0 +1,177 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import WritingCard from '../../components/WritingCard.astro';
+
+const writing = (await getCollection('writing', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+---
+
+<BaseLayout title="Writing" description="Technical essays, research notes, and workshop material on production AI systems by Praneeth Paikray.">
+  <header class="page-intro container">
+    <p class="eyebrow">Essays · notes · workshops</p>
+    <h1 class="page-title">Writing from the workbench.</h1>
+    <p class="page-deck">Long-form explanations when the details matter. Short notes when one result is worth keeping. Workshop material when the best way to understand something is to build it.</p>
+  </header>
+
+  <section class="writing-archive container" aria-labelledby="archive-heading">
+    <h2 id="archive-heading" class="sr-only">Writing archive</h2>
+    <div class="filters">
+      <div class="filter-buttons" role="group" aria-label="Filter by format">
+        <button class="active" type="button" data-filter="all">All</button>
+        <button type="button" data-filter="essay">Essays</button>
+        <button type="button" data-filter="note">Notes</button>
+        <button type="button" data-filter="workshop">Workshops</button>
+      </div>
+      <label>
+        <span>Search writing</span>
+        <input id="writing-search" type="search" placeholder="evals, agents, RAG…" autocomplete="off" />
+      </label>
+    </div>
+
+    <p id="result-count" class="result-count">{writing.length} entries</p>
+    <div id="writing-list" class="writing-list">
+      {writing.map((entry) => <WritingCard entry={entry} />)}
+    </div>
+    <p id="empty-state" class="empty-state" hidden>No notes match that search yet.</p>
+  </section>
+
+  <script>
+    const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-filter]'));
+    const input = document.querySelector<HTMLInputElement>('#writing-search');
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('.writing-card'));
+    const count = document.querySelector<HTMLElement>('#result-count');
+    const empty = document.querySelector<HTMLElement>('#empty-state');
+    let activeKind = new URLSearchParams(window.location.search).get('kind') ?? 'all';
+
+    const update = () => {
+      const query = input?.value.trim().toLowerCase() ?? '';
+      let visible = 0;
+      cards.forEach((card) => {
+        const kindMatch = activeKind === 'all' || card.dataset.kind === activeKind;
+        const searchMatch = !query || card.dataset.search?.includes(query);
+        const show = kindMatch && searchMatch;
+        card.hidden = !show;
+        if (show) visible += 1;
+      });
+      if (count) count.textContent = `${visible} ${visible === 1 ? 'entry' : 'entries'}`;
+      if (empty) empty.hidden = visible !== 0;
+    };
+
+    buttons.forEach((button) => {
+      button.classList.toggle('active', button.dataset.filter === activeKind);
+      button.addEventListener('click', () => {
+        activeKind = button.dataset.filter ?? 'all';
+        buttons.forEach((item) => item.classList.toggle('active', item === button));
+        update();
+      });
+    });
+    input?.addEventListener('input', update);
+    update();
+  </script>
+</BaseLayout>
+
+<style>
+  .writing-archive {
+    padding-bottom: 7rem;
+  }
+
+  .filters {
+    display: flex;
+    gap: 2rem;
+    padding: 1.2rem 0;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+    align-items: end;
+    justify-content: space-between;
+  }
+
+  .filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  button {
+    padding: 0.4rem 0.72rem;
+    color: var(--ink-soft);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    background: transparent;
+    font-size: 0.75rem;
+    cursor: pointer;
+  }
+
+  button.active,
+  button:hover {
+    color: var(--paper-soft);
+    border-color: var(--ink);
+    background: var(--ink);
+  }
+
+  label {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  label span {
+    color: var(--ink-faint);
+    font-family: var(--mono);
+    font-size: 0.63rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  input {
+    width: min(290px, 60vw);
+    padding: 0.45rem 0;
+    color: var(--ink);
+    border: 0;
+    border-bottom: 1px solid var(--ink-soft);
+    outline: 0;
+    background: transparent;
+  }
+
+  input:focus {
+    border-color: var(--accent);
+  }
+
+  .result-count {
+    margin: 1.5rem 0 0;
+    color: var(--ink-faint);
+    font-family: var(--mono);
+    font-size: 0.67rem;
+  }
+
+  .writing-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0 3rem;
+  }
+
+  .empty-state {
+    padding: 4rem 0;
+    color: var(--ink-soft);
+    font-family: var(--serif);
+    font-size: 1.5rem;
+  }
+
+  @media (max-width: 720px) {
+    .filters {
+      align-items: start;
+      flex-direction: column;
+    }
+
+    input {
+      width: min(100%, 420px);
+    }
+
+    label {
+      width: 100%;
+    }
+
+    .writing-list {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
