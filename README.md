@@ -2,6 +2,8 @@
 
 Personal portfolio and technical publication built with Astro and deployed on GitHub Pages.
 
+Live site: <https://praneeth16.github.io>
+
 ## Write a new post
 
 Add a Markdown file to `src/content/writing/`. Use one of three formats:
