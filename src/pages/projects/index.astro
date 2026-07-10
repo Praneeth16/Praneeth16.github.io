@@ -9,8 +9,8 @@ const projects = (await getCollection('projects')).sort((a, b) => a.data.order -
 <BaseLayout title="Projects" description="Open-source tools and research demos by Praneeth Paikray across AI agents, evaluation, and data systems.">
   <header class="page-intro container">
     <p class="eyebrow">Open source · demos · experiments</p>
-    <h1 class="page-title">Systems built to learn something.</h1>
-    <p class="page-deck">Some became reusable tools. Some tested a hypothesis. All of them were built to make an abstract AI question concrete enough to measure.</p>
+    <h1 class="page-title">Projects</h1>
+    <p class="page-deck">Open-source tools, reference implementations, and research demos built to make an AI question concrete enough to test.</p>
   </header>
   <section class="project-list container" aria-labelledby="project-archive-heading">
     <h2 id="project-archive-heading" class="sr-only">Project archive</h2>
@@ -20,7 +20,6 @@ const projects = (await getCollection('projects')).sort((a, b) => a.data.order -
 
 <style>
   .project-list {
-    padding-bottom: 7rem;
-    border-bottom: 1px solid var(--rule);
+    padding-bottom: 4rem;
   }
 </style>

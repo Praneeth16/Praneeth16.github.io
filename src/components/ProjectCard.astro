@@ -6,14 +6,16 @@ interface Props {
   index?: number;
 }
 
-const { entry, index = 0 } = Astro.props;
-const { title, description, status, tags, githubUrl, demoUrl } = entry.data;
+const { entry } = Astro.props;
+const { title, description, status, year, tags, githubUrl, demoUrl } = entry.data;
 ---
 
 <article class="project-card">
-  <div class="project-number">{String(index + 1).padStart(2, '0')}</div>
+  <div class="project-meta">
+    <span>{year}</span>
+    <span>{status}</span>
+  </div>
   <div class="project-body">
-    <div class="project-kicker">{status}</div>
     <h3><a href={`/projects/${entry.id}/`}>{title}</a></h3>
     <p>{description}</p>
     <ul class="pill-list">
@@ -21,69 +23,70 @@ const { title, description, status, tags, githubUrl, demoUrl } = entry.data;
     </ul>
   </div>
   <div class="project-links">
-    {githubUrl && <a href={githubUrl}>Code ↗</a>}
-    {demoUrl && <a href={demoUrl}>Demo ↗</a>}
+    {githubUrl && <a href={githubUrl}>code ↗</a>}
+    {demoUrl && <a href={demoUrl}>demo ↗</a>}
   </div>
 </article>
 
 <style>
   .project-card {
     display: grid;
-    grid-template-columns: 52px minmax(0, 1fr) auto;
-    gap: 1.4rem;
-    padding: 2.25rem 0;
+    grid-template-columns: 96px minmax(0, 1fr) auto;
+    gap: 1rem 1.2rem;
+    padding: 1rem 0;
     border-top: 1px solid var(--rule);
   }
 
-  .project-number {
-    color: var(--accent);
-    font-family: var(--mono);
-    font-size: 0.72rem;
-  }
-
-  .project-kicker {
-    color: var(--moss);
-    font-family: var(--mono);
-    font-size: 0.69rem;
-    letter-spacing: 0.08em;
+  .project-meta {
+    display: grid;
+    height: max-content;
+    color: var(--ink-faint);
+    font-size: 0.64rem;
     text-transform: uppercase;
   }
 
-  h3 {
-    margin: 0.45rem 0 0.65rem;
-    font-family: var(--serif);
-    font-size: clamp(1.75rem, 3.5vw, 3rem);
-    font-weight: 520;
-    letter-spacing: -0.035em;
-    line-height: 1;
+  .project-meta span:last-child {
+    color: var(--warm);
   }
 
-  h3 a {
-    text-decoration: none;
+  h3 {
+    margin: 0 0 0.25rem;
+    font-size: 0.92rem;
+    font-weight: 550;
   }
 
   p {
-    max-width: 700px;
-    margin: 0 0 1.2rem;
+    max-width: 650px;
+    margin: 0 0 0.45rem;
     color: var(--ink-soft);
+    font-family: var(--sans);
+    font-size: 0.82rem;
+    line-height: 1.55;
   }
 
   .project-links {
     display: flex;
-    gap: 1rem;
+    gap: 0.8rem;
     align-items: start;
-    font-size: 0.78rem;
-    font-weight: 650;
+    font-size: 0.68rem;
     white-space: nowrap;
   }
 
-  @media (max-width: 680px) {
+  @media (max-width: 640px) {
     .project-card {
-      grid-template-columns: 32px minmax(0, 1fr);
+      grid-template-columns: 1fr auto;
     }
 
-    .project-links {
-      grid-column: 2;
+    .project-meta {
+      display: flex;
+      gap: 0.8rem;
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 440px) {
+    .project-card {
+      grid-template-columns: 1fr;
     }
   }
 </style>

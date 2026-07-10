@@ -6,78 +6,76 @@ interface Props {
   featured?: boolean;
 }
 
-const { entry, featured = false } = Astro.props;
+const { entry } = Astro.props;
 const { title, description, kind, tags, readingMinutes, publishedAt, externalUrl } = entry.data;
 const url = externalUrl ?? `/writing/${entry.id}/`;
 const date = publishedAt.toLocaleDateString('en-IN', { month: 'short', year: 'numeric' });
-const kindLabel = kind === 'essay' ? 'Essay' : kind === 'note' ? 'Field note' : 'Workshop';
+const kindLabel = kind === 'essay' ? 'essay' : kind === 'note' ? 'note' : 'workshop';
 ---
 
-<article class:list={['writing-card', { featured }]} data-kind={kind} data-search={`${title} ${description} ${tags.join(' ')}`.toLowerCase()}>
+<article class="writing-card" data-kind={kind} data-search={`${title} ${description} ${tags.join(' ')}`.toLowerCase()}>
   <div class="card-meta">
-    <span>{kindLabel}</span>
     <span>{date}</span>
+    <span>{kindLabel}</span>
     <span>{readingMinutes} min</span>
   </div>
-  <h3><a href={url}>{title}</a></h3>
-  <p>{description}</p>
-  <ul class="pill-list">
-    {tags.slice(0, 4).map((tag) => <li class="pill">{tag}</li>)}
-  </ul>
+  <div class="card-copy">
+    <h3><a href={url}>{title}</a></h3>
+    <p>{description}</p>
+    <ul class="pill-list">
+      {tags.slice(0, 4).map((tag) => <li class="pill">{tag}</li>)}
+    </ul>
+  </div>
 </article>
 
 <style>
   .writing-card {
-    display: flex;
-    min-height: 260px;
-    padding: 1.4rem 0;
+    display: grid;
+    grid-template-columns: 112px minmax(0, 1fr);
+    gap: 1.2rem;
+    padding: 1rem 0;
     border-top: 1px solid var(--rule);
-    flex-direction: column;
-  }
-
-  .writing-card.featured {
-    min-height: 430px;
-    padding: 2rem;
-    border: 1px solid var(--ink);
-    background: var(--paper-soft);
-    box-shadow: 9px 9px 0 var(--paper-deep);
   }
 
   .card-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem 1rem;
+    display: grid;
+    height: max-content;
+    gap: 0.1rem;
     color: var(--ink-faint);
-    font-family: var(--mono);
-    font-size: 0.67rem;
+    font-size: 0.64rem;
+    line-height: 1.5;
     text-transform: uppercase;
   }
 
-  .card-meta span:first-child {
-    color: var(--accent-dark);
+  .card-meta span:nth-child(2) {
+    color: var(--warm);
   }
 
   h3 {
-    max-width: 820px;
-    margin: 1.15rem 0 0.8rem;
-    font-family: var(--serif);
-    font-size: clamp(1.7rem, 3vw, 2.7rem);
-    font-weight: 520;
-    letter-spacing: -0.03em;
-    line-height: 1.08;
-  }
-
-  h3 a {
-    text-decoration: none;
+    margin: 0 0 0.25rem;
+    font-size: 0.92rem;
+    font-weight: 550;
+    line-height: 1.45;
   }
 
   p {
-    max-width: 720px;
-    margin: 0 0 1.4rem;
+    max-width: 690px;
+    margin: 0 0 0.45rem;
     color: var(--ink-soft);
+    font-family: var(--sans);
+    font-size: 0.82rem;
+    line-height: 1.55;
   }
 
-  .pill-list {
-    margin-top: auto;
+  @media (max-width: 560px) {
+    .writing-card {
+      grid-template-columns: 1fr;
+      gap: 0.45rem;
+    }
+
+    .card-meta {
+      display: flex;
+      gap: 0.8rem;
+    }
   }
 </style>

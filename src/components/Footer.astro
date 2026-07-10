@@ -1,10 +1,7 @@
 <footer>
   <div class="footer-inner container">
-    <div>
-      <p class="footer-note">Build carefully. Measure honestly. Share what worked.</p>
-      <p class="fine-print">© {new Date().getFullYear()} Praneeth Paikray. Opinions are my own.</p>
-    </div>
-    <nav class="socials" aria-label="Social links">
+    <p>© {new Date().getFullYear()} Praneeth Paikray · Opinions are my own.</p>
+    <nav aria-label="Social links">
       <a href="https://github.com/Praneeth16">GitHub</a>
       <a href="https://www.linkedin.com/in/praneeth-paikray/">LinkedIn</a>
       <a href="https://medium.com/@paikraypraneeth">Medium</a>
@@ -15,50 +12,42 @@
 
 <style>
   footer {
-    padding: 3.5rem 0 4rem;
-    border-top: 1px solid var(--rule);
+    padding: 1.5rem 0 3.5rem;
   }
 
   .footer-inner {
     display: flex;
-    gap: 3rem;
-    align-items: end;
+    gap: 1rem 2rem;
+    padding-top: 1rem;
+    color: var(--ink-faint);
+    border-top: 1px solid var(--rule);
+    align-items: baseline;
     justify-content: space-between;
   }
 
-  .footer-note {
-    max-width: 520px;
+  p {
     margin: 0;
-    font-family: var(--serif);
-    font-size: clamp(1.45rem, 2.6vw, 2.2rem);
-    line-height: 1.18;
+    font-size: 0.68rem;
   }
 
-  .fine-print {
-    margin: 1.2rem 0 0;
-    color: var(--ink-faint);
-    font-size: 0.75rem;
-  }
-
-  .socials {
+  nav {
     display: flex;
     flex-wrap: wrap;
-    gap: 1.2rem;
+    gap: 1rem;
     justify-content: flex-end;
   }
 
-  .socials a {
-    font-size: 0.82rem;
-    font-weight: 650;
+  a {
+    font-size: 0.7rem;
   }
 
-  @media (max-width: 720px) {
+  @media (max-width: 620px) {
     .footer-inner {
-      align-items: start;
+      align-items: flex-start;
       flex-direction: column;
     }
 
-    .socials {
+    nav {
       justify-content: flex-start;
     }
   }

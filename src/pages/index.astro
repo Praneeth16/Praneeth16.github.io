@@ -6,8 +6,8 @@ import ProjectCard from '../components/ProjectCard.astro';
 
 const writing = (await getCollection('writing', ({ data }) => !data.draft))
   .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
-const featuredEssay = writing.find((entry) => entry.data.featured && entry.data.kind === 'essay') ?? writing[0];
-const latestNotes = writing.filter((entry) => entry.id !== featuredEssay.id).slice(0, 3);
+const latestWriting = writing.slice(0, 5);
+const workshops = writing.filter((entry) => entry.data.kind === 'workshop').slice(0, 3);
 const projects = (await getCollection('projects'))
   .filter((entry) => entry.data.featured)
   .sort((a, b) => a.data.order - b.data.order)
@@ -15,393 +15,174 @@ const projects = (await getCollection('projects'))
 ---
 
 <BaseLayout>
-  <section class="hero container">
-    <div class="hero-copy">
-      <p class="eyebrow">AI systems · field notes · workshops</p>
-      <h1>I build AI systems, measure how they behave, and write down what survives production.</h1>
-      <p class="hero-deck">
-        I’m Praneeth, a Solutions Architect focused on production GenAI, agent evaluation, and the engineering work between a good demo and a dependable system.
-      </p>
-      <div class="hero-links">
-        <a class="primary-link" href="/writing/">Read the field notes <span>→</span></a>
-        <a class="text-link" href="/projects/">See selected projects</a>
+  <div class="home container">
+    <section class="intro-panel" aria-labelledby="intro-heading">
+      <div class="intro-copy">
+        <h1 id="intro-heading">Hi, I’m Praneeth.</h1>
+        <p>I build production AI systems, evaluate how they behave, and write about the engineering work between a promising demo and a dependable product.</p>
+        <p>I work as a Solutions Architect focused on GenAI and agent systems at Databricks. My recent work covers agent evaluation, autonomous AI engineering, document intelligence, real-time agents, and technical workshops.</p>
+        <p>This site is where I keep the implementation details: what I built, what failed, what the measurements changed, and what another engineer can reuse.</p>
+        <p class="intro-links">
+          <a href="/about/">More about me</a>
+          <span>·</span>
+          <a href="https://github.com/Praneeth16">GitHub</a>
+          <span>·</span>
+          <a href="https://www.linkedin.com/in/praneeth-paikray/">LinkedIn</a>
+        </p>
       </div>
-    </div>
 
-    <aside class="field-card" aria-labelledby="field-card-title">
-      <div class="field-card-top">
-        <span>FIELD LOG</span>
-        <span>BLR / 2026</span>
+      <aside class="now" aria-labelledby="now-heading">
+        <p id="now-heading" class="now-title">Currently exploring</p>
+        <ul>
+          <li>Agent harnesses and meta-harnesses</li>
+          <li>Trajectory-level evaluation</li>
+          <li>Self-improving AI systems</li>
+          <li>Reusable Databricks AI demos</li>
+        </ul>
+        <p class="now-note">Based in Bengaluru, India.</p>
+      </aside>
+    </section>
+
+    <section class="section" aria-labelledby="latest-heading">
+      <div class="section-heading">
+        <h2 id="latest-heading">Latest writing</h2>
+        <a class="text-link" href="/writing/">All essays and notes</a>
       </div>
-      <p id="field-card-title" class="field-card-title">Three questions I keep returning to</p>
-      <ol>
-        <li><span>Build</span> Can an idea become a working system?</li>
-        <li><span>Measure</span> Do we know where it breaks?</li>
-        <li><span>Teach</span> Can someone else reproduce it?</li>
-      </ol>
-      <div class="signal" aria-hidden="true">
-        <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-      </div>
-      <p class="field-card-foot">Currently exploring agent harnesses, evals, and self-improving AI systems.</p>
-    </aside>
-  </section>
-
-  <div class="proof-strip">
-    <div class="container proof-inner">
-      <span><strong>9 years</strong> building AI and data systems</span>
-      <span><strong>Now</strong> Solutions Architect, AI at Databricks</span>
-      <span><strong>Based in</strong> Bengaluru, India</span>
-    </div>
-  </div>
-
-  <section class="section container" aria-labelledby="featured-heading">
-    <div class="section-heading">
       <div>
-        <p class="eyebrow">Featured essay</p>
-        <h2 id="featured-heading">Ideas with the implementation details left in.</h2>
+        {latestWriting.map((entry) => <WritingCard entry={entry} />)}
       </div>
-      <p>Long-form technical essays about the tradeoffs, failed assumptions, measurements, and fixes that turn AI prototypes into useful systems.</p>
-    </div>
-    <WritingCard entry={featuredEssay} featured />
-  </section>
+    </section>
 
-  <section class="section container" aria-labelledby="notes-heading">
-    <div class="section-heading compact-heading">
+    <section class="section" aria-labelledby="projects-heading">
+      <div class="section-heading">
+        <h2 id="projects-heading">Selected projects</h2>
+        <a class="text-link" href="/projects/">All projects</a>
+      </div>
       <div>
-        <p class="eyebrow">Recent writing</p>
-        <h2 id="notes-heading">Notes from the workbench.</h2>
+        {projects.map((entry) => <ProjectCard entry={entry} />)}
       </div>
-      <a class="text-link" href="/writing/">Browse everything</a>
-    </div>
-    <div class="notes-grid">
-      {latestNotes.map((entry) => <WritingCard entry={entry} />)}
-    </div>
-  </section>
+    </section>
 
-  <section class="section projects-section" aria-labelledby="projects-heading">
-    <div class="container">
+    <section class="section" aria-labelledby="workshops-heading">
       <div class="section-heading">
         <div>
-          <p class="eyebrow">Selected systems</p>
-          <h2 id="projects-heading">Built to answer a real question.</h2>
+          <h2 id="workshops-heading">Workshops and teaching</h2>
+          <p>Hands-on material for teams moving from AI concepts to working systems.</p>
         </div>
-        <p>Open-source tools and research demos across autonomous AI engineering, evaluation, document intelligence, and real-time agents.</p>
+        <a class="text-link" href="/writing/?kind=workshop">Workshop archive</a>
       </div>
       <div>
-        {projects.map((entry, index) => <ProjectCard entry={entry} index={index} />)}
+        {workshops.map((entry) => <WritingCard entry={entry} />)}
       </div>
-      <a class="text-link projects-all" href="/projects/">View all projects</a>
-    </div>
-  </section>
+    </section>
 
-  <section class="section container teaching" aria-labelledby="teaching-heading">
-    <div>
-      <p class="eyebrow">Workshops and talks</p>
-      <h2 id="teaching-heading">Teaching the path from concept to system.</h2>
-    </div>
-    <div class="teaching-copy">
-      <p>I design hands-on sessions for teams that know their domain and want to understand how modern data and AI systems are actually built, evaluated, and operated.</p>
-      <ul>
-        <li>Production agent architecture and evaluation</li>
-        <li>Real-time agents with APIs and WebSockets</li>
-        <li>Threat intelligence on the lakehouse</li>
-        <li>Databricks AI platform workshops</li>
-      </ul>
-      <a class="text-link" href="/writing/?kind=workshop">Explore workshop notes</a>
-    </div>
-  </section>
-
-  <section class="closing container">
-    <p class="eyebrow">The short version</p>
-    <p>I like ambitious AI ideas. I like them more after the evals run.</p>
-    <div>
-      <a href="https://www.linkedin.com/in/praneeth-paikray/">Start a conversation</a>
-      <a href="https://github.com/Praneeth16">Explore my GitHub</a>
-    </div>
-  </section>
+    <section class="small-note" aria-label="Site note">
+      <span aria-hidden="true">*</span>
+      <p>I prefer measured claims, practical code, and explanations that keep the tradeoffs visible.</p>
+    </section>
+  </div>
 </BaseLayout>
 
 <style>
-  .hero {
+  .home {
+    padding: 1.8rem 0 3rem;
+  }
+
+  .intro-panel {
     display: grid;
-    grid-template-columns: minmax(0, 1.45fr) minmax(310px, 0.55fr);
-    gap: clamp(3rem, 7vw, 7rem);
-    min-height: 720px;
-    padding: 7rem 0 5rem;
-    align-items: center;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: 2.5rem;
+    padding: 1.2rem;
+    border: 1px solid var(--rule-dark);
+    background: var(--surface);
   }
 
-  .hero h1 {
-    max-width: 870px;
-    margin: 0;
-    font-size: clamp(3.7rem, 7.2vw, 7.3rem);
-    line-height: 0.91;
+  h1 {
+    margin: 0 0 0.8rem;
+    font-size: 1.05rem;
+    font-weight: 600;
   }
 
-  .hero-deck {
-    max-width: 700px;
-    margin: 2.1rem 0 0;
-    color: var(--ink-soft);
-    font-family: var(--serif);
-    font-size: clamp(1.2rem, 2vw, 1.5rem);
-    line-height: 1.48;
+  .intro-copy > p {
+    max-width: 630px;
+    margin: 0 0 0.85rem;
+    font-family: var(--sans);
+    font-size: 0.88rem;
+    line-height: 1.65;
   }
 
-  .hero-links {
+  .intro-links {
     display: flex;
     flex-wrap: wrap;
-    gap: 1.4rem 2rem;
-    margin-top: 2.25rem;
-    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 0 !important;
+    font-family: var(--mono) !important;
+    font-size: 0.73rem !important;
   }
 
-  .primary-link {
-    display: inline-flex;
-    gap: 1rem;
-    padding: 0.85rem 1.05rem;
-    color: var(--paper-soft);
-    background: var(--ink);
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-decoration: none;
+  .intro-links span {
+    color: var(--rule-dark);
   }
 
-  .primary-link:hover {
-    color: white;
-    background: var(--accent-dark);
+  .now {
+    padding-left: 1.4rem;
+    border-left: 1px solid var(--rule);
   }
 
-  .field-card {
-    position: relative;
-    overflow: hidden;
-    padding: 1.35rem;
-    border: 1px solid var(--ink);
-    background: var(--paper-soft);
-    box-shadow: 11px 11px 0 var(--paper-deep);
-    transform: rotate(1.25deg);
-  }
-
-  .field-card::before {
-    position: absolute;
-    width: 64px;
-    height: 16px;
-    top: -3px;
-    left: 50%;
-    content: '';
-    background: rgba(212, 171, 87, 0.54);
-    transform: translateX(-50%) rotate(-2deg);
-  }
-
-  .field-card-top {
-    display: flex;
-    padding-bottom: 1rem;
-    color: var(--ink-faint);
-    border-bottom: 1px solid var(--rule);
-    font-family: var(--mono);
-    font-size: 0.62rem;
-    justify-content: space-between;
-  }
-
-  .field-card-title {
-    margin: 1.5rem 0;
-    font-family: var(--serif);
-    font-size: 1.65rem;
-    line-height: 1.15;
-  }
-
-  .field-card ol {
-    display: grid;
-    gap: 0.85rem;
-    margin: 0;
-    padding: 0;
-    counter-reset: field;
-    list-style: none;
-  }
-
-  .field-card li {
-    display: grid;
-    grid-template-columns: 66px 1fr;
-    gap: 0.75rem;
-    color: var(--ink-soft);
-    font-size: 0.78rem;
-  }
-
-  .field-card li span {
-    color: var(--accent-dark);
-    font-family: var(--mono);
-    font-weight: 700;
-  }
-
-  .signal {
-    display: flex;
-    height: 64px;
-    gap: 6px;
-    margin: 1.6rem 0 1.2rem;
-    padding: 0.65rem;
-    align-items: end;
-    border: 1px solid var(--rule);
-  }
-
-  .signal i {
-    width: 100%;
-    height: 28%;
-    background: var(--moss);
-  }
-
-  .signal i:nth-child(2) { height: 42%; }
-  .signal i:nth-child(3) { height: 38%; }
-  .signal i:nth-child(4) { height: 64%; }
-  .signal i:nth-child(5) { height: 55%; }
-  .signal i:nth-child(6) { height: 78%; background: var(--accent); }
-  .signal i:nth-child(7) { height: 90%; }
-
-  .field-card-foot {
-    margin: 0;
-    color: var(--ink-faint);
+  .now-title {
+    margin: 0 0 0.65rem;
+    color: var(--warm);
     font-size: 0.72rem;
-  }
-
-  .proof-strip {
-    color: var(--paper-soft);
-    background: var(--ink);
-  }
-
-  .proof-inner {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-  }
-
-  .proof-inner span {
-    padding: 1.2rem 1.5rem;
-    border-left: 1px solid #4a463f;
-    font-size: 0.76rem;
-  }
-
-  .proof-inner span:last-child {
-    border-right: 1px solid #4a463f;
-  }
-
-  .proof-inner strong {
-    display: block;
-    color: #d7ad59;
-    font-family: var(--mono);
-    font-size: 0.64rem;
-    letter-spacing: 0.06em;
     text-transform: uppercase;
   }
 
-  .compact-heading {
-    grid-template-columns: 1fr auto;
-  }
-
-  .notes-grid {
+  .now ul {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-  }
-
-  .projects-section {
-    background: rgba(236, 227, 211, 0.56);
-  }
-
-  .projects-all {
-    margin-top: 2rem;
-  }
-
-  .teaching {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(300px, 0.62fr);
-    gap: 5rem;
-  }
-
-  .teaching h2 {
-    max-width: 700px;
+    gap: 0.35rem;
     margin: 0;
-    font-family: var(--serif);
-    font-size: clamp(2.6rem, 5vw, 5rem);
-    font-weight: 520;
-    letter-spacing: -0.04em;
-    line-height: 0.98;
-  }
-
-  .teaching-copy {
+    padding-left: 1.1rem;
     color: var(--ink-soft);
+    font-family: var(--sans);
+    font-size: 0.78rem;
   }
 
-  .teaching-copy ul {
-    margin: 1.5rem 0 2rem;
-    padding-left: 1.25rem;
+  .now-note {
+    margin: 1rem 0 0;
+    color: var(--ink-faint);
+    font-size: 0.66rem;
   }
 
-  .closing {
-    padding: 6rem 0 7rem;
-    text-align: center;
-  }
-
-  .closing > p:nth-child(2) {
-    max-width: 900px;
-    margin: 0 auto 2rem;
-    font-family: var(--serif);
-    font-size: clamp(2.5rem, 6vw, 5.8rem);
-    letter-spacing: -0.045em;
-    line-height: 0.98;
-  }
-
-  .closing div {
+  .small-note {
     display: flex;
-    gap: 1.5rem;
-    justify-content: center;
+    gap: 0.6rem;
+    margin-top: 2.2rem;
+    padding: 0.8rem 1rem;
+    color: var(--ink-soft);
+    border: 1px dashed var(--rule-dark);
+    background: var(--surface-soft);
+    align-items: baseline;
   }
 
-  @media (max-width: 900px) {
-    .hero {
-      grid-template-columns: 1fr;
-      padding-top: 5rem;
-    }
-
-    .field-card {
-      max-width: 520px;
-      transform: none;
-    }
-
-    .notes-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .teaching {
-      grid-template-columns: 1fr;
-      gap: 2rem;
-    }
+  .small-note span {
+    color: var(--warm);
   }
 
-  @media (max-width: 680px) {
-    .hero {
-      min-height: 0;
-      padding: 4.25rem 0;
-    }
+  .small-note p {
+    margin: 0;
+    font-family: var(--sans);
+    font-size: 0.78rem;
+  }
 
-    .hero h1 {
-      font-size: clamp(3rem, 14vw, 4.6rem);
-    }
-
-    .proof-inner {
+  @media (max-width: 700px) {
+    .intro-panel {
       grid-template-columns: 1fr;
-      padding: 0.6rem 0;
+      gap: 1.4rem;
     }
 
-    .proof-inner span,
-    .proof-inner span:last-child {
-      padding: 0.7rem 0;
-      border: 0;
-    }
-
-    .compact-heading {
-      grid-template-columns: 1fr;
-    }
-
-    .closing div {
-      flex-direction: column;
+    .now {
+      padding: 1rem 0 0;
+      border-top: 1px solid var(--rule);
+      border-left: 0;
     }
   }
 </style>

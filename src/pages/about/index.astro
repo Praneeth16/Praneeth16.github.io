@@ -5,146 +5,91 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 <BaseLayout title="About" description="About Praneeth Paikray, a Solutions Architect working on production AI systems, agent evaluation, and technical education.">
   <header class="page-intro container">
     <p class="eyebrow">About</p>
-    <h1 class="page-title">Engineer, explainer, persistent evaluator.</h1>
+    <h1 class="page-title">Praneeth Paikray</h1>
   </header>
 
-  <section class="about-grid container">
-    <div class="portrait" aria-hidden="true">
-      <div class="initials">PP</div>
-      <p>Bengaluru<br />India</p>
-    </div>
-    <div class="about-copy">
-      <p class="lede">I’m Praneeth Paikray, a Solutions Architect focused on making ambitious AI ideas work inside real organizations.</p>
+  <div class="about container">
+    <section class="about-panel">
+      <p>Hi, I’m Praneeth. I’m a Solutions Architect focused on making ambitious AI ideas work inside real organizations.</p>
       <p>Over the last nine years, I have worked across enterprise IT, financial services, staffing, and data platforms. The recurring pattern is simple: the model is rarely the whole system. The difficult and interesting work sits around it, in data, tools, evaluation, interfaces, operations, and the judgment to know what should be automated.</p>
-      <p>At Databricks, I work with teams building production GenAI and agent systems. Outside customer work, I build open-source experiments, design technical workshops, and write about what I learn. My recent work spans agent evaluation harnesses, autonomous AI engineering, document intelligence, real-time agents, and multilingual systems.</p>
+      <p>At Databricks, I work with teams building production GenAI and agent systems. Outside customer work, I build open-source experiments, design technical workshops, and write about what I learn.</p>
+      <p>My recent work spans agent evaluation harnesses, autonomous AI engineering, document intelligence, real-time agents, and multilingual systems.</p>
 
       <h2>What I care about</h2>
-      <div class="values">
-        <article>
-          <span>01</span>
-          <h3>Measured, not asserted</h3>
-          <p>A fluent demo is a starting point. Claims should survive traces, held-out tests, model swaps, and the boring edge cases.</p>
-        </article>
-        <article>
-          <span>02</span>
-          <h3>Useful technical depth</h3>
-          <p>I like explanations that preserve the tradeoffs and implementation detail without turning jargon into a personality.</p>
-        </article>
-        <article>
-          <span>03</span>
-          <h3>Reusable work</h3>
-          <p>A good workshop or demo should leave behind an asset that another engineer can understand, adapt, and run.</p>
-        </article>
-      </div>
+      <dl>
+        <div>
+          <dt>Measured, not asserted</dt>
+          <dd>A fluent demo is a starting point. Claims should survive traces, held-out tests, model swaps, and boring edge cases.</dd>
+        </div>
+        <div>
+          <dt>Useful technical depth</dt>
+          <dd>I like explanations that preserve tradeoffs and implementation detail without turning jargon into a personality.</dd>
+        </div>
+        <div>
+          <dt>Reusable work</dt>
+          <dd>A good workshop or demo should leave behind an asset another engineer can understand, adapt, and run.</dd>
+        </div>
+      </dl>
 
       <h2>Elsewhere</h2>
       <p>Find my code on <a href="https://github.com/Praneeth16">GitHub</a>, shorter updates on <a href="https://www.linkedin.com/in/praneeth-paikray/">LinkedIn</a>, earlier essays on <a href="https://medium.com/@paikraypraneeth">Medium</a>, and models or datasets on <a href="https://huggingface.co/Praneeth">Hugging Face</a>.</p>
-      <p>For workshops, speaking, or a thoughtful technical conversation, connect with me on <a href="https://www.linkedin.com/in/praneeth-paikray/">LinkedIn</a>.</p>
-    </div>
-  </section>
+    </section>
+  </div>
 </BaseLayout>
 
 <style>
-  .about-grid {
-    display: grid;
-    grid-template-columns: minmax(250px, 0.42fr) minmax(0, 1fr);
-    gap: clamp(3rem, 9vw, 8rem);
-    padding-bottom: 7rem;
-    align-items: start;
+  .about {
+    padding-bottom: 4rem;
   }
 
-  .portrait {
-    position: sticky;
-    top: 2rem;
-    min-height: 420px;
+  .about-panel {
     padding: 1.2rem;
-    color: var(--paper-soft);
-    background: var(--moss);
-    box-shadow: 10px 10px 0 var(--sun);
+    border: 1px solid var(--rule-dark);
+    background: var(--surface);
   }
 
-  .initials {
-    font-family: var(--serif);
-    font-size: clamp(8rem, 16vw, 13rem);
-    letter-spacing: -0.1em;
-    line-height: 0.8;
-  }
-
-  .portrait p {
-    position: absolute;
-    right: 1.2rem;
-    bottom: 1rem;
-    margin: 0;
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    text-align: right;
-    text-transform: uppercase;
-  }
-
-  .about-copy {
-    color: var(--ink-soft);
-    font-family: var(--serif);
-    font-size: 1.2rem;
-    line-height: 1.75;
-  }
-
-  .lede {
-    margin-top: 0;
-    color: var(--ink);
-    font-size: clamp(1.8rem, 3.5vw, 3rem);
-    line-height: 1.22;
+  .about-panel > p {
+    max-width: 760px;
+    margin: 0 0 0.9rem;
+    font-family: var(--sans);
+    font-size: 0.88rem;
+    line-height: 1.7;
   }
 
   h2 {
-    margin: 4rem 0 1.4rem;
-    color: var(--ink);
-    font-size: 2rem;
-    font-weight: 520;
+    margin: 2rem 0 0.8rem;
+    font-size: 0.92rem;
+    font-weight: 600;
   }
 
-  .values {
-    display: grid;
-    gap: 0;
+  dl {
+    margin: 0;
   }
 
-  .values article {
+  dl div {
     display: grid;
-    grid-template-columns: 42px 1fr;
-    gap: 0 1rem;
-    padding: 1.3rem 0;
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 1rem;
+    padding: 0.8rem 0;
     border-top: 1px solid var(--rule);
   }
 
-  .values span {
-    color: var(--accent);
-    font-family: var(--mono);
-    font-size: 0.7rem;
+  dt {
+    color: var(--warm);
+    font-size: 0.75rem;
   }
 
-  .values h3 {
+  dd {
     margin: 0;
-    color: var(--ink);
-    font-size: 1.35rem;
-    font-weight: 520;
-  }
-
-  .values p {
-    grid-column: 2;
-    margin: 0.35rem 0 0;
+    color: var(--ink-soft);
     font-family: var(--sans);
-    font-size: 0.9rem;
-    line-height: 1.6;
+    font-size: 0.82rem;
   }
 
-  @media (max-width: 760px) {
-    .about-grid {
+  @media (max-width: 560px) {
+    dl div {
       grid-template-columns: 1fr;
-    }
-
-    .portrait {
-      position: relative;
-      min-height: 260px;
-      top: 0;
+      gap: 0.3rem;
     }
   }
 </style>

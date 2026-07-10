@@ -10,8 +10,8 @@ const writing = (await getCollection('writing', ({ data }) => !data.draft))
 <BaseLayout title="Writing" description="Technical essays, research notes, and workshop material on production AI systems by Praneeth Paikray.">
   <header class="page-intro container">
     <p class="eyebrow">Essays · notes · workshops</p>
-    <h1 class="page-title">Writing from the workbench.</h1>
-    <p class="page-deck">Long-form explanations when the details matter. Short notes when one result is worth keeping. Workshop material when the best way to understand something is to build it.</p>
+    <h1 class="page-title">Writing</h1>
+    <p class="page-deck">Technical essays, short research notes, and workshop material on building and evaluating AI systems.</p>
   </header>
 
   <section class="writing-archive container" aria-labelledby="archive-heading">
@@ -73,14 +73,14 @@ const writing = (await getCollection('writing', ({ data }) => !data.draft))
 
 <style>
   .writing-archive {
-    padding-bottom: 7rem;
+    padding-bottom: 4rem;
   }
 
   .filters {
     display: flex;
     gap: 2rem;
-    padding: 1.2rem 0;
-    border-top: 1px solid var(--ink);
+    padding: 0.8rem 0;
+    border-top: 1px solid var(--rule-dark);
     border-bottom: 1px solid var(--rule);
     align-items: end;
     justify-content: space-between;
@@ -93,20 +93,20 @@ const writing = (await getCollection('writing', ({ data }) => !data.draft))
   }
 
   button {
-    padding: 0.4rem 0.72rem;
+    padding: 0.28rem 0.55rem;
     color: var(--ink-soft);
     border: 1px solid var(--rule);
-    border-radius: 999px;
-    background: transparent;
-    font-size: 0.75rem;
+    border-radius: 0;
+    background: var(--surface);
+    font-size: 0.68rem;
     cursor: pointer;
   }
 
   button.active,
   button:hover {
-    color: var(--paper-soft);
-    border-color: var(--ink);
-    background: var(--ink);
+    color: white;
+    border-color: var(--accent);
+    background: var(--accent);
   }
 
   label {
@@ -127,7 +127,7 @@ const writing = (await getCollection('writing', ({ data }) => !data.draft))
     padding: 0.45rem 0;
     color: var(--ink);
     border: 0;
-    border-bottom: 1px solid var(--ink-soft);
+    border-bottom: 1px solid var(--rule-dark);
     outline: 0;
     background: transparent;
   }
@@ -144,9 +144,7 @@ const writing = (await getCollection('writing', ({ data }) => !data.draft))
   }
 
   .writing-list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0 3rem;
+    display: block;
   }
 
   .empty-state {
@@ -170,8 +168,5 @@ const writing = (await getCollection('writing', ({ data }) => !data.draft))
       width: 100%;
     }
 
-    .writing-list {
-      grid-template-columns: 1fr;
-    }
   }
 </style>

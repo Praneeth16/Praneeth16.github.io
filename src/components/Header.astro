@@ -1,18 +1,20 @@
 ---
 const path = Astro.url.pathname;
 const links = [
+  { href: '/', label: 'Home' },
   { href: '/writing/', label: 'Writing' },
   { href: '/projects/', label: 'Projects' },
   { href: '/about/', label: 'About' },
+  { href: '/rss.xml', label: 'RSS' },
 ];
+
+const isActive = (href: string) => href === '/' ? path === '/' : path.startsWith(href);
 ---
 
 <header class="site-header">
   <div class="header-inner container">
-    <a class="brand" href="/" aria-label="Praneeth Paikray, home">
-      <span class="brand-mark">PP</span>
-      <span class="brand-name">Praneeth Paikray</span>
-    </a>
+    <a class="site-title" href="/">Praneeth Paikray</a>
+    <p>AI systems, field notes, and workshop material.</p>
 
     <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">
       Menu
@@ -20,9 +22,10 @@ const links = [
 
     <nav id="site-nav" aria-label="Primary navigation">
       {links.map((link) => (
-        <a class:list={{ active: path.startsWith(link.href) }} href={link.href}>{link.label}</a>
+        <a class:list={{ active: isActive(link.href) }} href={link.href}>
+          {isActive(link.href) && <span aria-hidden="true">&gt; </span>}{link.label}
+        </a>
       ))}
-      <a class="nav-rss" href="/rss.xml">RSS</a>
     </nav>
   </div>
 </header>
@@ -40,112 +43,90 @@ const links = [
 
 <style>
   .site-header {
-    position: relative;
-    z-index: 20;
-    border-bottom: 1px solid var(--rule);
+    padding: 4rem 0 0;
   }
 
   .header-inner {
-    display: flex;
-    min-height: 76px;
-    align-items: center;
-    justify-content: space-between;
+    position: relative;
   }
 
-  .brand {
-    display: inline-flex;
-    gap: 0.75rem;
-    align-items: center;
+  .site-title {
+    display: inline-block;
+    color: var(--accent);
+    font-size: clamp(1.45rem, 3vw, 2rem);
+    font-weight: 650;
+    letter-spacing: -0.04em;
+  }
+
+  .site-title:hover {
     text-decoration: none;
   }
 
-  .brand-mark {
-    display: grid;
-    width: 34px;
-    height: 34px;
-    place-items: center;
-    color: var(--paper-soft);
-    border-radius: 50%;
-    background: var(--accent);
-    font-family: var(--serif);
-    font-size: 0.85rem;
-  }
-
-  .brand-name {
-    font-family: var(--serif);
-    font-size: 1.05rem;
-    font-weight: 600;
+  .header-inner > p {
+    margin: 0.25rem 0 2rem;
+    color: var(--ink-faint);
+    font-family: var(--sans);
+    font-size: 0.78rem;
   }
 
   nav {
     display: flex;
-    gap: 1.8rem;
-    align-items: center;
+    gap: 1.7rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--rule-dark);
   }
 
   nav a {
     color: var(--ink-soft);
-    font-size: 0.84rem;
-    font-weight: 650;
-    text-decoration: none;
+    font-size: 0.78rem;
   }
 
   nav a:hover,
   nav a.active {
     color: var(--ink);
+    text-decoration: none;
   }
 
-  nav a.active {
-    text-decoration: underline;
-    text-decoration-color: var(--accent);
-    text-underline-offset: 0.35rem;
-  }
-
-  .nav-rss {
-    padding-left: 1.8rem;
-    border-left: 1px solid var(--rule);
-    font-family: var(--mono);
-    font-size: 0.72rem;
+  nav a.active span {
+    color: var(--accent);
   }
 
   .menu-button {
     display: none;
-    padding: 0.45rem 0.65rem;
-    color: var(--ink);
-    border: 1px solid var(--rule);
-    border-radius: 3px;
-    background: transparent;
   }
 
-  @media (max-width: 680px) {
-    .brand-name {
-      display: none;
+  @media (max-width: 560px) {
+    .site-header {
+      padding-top: 2.5rem;
+    }
+
+    .header-inner > p {
+      margin-right: 4rem;
+      margin-bottom: 1.2rem;
     }
 
     .menu-button {
-      display: inline-flex;
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: block;
+      padding: 0.35rem 0.55rem;
+      color: var(--ink-soft);
+      border: 1px solid var(--rule);
+      background: var(--surface);
+      font-size: 0.72rem;
     }
 
     nav {
-      position: absolute;
-      top: 76px;
-      right: 0;
-      left: 0;
       display: none;
-      padding: 1.2rem 24px 1.5rem;
-      border-bottom: 1px solid var(--rule);
-      background: var(--paper);
+      gap: 0.75rem;
+      padding: 0.8rem 0;
+      border-top: 1px solid var(--rule);
       flex-direction: column;
-      align-items: flex-start;
     }
 
     nav.open {
       display: flex;
-    }
-
-    .nav-rss {
-      padding: 0;
-      border: 0;
     }
   }
 </style>
