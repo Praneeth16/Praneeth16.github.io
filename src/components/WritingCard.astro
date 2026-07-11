@@ -8,7 +8,7 @@ interface Props {
 
 const { entry } = Astro.props;
 const { title, description, kind, tags, readingMinutes, publishedAt, externalUrl } = entry.data;
-const url = externalUrl ?? `/writing/${entry.id}/`;
+const url = `/writing/${entry.id}/`;
 const date = publishedAt.toLocaleDateString('en-IN', { month: 'short', year: 'numeric' });
 const kindLabel = kind === 'essay' ? 'essay' : kind === 'note' ? 'note' : 'workshop';
 ---
@@ -20,7 +20,10 @@ const kindLabel = kind === 'essay' ? 'essay' : kind === 'note' ? 'note' : 'works
     <span>{readingMinutes} min</span>
   </div>
   <div class="card-copy">
-    <h3><a href={url}>{title}</a></h3>
+    <div class="title-row">
+      <h3><a href={url}>{title}</a></h3>
+      {externalUrl && <a class="medium-link" href={externalUrl} aria-label={`Read ${title} on Medium`}>Medium ↗</a>}
+    </div>
     <p>{description}</p>
     <ul class="pill-list">
       {tags.slice(0, 4).map((tag) => <li class="pill">{tag}</li>)}
@@ -58,6 +61,24 @@ const kindLabel = kind === 'essay' ? 'essay' : kind === 'note' ? 'note' : 'works
     line-height: 1.45;
   }
 
+  .title-row {
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  .medium-link {
+    flex: 0 0 auto;
+    color: var(--ink-faint);
+    font-size: 0.64rem;
+    white-space: nowrap;
+  }
+
+  .medium-link:hover {
+    color: var(--accent-dark);
+  }
+
   p {
     max-width: 690px;
     margin: 0 0 0.45rem;
@@ -76,6 +97,15 @@ const kindLabel = kind === 'essay' ? 'essay' : kind === 'note' ? 'note' : 'works
     .card-meta {
       display: flex;
       gap: 0.8rem;
+    }
+
+    .title-row {
+      display: block;
+    }
+
+    .medium-link {
+      display: inline-block;
+      margin-bottom: 0.35rem;
     }
   }
 </style>

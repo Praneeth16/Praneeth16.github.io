@@ -1,11 +1,12 @@
 ---
-title: "LangGraph vs CrewAI vs DSPy: What 900 Runs Actually Changed"
+title: "LangGraph vs CrewAI vs DSPy"
 description: "A framework comparison built around one refund assistant, repeated runs, and the costs hidden by a single successful demo."
 publishedAt: 2026-04-25
 kind: essay
 tags: [agents, benchmarks, dspy, langgraph, crewai]
 featured: false
 readingMinutes: 11
+externalUrl: "https://pub.towardsai.net/langgraph-vs-crewai-vs-dspy-6c7d208600b5"
 draft: false
 ---
 

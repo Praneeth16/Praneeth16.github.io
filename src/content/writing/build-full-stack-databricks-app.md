@@ -6,6 +6,7 @@ kind: essay
 tags: [databricks, apps, agents, prototyping]
 featured: false
 readingMinutes: 9
+externalUrl: "https://pub.towardsai.net/build-a-full-stack-databricks-app-in-five-prompts-f11d6813bc21"
 draft: false
 ---
 

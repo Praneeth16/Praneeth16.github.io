@@ -1,11 +1,12 @@
 ---
-title: "The Journey of an Agent from Demo to Production"
+title: "Journey of an Agent: From Demo to Production"
 description: "A practical map of what changes when an agent leaves the notebook and starts serving real users."
 publishedAt: 2026-06-02
 kind: essay
 tags: [agents, evaluation, mlflow, production]
 featured: true
 readingMinutes: 12
+externalUrl: "https://pub.towardsai.net/journey-of-an-agent-from-demo-to-production-9606ea8df8eb"
 draft: false
 ---
 

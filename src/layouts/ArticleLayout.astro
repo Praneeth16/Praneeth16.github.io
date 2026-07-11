@@ -9,9 +9,10 @@ interface Props {
   updatedAt?: Date;
   readingMinutes: number;
   tags: string[];
+  externalUrl?: string;
 }
 
-const { title, description, kind, publishedAt, updatedAt, readingMinutes, tags } = Astro.props;
+const { title, description, kind, publishedAt, updatedAt, readingMinutes, tags, externalUrl } = Astro.props;
 const label = kind === 'essay' ? 'Technical essay' : kind === 'note' ? 'Research note' : 'Workshop notes';
 const formatDate = (date: Date) => date.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
@@ -30,6 +31,7 @@ const formatDate = (date: Date) => date.toLocaleDateString('en-IN', { day: 'nume
       <ul class="pill-list">
         {tags.map((tag) => <li class="pill">{tag}</li>)}
       </ul>
+      {externalUrl && <a class="medium-link" href={externalUrl}>Read the published version on Medium ↗</a>}
     </header>
     <div class="prose"><slot /></div>
     <aside class="article-end container">
@@ -73,6 +75,12 @@ const formatDate = (date: Date) => date.toLocaleDateString('en-IN', { day: 'nume
     color: var(--ink-faint);
     font-size: 0.67rem;
     text-transform: uppercase;
+  }
+
+  .medium-link {
+    display: inline-block;
+    margin-top: 0.85rem;
+    font-size: 0.7rem;
   }
 
   .article-end {
