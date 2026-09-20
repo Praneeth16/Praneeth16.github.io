@@ -17,9 +17,9 @@ The GitHub Actions workflow deploys pushes to `main`. The site publishes the int
 
 ## Article and evidence
 
-`public/jev/article.md` is the complete article source. `scripts/compile_article.py` converts it to the HTML imported by the Astro article page. It requires Python Markdown and Pygments. The article's nine interactive views use plain JavaScript and the recorded `public/jev/evidence.json`; they make no model API calls.
+`src/content/jev-article.md` is the complete article source. `scripts/compile_article.py` converts it to the HTML imported by the Astro article page. It requires Python Markdown and Pygments. The article's nine interactive views use plain JavaScript and the recorded `public/jev/evidence.json`; they make no model API calls.
 
-Run `python scripts/compile_article.py` after editing the article source. After `npm run build`, run `python scripts/export_article.py` to refresh the portable HTML download, then rebuild before deploying. Run `python scripts/draw_plots.py` to redraw its numerical figures from the saved evidence with Matplotlib and NumPy. `scripts/prepare_evidence.py PATH_TO_ORIGINAL_WORKSPACE` reconstructs the public evidence index from the original study workspace and downloaded pinned corpus.
+Run `python scripts/compile_article.py` after editing the article source. Run `python scripts/draw_plots.py` to redraw its numerical figures from the saved evidence with Matplotlib and NumPy. `scripts/prepare_evidence.py PATH_TO_ORIGINAL_WORKSPACE` reconstructs the public evidence index from the original study workspace and downloaded pinned corpus.
 
 Source sentences load on demand from the public Hugging Face rows service. The browser verifies the label and normalized-text SHA-256 against the saved study before displaying them. Service availability is external; a direct source link remains available if loading fails. Source corpus text is not bundled in the repository.
 

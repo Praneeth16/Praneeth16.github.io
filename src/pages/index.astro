@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import metadata from '../generated/article-meta.json';
 ---
 <BaseLayout title="Praneeth Paikray" description="Notes and experiments on building AI systems. Praneeth Paikray, AI Solutions Architect at Databricks, based in Bengaluru.">
   <div class="home container">
@@ -16,7 +17,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <a class="post-link" href="/blog/adapting-jev-with-gepa/">
         <h2>Adapting Jev to Your Domain with GEPA</h2>
         <p>A medical-literature experiment in prompt optimization, confident mistakes, and the trade-off between better predictions and fewer missed cases.</p>
-        <span class="meta">20 Sep 2026 · 24 min read · Interactive study</span>
+        <span class="meta">20 Sep 2026 · {metadata.readingMinutes} min read · Interactive study</span>
       </a>
     </section>
   </div>

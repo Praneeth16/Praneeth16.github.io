@@ -8,29 +8,27 @@ Every Jev response in my first experiment passed the output checks. The labels w
 
 On the 300-sentence test set, 54 answers still disagreed with the dataset's labels.
 
-That was the useful starting point. Jev had made the mechanics of obtaining a decision straightforward. Understanding the decision required more work. It found almost all the adverse-event sentences, but it also flagged many negatives and sometimes assigned complete confidence to a wrong answer.
+Jev found almost all the adverse-event sentences, but it also flagged many negatives and sometimes assigned complete confidence to a wrong answer. Obtaining a valid decision was straightforward. Deciding whether to trust it required more work.
 
 I began with a public medical-literature dataset and a simple local classifier. Then I added GEPA to revise Jev's instructions using examples and feedback. On a fresh test set, the revised prompt increased F1 from 69.1% to 79.7% and nearly halved probability error. It also missed two additional positive cases.
 
-The experiments became a way to examine three things together: what Jev makes convenient, what prompt optimization can improve, and why the metric we optimize has to match the job we want done.
-
 ## Why Jev attracted attention
 
-Jev is TypeSafe AI's model for decisions over a defined answer space. An application supplies text and questions; Jev returns choices, scores, and probabilities that code can consume directly. TypeSafe calls this a *System One model* and released it in early access on September 15, 2026. [Launch announcement](https://typesafe.ai/blog/introducing-system-one-models-and-jev)
+Jev is TypeSafe AI's model for decisions over a defined answer space. An application supplies text and questions; Jev returns choices, scores, and probabilities that code can consume directly. TypeSafe calls this a *System One model* and released it in early access on September 15, 2026. [1](#ref-1)
 
-There is a practical reason developers noticed. Agent workflows repeatedly make small decisions: whether a retrieved passage is relevant, which model should handle a request, or whether a proposed tool call needs review. Each decision can sit on the critical path. Sydney Runkle and Hunter Lovell's early LangChain integration illustrates model routing and tool-call checks. [LangChain implementation guide](https://www.langchain.com/blog/building-a-harness-with-jev)
+There is a practical reason developers noticed. Agent workflows repeatedly make small decisions: whether a retrieved passage is relevant, which model should handle a request, or whether a proposed tool call needs review. Each decision can sit on the critical path. Sydney Runkle and Hunter Lovell's early LangChain integration illustrates model routing and tool-call checks. [2](#ref-2)
 
-The launch figures were striking: 193.6× faster and 444.6× cheaper in TypeSafe's selected workflow evaluations. The company describes these as toward the upper end of expected real-world gains. Its reference answers came from other frontier models' probabilities, which limits what those comparisons establish about correctness against independent labels. [Launch evaluation methodology](https://typesafe.ai/blog/introducing-system-one-models-and-jev)
+The launch figures were striking: 193.6× faster and 444.6× cheaper in TypeSafe's selected workflow evaluations. The company describes these as toward the upper end of expected real-world gains. Its reference answers came from other frontier models' probabilities, which limits what those comparisons establish about correctness against independent labels. [1](#ref-1)
 
-At the time of the experiment, Jev cost $0.042 per million input tokens, with outputs free. Its API also supports evaluating multiple questions against the same input state in parallel. Those features make frequent routing and filtering decisions economically interesting. They still leave accuracy and observed latency to be measured on the intended workload. [Model documentation](https://docs.typesafe.ai/models)
+At the time of the experiment, Jev cost $0.042 per million input tokens, with outputs free. Its API also supports evaluating multiple questions against the same input state in parallel. Those features make frequent routing and filtering decisions economically interesting, provided accuracy and latency hold up on the intended workload. [3](#ref-3)
 
-For this test, I chose healthcare and life sciences, or HLS. The job was sentence-level literature screening: identify text that describes a suspected drug-related adverse effect, then decide which sentences should receive review first.
+For this test, I chose healthcare and life sciences, or HLS. The job was sentence-level literature screening: identify sentences describing suspected adverse drug events (ADEs), then decide which should receive review first.
 
 That gives the model's mistakes a concrete interpretation. A false positive adds reading work. A false negative can send a relevant passage to a lower-priority queue. Throughout this article, “positive” means a positive corpus label. The experiment measures agreement with those annotations, not the probability that a patient will experience an adverse effect.
 
 ## Give the model a decision it can return
 
-A generative model could answer this task with constrained JSON. Jev exposes the distribution over the allowed choices directly. The application defines the alternatives and their meaning, then receives probabilities it can store, rank, and threshold.
+The application defines its alternatives in natural language. Jev returns probabilities over those choices, ready to store, rank, or threshold.
 
 ![Source text and task criteria enter Jev, which returns two class probabilities.](diagrams/01-decision-interface.svg)
 
@@ -46,7 +44,7 @@ The API offers three primitives:
 | Noul | A yes/no question | Probability of yes | Check whether a drug is explicitly named |
 | Score | Ordered descriptive levels | Expected level, distribution, confidence | Rate a passage's relevance to a literature query |
 
-The proposed Noul and Score uses were not tested here. [Choice documentation](https://docs.typesafe.ai/primitives/choice), [Noul documentation](https://docs.typesafe.ai/primitives/noul), [Score documentation](https://docs.typesafe.ai/primitives/score)
+The proposed Noul and Score uses were not tested here. [5](#ref-5)
 
 I used Choice for its two class probabilities and separate confidence field. This was the original question:
 
@@ -73,15 +71,15 @@ question = {
 }
 ```
 
-The sentence goes in `state`, and this question goes under `questions["ade"]` in a request to `POST https://api.typesafe.ai/v1/systemone`. Labels and row identifiers stay local. [HTTP API reference](https://docs.typesafe.ai/api)
+The sentence goes in `state`, and this question goes under `questions["ade"]` in a request to `POST https://api.typesafe.ai/v1/systemone`. Labels and row identifiers stay local. [4](#ref-4)
 
-The first run requested `jev-latest`; every logged response returned `jev-1.13.0`. The follow-up pinned that version explicitly. The task definition asks about what a sentence reports, including suspected relationships. Establishing drug causality would require a different evaluation and substantially more evidence.
+The first run requested `jev-latest`; every logged response returned `jev-1.13.0`. The follow-up pinned that version explicitly. This question classifies what a sentence reports; it does not establish drug causality.
 
 ## A probability needs an outcome to check against
 
 Let `p` be Jev's probability of `ade_related`. For ordinary classification, I predict positive when `p >= 0.5`. For review routing, I can choose another cutoff using the same saved probabilities.
 
-The API's `confidence` field has a narrower meaning than its name might suggest. TypeSafe describes it as a statistic derived from the distribution over answers. Concentrating probability on one option raises confidence. That field supplies no independent evidence that the option is correct. [Confidence documentation](https://docs.typesafe.ai/confidence)
+The API's `confidence` field has a narrower meaning than its name might suggest. TypeSafe describes it as a statistic derived from the distribution over answers. Concentrating probability on one option raises confidence. That field supplies no independent evidence that the option is correct. [6](#ref-6)
 
 Calibration requires many predictions and their outcomes. Among enough sentences assigned an ADE probability near 0.8, roughly 80% should carry a positive label if those probabilities are calibrated for this task.
 
@@ -89,7 +87,7 @@ Calibration requires many predictions and their outcomes. Among enough sentences
 
 *Figure 2. Confidence summarizes a prediction. Calibration compares predictions with observed labels. These numbers are explanatory examples, not measurements from the experiment.*
 
-I used Brier score to measure probability error:
+I used Brier score to measure probability error. [12](#ref-12), [14](#ref-14)
 
 ```text
 Brier = mean((p - y)²), where y is 0 or 1
@@ -97,13 +95,11 @@ Brier = mean((p - y)²), where y is 0 or 1
 
 For a negative sentence, assigning 0.9 incurs squared error 0.81; assigning 0.6 incurs 0.36. Confident mistakes receive a larger penalty. Brier also reflects discrimination and class prevalence, so it is broader than a pure calibration measure.
 
-This became important in the second experiment: it gave the optimizer useful feedback even when changing a probability did not change the predicted class.
-
-TypeSafe describes Jev's training approach as Reinforcement Learning for Calibrated Decisions, or RLCD. The public material explains the aim at a high level, without enough detail to reconstruct the training procedure independently. Brier is our evaluation metric; I am not claiming it is Jev's training loss. [TypeSafe's machine-learning primer](https://docs.typesafe.ai/introduction/machine-learning-primer)
+TypeSafe describes Jev's training approach as Reinforcement Learning for Calibrated Decisions, or RLCD. The public material explains the aim at a high level, without enough detail to reconstruct the training procedure independently. Brier is our evaluation metric; I am not claiming it is Jev's training loss. [7](#ref-7)
 
 ## Experiment 1: start with public data and a simple baseline
 
-I used the classification configuration of [ADE Corpus V2 on Hugging Face](https://huggingface.co/datasets/ade-benchmark-corpus/ade_corpus_v2). The original research describes an annotated corpus drawn from medical case reports. [Corpus paper](https://doi.org/10.1016/j.jbi.2012.04.008)
+I used the classification configuration of ADE Corpus V2 on Hugging Face. [11](#ref-11) The original research describes an annotated corpus drawn from medical case reports. [10](#ref-10)
 
 The downloaded table contained 23,516 rows. Normalizing case and whitespace and removing duplicate sentences left 20,895 unique examples. No normalized duplicate group had conflicting labels. Deduplicating before splitting prevents identical sentences from appearing in both training and evaluation.
 
@@ -139,13 +135,11 @@ Recall asks how many labeled positives the classifier finds. Precision asks how 
 
 *Table 1. Experiment 1, identical 300 test sentences. The tuned baseline uses threshold 0.31; the default baseline and Jev use 0.5.*
 
-![Classifier metrics and test confusion matrices for Experiment 1.](figures/04-test-performance.svg)
+![Precision, recall, and F1 for the classifiers in Experiment 1.](figures/04-test-performance.svg)
 
 *Figure 4. Selecting the baseline threshold on validation substantially changes its operating point. In the web edition, switch metrics and hover or focus a bar to inspect the underlying counts.*
 
-The default baseline missed 39 positive sentences. Threshold selection reduced that to 20, with 29 false positives. Jev missed 3 and produced 51 false positives.
-
-Relative to the tuned baseline, Jev found 17 additional positives and flagged 22 additional negatives. Its F1 was higher, its accuracy lower. For screening candidate adverse-event passages, that trade-off is worth examining through the actual review policy.
+The default baseline missed 39 positive sentences; threshold selection reduced that to 20. Jev missed 3. Relative to the tuned baseline, it found 17 additional positives and flagged 22 additional negatives. Whether that exchange helps a screening workflow depends on the review policy.
 
 The sample remains small. Jev's 95.1% recall has an approximate 95% Wilson interval of 86.5% to 98.3%, assuming independent positive sentences. That interval already permits considerably lower recall, before considering possible correlations between sentences from the same article.
 
@@ -166,11 +160,11 @@ The probability metrics told a less favorable story for Jev.
 
 Jev returned `confidence = 1.0` on 150 test sentences. Ten disagreed with their labels. At `confidence >= 0.9`, there were 30 disagreements among 233 sentences.
 
-The ADE probability itself also reached extremes. Of 61 sentences assigned exactly `P(ADE) = 1.0`, twelve had negative labels. An incorrect probability of one has infinite theoretical log loss; scikit-learn clips probabilities to numerical limits, producing the finite value above. We measured the API's returned values and cannot infer whether internal probabilities were rounded.
+The ADE probability itself also reached extremes. Of 61 sentences assigned exactly `P(ADE) = 1.0`, twelve had negative labels. An incorrect probability of one has infinite theoretical log loss; scikit-learn clips probabilities to numerical limits, producing the finite value above. [14](#ref-14) We measured the API's returned values and cannot infer whether internal probabilities were rounded.
 
-The 10-bin expected calibration error, or ECE, summarizes gaps between mean probability and observed positive rate within bins. With 300 examples, it depends on how those examples populate the bins. Neither that number nor the reliability plot supports calling this prompt well calibrated for the corpus.
+The 10-bin expected calibration error, or ECE, summarizes gaps between mean probability and observed positive rate within bins. [13](#ref-13) With 300 examples, sparse bins make that estimate uncertain. Both the score and the reliability plot indicate substantial calibration error for this prompt.
 
-All 505 logged responses nevertheless passed our schema and probability checks, including the 54 test disagreements. TypeSafe's zero-hallucination framing concerns guaranteed schema matching. Selecting an incorrect member of a valid answer set remains possible. [Launch discussion of schema guarantees](https://typesafe.ai/blog/introducing-system-one-models-and-jev)
+This explains the apparent contradiction in the opening results. TypeSafe's zero-hallucination framing concerns guaranteed schema matching; a valid answer can still disagree with the evidence or label. [1](#ref-1)
 
 Inspecting errors suggested that the question definition deserved attention. One missed positive described a treatment reducing vomiting caused by another drug. Another described symptoms disappearing after drug withdrawal. Such sentences require following the direction of the relationship, including evidence expressed indirectly.
 
@@ -179,8 +173,6 @@ Some negative-labeled sentences raised annotation questions. A title linking a n
 I kept every supplied label unchanged. These observations suggested hypotheses about the prompt; the API returned no reasoning trace that could establish why Jev made a particular prediction.
 
 ## First, translate the scores into reading work
-
-Before changing the prompt, I wanted to know what the original probabilities would do to a queue.
 
 The policy was simple: send a sentence to lower priority when `P(ADE) <= t`; otherwise keep it in review. Lower priority means deferred review or audit, not discarded literature.
 
@@ -197,17 +189,11 @@ For each model, I searched cutoffs from 0 to 0.4 in steps of 0.005 and chose the
 
 *Figure 6. Jev leaves 29 fewer sentences in the main queue and retains three more positives than the baseline. The validation target does not guarantee the same retention on future data.*
 
-
-
-*Interactive companion. Move the cutoff over Experiment 1's saved predictions. The starting values reproduce Table 3. Other settings explore these test outcomes; they do not validate a new threshold.*
-
-Jev retained all 41 validation positives at cutoff 0.4, then deferred three positives on test. The baseline also met the validation target but retained only 90.2% on test. These differences show how uncertain a threshold can be when selected from a small number of positives.
-
-The original result was promising for prioritization. Its confident errors also gave the follow-up a precise target: could feedback help Jev interpret the annotation task more consistently?
+Jev retained all 41 validation positives at cutoff 0.4, then deferred three positives on test. Meeting the validation target did not guarantee future retention for either model. The confident errors suggested a concrete next experiment: revise the task definition against labeled feedback.
 
 ## Experiment 2: let GEPA revise the question
 
-GEPA, short for Genetic-Pareto Reflective Prompt Evolution, searches over prompts using evaluation feedback and proposed revisions. A generative model can inspect examples and failures, suggest a change, and let subsequent evaluations decide whether the change helps. Its candidate-selection process can retain prompts that perform well on different examples, providing multiple useful starting points for further revisions. [GEPA paper](https://arxiv.org/abs/2507.19457), [GEPA implementation](https://github.com/gepa-ai/gepa)
+GEPA (Genetic-Pareto), introduced by Agrawal and colleagues, is a prompt optimizer that learns from evaluation feedback. A generative model inspects examples and failures, proposes revisions, and lets subsequent evaluations determine whether they help. Pareto selection can retain candidates that perform well on different examples, preserving several useful starting points. [8](#ref-8), [9](#ref-9)
 
 Jev fits inside this process as the classifier. GEPA changes the instructions and the two class descriptions; Jev evaluates the resulting question on labeled sentences. The output labels, Choice schema, and `jev-1.13.0` weights stay fixed.
 
@@ -215,11 +201,9 @@ Jev fits inside this process as the classifier. GEPA changes the instructions an
 
 *Figure 7. The assistant proposes wording from training feedback. GEPA manages evaluation and candidate selection. Validation chooses the prompt before the fresh test is opened.*
 
-That distinction matters for the integration. Jev supplies bounded decisions, so it cannot write its own revised instruction text. A separate generative component has to propose those revisions.
+I connected `gepa==0.1.4` through a custom adapter. The package handled minibatch sampling, candidate acceptance, Pareto parent selection, and validation scoring. Jev cannot generate revised instructions, so the conversation assistant supplied four proposals through a custom-proposer callback. This was an assistant-driven pilot, without an independently versioned reflection-model API; that model's version and cost are unavailable. The code also includes a callable-proposer alternative for automated reflection.
 
-I used the actual `gepa` Python package, version 0.1.4, through a custom adapter. GEPA handled minibatch sampling, candidate acceptance, Pareto parent selection, and validation scoring. The conversation assistant supplied four reflection proposals through a custom-proposer callback. This was an assistant-driven GEPA pilot; it did not use an independently versioned reflection-model API. The reflection model's version and cost are unavailable. A callable-proposer alternative is included for automating that part with a configured generative model.
-
-The feedback available to the proposer contained a training sentence, its corpus label, Jev's ADE probability, its confidence, and its squared error. There was no Jev rationale to inspect. Reflection therefore meant comparing predictions with evidence and labels, then revising the task description.
+Each feedback record contained a training sentence, its label, Jev's ADE probability and confidence, and the squared error. The proposer worked from those observations, without a Jev reasoning trace.
 
 ## Give the optimizer fresh data and a specific objective
 
@@ -241,7 +225,7 @@ The optimizer maximized this per-example score:
 score = 1.0 - (p_ade - label) ** 2
 ```
 
-Averaging it is equivalent to minimizing Brier score. If a negative sentence stays below the 0.5 classification threshold while its probability moves from 0.4 to 0.1, its hard prediction is unchanged, but its contribution to Brier improves from 0.16 to 0.01. That gives the search a more detailed signal than counting correct labels alone.
+Averaging this score is equivalent to minimizing Brier. For a negative sentence, moving the probability from 0.4 to 0.1 leaves the class prediction unchanged but reduces squared error from 0.16 to 0.01. The search can therefore reward improvements that a count of correct labels would miss.
 
 The search allowed four proposals, 20 reflection examples per round, and at most 700 optimization metric calls. GEPA required strict improvement on the sampled minibatch before full validation. Crossover was disabled. The completed search used 660 evaluations.
 
@@ -273,13 +257,11 @@ Later proposals tested wording around monitoring advice and vague references suc
 
 <!-- explorer:prompts -->
 
-These revisions refine the annotation decision boundary. They are not new findings about drug safety. A prompt can become better at matching a corpus convention even where that convention needs review.
-
-The final text was also longer: 2,020 characters across its three components, compared with 503 originally. Mean input usage on the paired test increased from 424.2 to 694.2 tokens per request, about 64%. The measured benefit has a prompt-length cost.
+The final text grew from 503 to 2,020 characters across its three components. Mean input usage on the paired test rose from 424.2 to 694.2 tokens per request, about 64%.
 
 ## The fresh test improved, with a specific trade-off
 
-The valid comparison is between the original and selected prompts on this new test set. The original prompt's F1 here was 69.1%, slightly different from its 68.2% on the first test set. Comparing 68.2% directly with the optimized result would mix a prompt change with a data change.
+On the fresh test, the original prompt's F1 was 69.1%, compared with 68.2% in Experiment 1. The comparison below uses the two prompts on the same new sentences, so it does not confound a prompt change with a data change.
 
 | Metric | Original Jev | GEPA-selected Jev |
 | --- | ---: | ---: |
@@ -307,15 +289,11 @@ The confusion matrices explain where the gain came from.
 
 *Figure 9. False positives fall from 47 to 22. False negatives rise from 4 to 6. Counts are disagreements with the unchanged corpus labels.*
 
-The revised prompt corrected 28 original errors and introduced five new ones, leaving 23 fewer errors overall. In aggregate, it removed 25 false positives at the cost of two additional false negatives.
-
-That is a useful result for a small prompt search. It also brings us back to the reason for using medical literature: different errors carry different consequences.
+The revised prompt corrected 28 errors and introduced five, leaving 23 fewer errors overall. Most of the gain came from reducing false positives. The additional false negatives matter when these predictions determine what gets read.
 
 ## The review queue reveals what F1 leaves out
 
-I applied the same validation-based routing policy to both prompts: select the largest cutoff from 0 to 0.4 retaining at least 95% of validation positives. Both selected 0.4 and retained 20 of 21 validation positives.
-
-On the fresh test, the queues looked like this:
+Under the same validation-based routing policy, both prompts selected cutoff 0.4 and retained 20 of 21 validation positives. On the fresh test:
 
 | Prompt | Cutoff | In review | Lower priority | Positive cases deferred | Positive retention |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -328,25 +306,21 @@ On the fresh test, the queues looked like this:
 
 The optimized prompt removed another 28 sentences from the immediate review queue. Two additional positive sentences moved to lower priority with them. Neither prompt achieved 95% retention on the fresh test, despite meeting that target on validation.
 
-Brier rewards probability accuracy across examples. F1 balances precision and recall at one classification threshold. Our screening policy asks a different question: how much work can be deferred while retaining enough relevant passages?
+We optimized average probability error, but the screening policy needs to limit missed positives. The smaller queue is useful only if its retention meets that requirement. Higher F1 does not establish that it does.
 
-The experiment supports a narrower conclusion than “GEPA makes the workflow better.” It improved probability error and F1 for this prompt on this corpus. Whether the reduced review burden justifies the additional deferred positives depends on the workflow's requirements.
-
-A next search should make those requirements explicit in candidate selection, with a sufficiently large validation set to estimate positive retention. Twenty-one validation positives give a very coarse signal: deferring one still meets the 95% target; deferring two fails it. A final article-separated test would then check whether the selected policy generalizes.
+The next search should select candidates against a review objective, using more validation positives. With only 21, deferring one still meets the 95% target; deferring two fails it. That is a coarse signal for a consequential cutoff.
 
 ## Cheap decisions still have a measured latency
 
-The first experiment's 505 logged requests consumed 213,832 input tokens. At the documented rate, the estimated input charge was $0.00898. One interrupted in-flight request may have incurred an additional unlogged charge. These are usage-based estimates, not invoice totals. [Pricing documentation](https://docs.typesafe.ai/models)
+The first experiment's 505 logged requests consumed 213,832 input tokens. At the documented rate, the estimated input charge was $0.00898. One interrupted in-flight request may have incurred an additional unlogged charge. These are usage-based estimates, not invoice totals. [3](#ref-3)
 
 ![Client-observed request latency in the two experiments.](figures/07-latency-cost.svg)
 
 *Figure 10. Client-observed request latency. Explore the 300 first-test requests or all 1,257 preserved requests from the GEPA study. The runs used different prompts and concurrency limits, so their timing is not a controlled comparison.*
 
-The serial smoke requests had median latency 12.35 seconds. The first test had median 14.69 seconds and a 95th percentile of 15.62 seconds. TypeSafe reported 70–500 ms on its launch workloads; our client-observed measurements did not reproduce that range. We cannot separate model inference from transport, queueing, or other service effects in these records. [Published launch measurements](https://typesafe.ai/blog/introducing-system-one-models-and-jev)
+The serial smoke requests had median latency 12.35 seconds. The first test had median 14.69 seconds and a 95th percentile of 15.62 seconds. TypeSafe reported 70–500 ms on its launch workloads; our client-observed measurements did not reproduce that range. We cannot separate model inference from transport, queueing, or other service effects in these records. [1](#ref-1)
 
-The GEPA search and paired test completed 1,260 successful Jev evaluations: 660 during optimization and 600 on the final test. Full response records survive for 1,257. The initial append journal omitted ten records; seven were recovered from saved GEPA outputs and test snapshots. Three optimization payloads remain unavailable.
-
-All 600 final test responses and both complete validation sets used for the original-versus-selected routing comparison are preserved. Those reported results can be recomputed. The three missing payloads limit complete per-call auditing and usage accounting for the search. No calls were repeated to repair the logs; the runner now also writes atomic batch snapshots.
+The GEPA study completed 1,260 successful Jev evaluations: 660 during optimization and 600 on test. Full response records survive for 1,257; three optimization payloads remain unavailable. All final test responses and both validation sets used for the routing comparison are complete, so those results can be recomputed. The missing payloads limit per-call auditing and usage accounting. No calls were repeated to repair the logs; the runner now also writes atomic batch snapshots.
 
 Preserved usage totals 730,168 input tokens, an estimated $0.03067. That is a lower bound excluding the three missing usage records and reflection cost. Preserved request latency had a median of 19.59 seconds and a 95th percentile of 24.37 seconds. The second run allowed 24 concurrent requests and used longer candidate prompts, so the timing difference between runs cannot be attributed to GEPA alone.
 
@@ -354,32 +328,68 @@ The recorded Jev token charges were small. A deployment decision would still nee
 
 ## What I would carry into a real literature pipeline
 
-Jev makes a narrow decision easy to express and easy to consume in code. GEPA gives us a systematic way to revise that decision's instructions against labeled feedback. Together, they produced a measurable gain without changing Jev's weights.
-
 For a literature system, I would keep each probability attached to its source passage and preserve the exact model version, prompt, cutoff, and later human correction. A review decision should remain traceable to the evidence and rule that produced it.
 
 ![Proposed literature workflow with explicit review and lower-priority branches.](diagrams/05-literature-workflow.svg)
 
 *Figure 11. A proposed extension beyond the tested sentence classifier. Retrieval, human review, and downstream synthesis need their own evaluation. The lower-priority branch requires an audit policy.*
 
-A richer version could ask separately whether a drug is named, harm is described, and a relationship is expressed. That might expose useful intermediate signals. It would require labels and evaluation for the composed decision; evaluating questions in parallel does not make their events statistically independent.
+A richer version could ask separately whether a drug is named, harm is described, and a relationship is expressed. Those intermediate signals would need their own labels and an evaluation of the composed decision. Parallel evaluation does not make the events statistically independent.
 
 There are substantial boundaries to this pilot. The classification table lacks article identifiers, so sentence deduplication cannot prevent different sentences from one report crossing partitions. Jev's possible pretraining exposure is unknown. GEPA may learn corpus conventions whose clinical validity has not been independently adjudicated. We tested one task, one returned model version, and one small optimization search.
 
-The dataset card lists its license as unknown; the companion package does not redistribute the source corpus. A stronger evaluation would use independently annotated, recent articles, grouped by source document, with enough positive cases to estimate the acceptable miss rate. [Dataset card](https://huggingface.co/datasets/ade-benchmark-corpus/ade_corpus_v2/blob/main/README.md)
+The dataset card lists its license as unknown; the companion package does not redistribute the source corpus. A stronger evaluation would use independently annotated, recent articles, grouped by source document, with enough positive cases to estimate the acceptable miss rate. [11](#ref-11)
 
-My next comparison would include a stronger supervised text model and a generative model, using the same evidence, evaluation rules, and timing boundaries. I would select prompts against the review objective before looking at the final test.
+I would then compare a stronger supervised text model and a generative model under the same evaluation rules and timing boundaries.
 
 The first experiment showed that valid outputs can still contain confident mistakes. The second showed that clearer instructions can correct many of them. The two extra missed positives are the part I would keep beside the improved F1: they tell us exactly what the next experiment needs to resolve.
 
 ## Reproduce both experiments
 
-The companion package includes the complete article, two executed notebooks, plotting and analysis code, saved predictions, split manifests, and the original and selected prompts. The web edition adds a dataset browser, exact prompt comparisons, error inspection, calibration controls, and review-cutoff explorers for both experiments. The downloadable HTML embeds the figures and recorded results. Original source sentences load from Hugging Face on demand and are checked against their saved identifiers.
+The [companion repository](https://github.com/Praneeth16/Praneeth16.github.io/tree/main/study) contains two executed notebooks, the adapter, plotting and analysis code, saved predictions, split manifests, and all five candidate prompts. The explorers on this page use those recorded outputs; source sentences load from Hugging Face and are checked against the saved identifiers. [15](#ref-15)
 
-Both studies use `Ade_corpus_v2_classification` at revision `4ba01c71687dd7c996597042449448ea312126cf`. The downloaded source file's SHA-256 is `599e7777b35170c40a7d4cdf5cbb1941fad7d6565f1bd7182b2bf271d30379f5`. The first split uses seed 42; the GEPA split and paired bootstrap use 20260919. Model responses identify `jev-1.13.0`, and the optimization package is `gepa==0.1.4`.
+Start with [the original experiment](https://github.com/Praneeth16/Praneeth16.github.io/blob/main/study/original/Jev_HLS_ADE_Experiment.ipynb) or [the GEPA follow-up](https://github.com/Praneeth16/Praneeth16.github.io/blob/main/study/gepa/Jev_GEPA_Experiment.ipynb). The GEPA notebook defaults to replaying saved outputs. The original retains its live-run flags, so inspect them before executing it. Offline analysis makes no TypeSafe calls; live runs take credentials through hidden input or a secret store, and automated reflection requires a configured generative-model callable.
 
-`Jev_HLS_ADE_Experiment.ipynb` records the original experiment. `Jev_GEPA_Experiment.ipynb` contains the executed follow-up analysis and defaults to replaying saved outputs. The original notebook preserves its live-run flags, so read the package instructions before rerunning it. Offline analysis needs no TypeSafe calls. Live execution requires a key supplied through a secret store or hidden input; automated reflection also requires a configured generative-model callable. No credentials are included.
+Both studies use the pinned dataset revision in reference 11 and report `jev-1.13.0`. The first split uses seed 42; the GEPA split and paired bootstrap use 20260919. Package versions, the source-file checksum, and record-integrity details are preserved alongside the code.
 
-The five explanatory diagrams were created through the official [Excalidraw MCP server](https://github.com/excalidraw/excalidraw-mcp) and are available as editable Excalidraw files. Numerical plots use recorded results. The typography uses Spectral, Schibsted Grotesk, and Fragment Mono, with a restrained palette and evidence viewers informed by [Jasper Lu's search-agent article](https://jasperlu.com/blog/training-search-agents-grpo/).
+## References
 
-Early discussion and integrations: [Sydney Runkle](https://x.com/sydneyrunkle/status/2100754364545761643), [Shann Holmberg](https://x.com/shannholmberg/status/2100979911825789393), and [Akshay Pachaar](https://x.com/akshay_pachaar/status/2101037514945597645).
+1. <span id="ref-1"></span>TypeSafe AI. (2026, September 15). [Introducing System One Models and Jev](https://typesafe.ai/blog/introducing-system-one-models-and-jev). Launch announcement and evaluation methodology.
+
+2. <span id="ref-2"></span>Runkle, S., & Lovell, H. (2026, September 17). [Building a Harness with Jev](https://www.langchain.com/blog/building-a-harness-with-jev). LangChain.
+
+3. <span id="ref-3"></span>TypeSafe AI. [Models](https://docs.typesafe.ai/models). Jev model versions, pricing, and request limits. Accessed September 20, 2026.
+
+4. <span id="ref-4"></span>TypeSafe AI. [API reference](https://docs.typesafe.ai/api). HTTP request and response schemas. Accessed September 20, 2026.
+
+5. <span id="ref-5"></span>TypeSafe AI. Primitive specifications: [Choice](https://docs.typesafe.ai/primitives/choice), [Noul](https://docs.typesafe.ai/primitives/noul), and [Score](https://docs.typesafe.ai/primitives/score). Accessed September 20, 2026.
+
+6. <span id="ref-6"></span>TypeSafe AI. [Confidence](https://docs.typesafe.ai/confidence). Definition and interpretation of the returned confidence statistic. Accessed September 20, 2026.
+
+7. <span id="ref-7"></span>TypeSafe AI. [AI primer](https://docs.typesafe.ai/introduction/machine-learning-primer). Overview of decision models and RLCD. Accessed September 20, 2026.
+
+8. <span id="ref-8"></span>Agrawal, L. A., et al. (2025; revised 2026). [GEPA: Reflective Prompt Evolution Can Outperform Reinforcement Learning](https://arxiv.org/abs/2507.19457). arXiv:2507.19457, version 2; accepted to ICLR 2026.
+
+9. <span id="ref-9"></span>GEPA contributors. [GEPA](https://github.com/gepa-ai/gepa). Python implementation; version 0.1.4 used in this study.
+
+10. <span id="ref-10"></span>Gurulingappa, H., Rajput, A. M., Roberts, A., Fluck, J., Hofmann-Apitius, M., & Toldo, L. (2012). [Development of a benchmark corpus to support the automatic extraction of drug-related adverse effects from medical case reports](https://doi.org/10.1016/j.jbi.2012.04.008). *Journal of Biomedical Informatics, 45*(5), 885–892.
+
+11. <span id="ref-11"></span>ADE benchmark corpus maintainers. [ADE Corpus V2](https://huggingface.co/datasets/ade-benchmark-corpus/ade_corpus_v2/tree/4ba01c71687dd7c996597042449448ea312126cf). Hugging Face dataset, configuration `Ade_corpus_v2_classification`, pinned revision `4ba01c7`. [Dataset card](https://huggingface.co/datasets/ade-benchmark-corpus/ade_corpus_v2/blob/4ba01c71687dd7c996597042449448ea312126cf/README.md).
+
+12. <span id="ref-12"></span>Brier, G. W. (1950). [Verification of Forecasts Expressed in Terms of Probability](https://journals.ametsoc.org/abstract/journals/mwre/78/1/1520-0493_1950_078_0001_vofeit_2_0_co_2.xml). *Monthly Weather Review, 78*(1), 1–3.
+
+13. <span id="ref-13"></span>Guo, C., Pleiss, G., Sun, Y., & Weinberger, K. Q. (2017). [On Calibration of Modern Neural Networks](https://proceedings.mlr.press/v70/guo17a.html). *Proceedings of ICML*, PMLR 70, 1321–1330. Background on reliability diagrams and expected calibration error.
+
+14. <span id="ref-14"></span>scikit-learn developers. Metric documentation: [Brier score loss](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.brier_score_loss.html) and [log loss](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.log_loss.html). Definitions and numerical treatment of probability endpoints.
+
+15. <span id="ref-15"></span>Paikray, P. (2026). [Jev + GEPA: the recorded studies](https://github.com/Praneeth16/Praneeth16.github.io/tree/b746a0f0d1908adc6108e688208251e1e3b763df/study). Executed notebooks, predictions, prompt candidates, and evaluation code underlying this article.
+
+16. <span id="ref-16"></span>Excalidraw contributors. [Excalidraw MCP](https://github.com/excalidraw/excalidraw-mcp/tree/157aa23ceb1976008aadc89eb05e3444060f09d6), version 0.3.2. Tool used for the conceptual diagrams.
+
+17. <span id="ref-17"></span>Lu, J. [Training Search Agents with GRPO](https://jasperlu.com/blog/training-search-agents-grpo/). Visual reference for typography, chart styling, and interactive exploration.
+
+18. <span id="ref-18"></span>Runkle, S. [Jev integration discussion](https://x.com/sydneyrunkle/status/2100754364545761643) [X post]. Launch discussion; the implementation article is listed in reference 2.
+
+19. <span id="ref-19"></span>Holmberg, S. [Jev discussion](https://x.com/shannholmberg/status/2100979911825789393) [X post]. Launch discussion.
+
+20. <span id="ref-20"></span>Pachaar, A. [Jev discussion](https://x.com/akshay_pachaar/status/2101037514945597645) [X post]. Further reading on the launch.
