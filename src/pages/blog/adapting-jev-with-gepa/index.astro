@@ -4,14 +4,14 @@ import body from '../../../generated/article.html?raw';
 import contents from '../../../generated/contents.html?raw';
 import metadata from '../../../generated/article-meta.json';
 ---
-<BaseLayout title="Adapting Jev to Your Domain with GEPA" description="A medical-literature experiment in prompt optimization, probability calibration, and the cost of missing a relevant sentence." article>
+<BaseLayout title="Adapting Jev to Your Domain with GEPA" description={metadata.subtitle} article>
   <article>
     <header class="article-header container">
       <h1>Adapting Jev to Your Domain with GEPA</h1>
-      <p class="article-deck">A medical-literature experiment in prompt optimization, probability calibration, and the cost of missing a relevant sentence.</p>
+      <p class="article-deck">{metadata.subtitle}</p>
       <div class="article-meta"><span>Praneeth Paikray</span><time datetime="2026-09-20">20 September 2026</time><span>{metadata.readingMinutes} min read</span></div>
       <div class="article-links"><a href="https://github.com/Praneeth16/Praneeth16.github.io/tree/main/study">Notebooks &amp; code ↗</a><a href="#experiment-1-start-with-public-data-and-a-simple-baseline">Explore the data</a></div>
-      <details class="contents"><summary>Contents</summary><div set:html={contents}/></details>
+      <nav class="contents" aria-labelledby="contents-heading"><p class="contents-label" id="contents-heading">Contents</p><div set:html={contents}/></nav>
     </header>
     <div class="prose" set:html={body}/>
   </article>

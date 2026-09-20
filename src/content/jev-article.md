@@ -1,6 +1,6 @@
 # Adapting Jev to Your Domain with GEPA
 
-*A medical-literature experiment in prompt optimization, probability calibration, and the cost of missing a relevant sentence.*
+*A practical guide to Jev and domain adaptation with GEPA, from defining the task to measuring results on medical literature.*
 
 Praneeth Paikray · September 20, 2026 · Experiments run September 19
 
