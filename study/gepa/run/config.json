@@ -1,0 +1,16 @@
+{
+  "model": "jev-1.13.0",
+  "seed": 20260919,
+  "train_n": 100,
+  "validation_n": 100,
+  "test_n": 300,
+  "proposals": 4,
+  "reflection_minibatch": 20,
+  "max_metric_calls": 700,
+  "max_http_calls": 1400,
+  "workers": 24,
+  "primary_metric": "brier",
+  "classification_cutoff": 0.5,
+  "reflection_provider": "conversation assistant via custom proposer; model version unavailable",
+  "gepa_version": "0.1.4"
+}

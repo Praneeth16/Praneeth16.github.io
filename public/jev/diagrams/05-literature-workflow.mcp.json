@@ -1,0 +1,343 @@
+[
+  {
+    "type": "cameraUpdate",
+    "width": 1200,
+    "height": 900,
+    "x": -100,
+    "y": -120
+  },
+  {
+    "type": "text",
+    "id": "05-literature-workflow-1",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260921,
+    "x": 35,
+    "y": 20,
+    "text": "A probability helps prioritize reading. It does not finish the review.",
+    "fontSize": 24,
+    "fontFamily": 1
+  },
+  {
+    "type": "rectangle",
+    "id": "05-literature-workflow-2",
+    "roughness": 0.5,
+    "strokeColor": "#557f91",
+    "strokeWidth": 1.5,
+    "seed": 20260922,
+    "x": 35,
+    "y": 165,
+    "width": 240,
+    "height": 95,
+    "backgroundColor": "#557f91",
+    "fillStyle": "solid",
+    "roundness": {
+      "type": 3
+    },
+    "label": {
+      "text": "Retrieved passage",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "strokeColor": "#ffffff"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "05-literature-workflow-3",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260923,
+    "x": 287,
+    "y": 212,
+    "width": 90,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        90,
+        0
+      ]
+    ],
+    "endArrowhead": "arrow",
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "rectangle",
+    "id": "05-literature-workflow-4",
+    "roughness": 0.5,
+    "strokeColor": "#80658f",
+    "strokeWidth": 1.5,
+    "seed": 20260924,
+    "x": 390,
+    "y": 165,
+    "width": 210,
+    "height": 95,
+    "backgroundColor": "#80658f",
+    "fillStyle": "solid",
+    "roundness": {
+      "type": 3
+    },
+    "label": {
+      "text": "Jev + criteria",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "strokeColor": "#ffffff"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "05-literature-workflow-5",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260925,
+    "x": 611,
+    "y": 212,
+    "width": 110,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        110,
+        0
+      ]
+    ],
+    "endArrowhead": "arrow",
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "rectangle",
+    "id": "05-literature-workflow-6",
+    "roughness": 0.5,
+    "strokeColor": "#4b7864",
+    "strokeWidth": 1.5,
+    "seed": 20260926,
+    "x": 735,
+    "y": 165,
+    "width": 210,
+    "height": 95,
+    "backgroundColor": "#4b7864",
+    "fillStyle": "solid",
+    "roundness": {
+      "type": 3
+    },
+    "label": {
+      "text": "Review policy",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "strokeColor": "#ffffff"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "05-literature-workflow-7",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260927,
+    "x": 840,
+    "y": 273,
+    "width": 0,
+    "height": 86,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        86
+      ]
+    ],
+    "endArrowhead": "arrow",
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "rectangle",
+    "id": "05-literature-workflow-8",
+    "roughness": 0.5,
+    "strokeColor": "#557f91",
+    "strokeWidth": 1.5,
+    "seed": 20260928,
+    "x": 645,
+    "y": 379,
+    "width": 300,
+    "height": 80,
+    "backgroundColor": "#557f91",
+    "fillStyle": "solid",
+    "roundness": {
+      "type": 3
+    },
+    "label": {
+      "text": "Review queue",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "strokeColor": "#ffffff"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "05-literature-workflow-9",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260929,
+    "x": 732,
+    "y": 223,
+    "width": 195,
+    "height": 148,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -47,
+        0
+      ],
+      [
+        -47,
+        148
+      ],
+      [
+        -195,
+        148
+      ]
+    ],
+    "endArrowhead": "arrow",
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "05-literature-workflow-10",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260930,
+    "x": 565,
+    "y": 286,
+    "text": "p \u2264 cutoff",
+    "fontSize": 17,
+    "fontFamily": 2
+  },
+  {
+    "type": "text",
+    "id": "05-literature-workflow-11",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260931,
+    "x": 848,
+    "y": 310,
+    "text": "p > cutoff",
+    "fontSize": 17,
+    "fontFamily": 2
+  },
+  {
+    "type": "rectangle",
+    "id": "05-literature-workflow-12",
+    "roughness": 0.5,
+    "strokeColor": "#b45b48",
+    "strokeWidth": 1.5,
+    "seed": 20260932,
+    "x": 185,
+    "y": 331,
+    "width": 340,
+    "height": 90,
+    "backgroundColor": "#b45b48",
+    "fillStyle": "solid",
+    "roundness": {
+      "type": 3
+    },
+    "label": {
+      "text": "Lower priority + audit",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "strokeColor": "#ffffff"
+    }
+  },
+  {
+    "type": "text",
+    "id": "05-literature-workflow-13",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260933,
+    "x": 155,
+    "y": 466,
+    "text": "Deferred, with a source ID.\nRelevant cases may be here too.",
+    "fontSize": 21,
+    "fontFamily": 1
+  },
+  {
+    "type": "arrow",
+    "id": "05-literature-workflow-14",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260934,
+    "x": 537,
+    "y": 384,
+    "width": 94,
+    "height": 35,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        94,
+        35
+      ]
+    ],
+    "endArrowhead": "arrow",
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "05-literature-workflow-15",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260935,
+    "x": 543,
+    "y": 442,
+    "text": "Audit",
+    "fontSize": 18,
+    "fontFamily": 1
+  },
+  {
+    "type": "text",
+    "id": "05-literature-workflow-16",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260936,
+    "x": 649,
+    "y": 497,
+    "text": "Read the evidence.\nRecord any correction.",
+    "fontSize": 21,
+    "fontFamily": 1
+  },
+  {
+    "type": "text",
+    "id": "05-literature-workflow-17",
+    "roughness": 0.5,
+    "strokeColor": "#666b68",
+    "strokeWidth": 1.5,
+    "seed": 20260937,
+    "x": 36,
+    "y": 81,
+    "text": "Proposed workflow; only the sentence classifier was evaluated.",
+    "fontSize": 19,
+    "fontFamily": 1
+  }
+]

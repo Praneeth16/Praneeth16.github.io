@@ -1,0 +1,296 @@
+[
+  {
+    "type": "cameraUpdate",
+    "width": 1200,
+    "height": 900,
+    "x": -100,
+    "y": -120
+  },
+  {
+    "type": "text",
+    "id": "01-decision-interface-1",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260921,
+    "x": 28,
+    "y": 12,
+    "text": "You supply the evidence and define the decision.",
+    "fontSize": 25,
+    "fontFamily": 1
+  },
+  {
+    "type": "rectangle",
+    "id": "01-decision-interface-2",
+    "roughness": 0.5,
+    "strokeColor": "#557f91",
+    "strokeWidth": 1.5,
+    "seed": 20260922,
+    "x": 40,
+    "y": 120,
+    "width": 255,
+    "height": 90,
+    "backgroundColor": "#557f91",
+    "fillStyle": "solid",
+    "roundness": {
+      "type": 3
+    },
+    "label": {
+      "text": "1  Source sentence",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "strokeColor": "#ffffff"
+    }
+  },
+  {
+    "type": "text",
+    "id": "01-decision-interface-3",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260923,
+    "x": 48,
+    "y": 225,
+    "text": "Text to classify.\nThe gold label stays local.",
+    "fontSize": 20,
+    "fontFamily": 1
+  },
+  {
+    "type": "rectangle",
+    "id": "01-decision-interface-4",
+    "roughness": 0.5,
+    "strokeColor": "#80658f",
+    "strokeWidth": 1.5,
+    "seed": 20260924,
+    "x": 40,
+    "y": 325,
+    "width": 255,
+    "height": 100,
+    "backgroundColor": "#80658f",
+    "fillStyle": "solid",
+    "roundness": {
+      "type": 3
+    },
+    "label": {
+      "text": "2  Question + criteria",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "strokeColor": "#ffffff"
+    }
+  },
+  {
+    "type": "text",
+    "id": "01-decision-interface-5",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260925,
+    "x": 55,
+    "y": 455,
+    "text": "ADE-related or not related.\nDescribe what each means.",
+    "fontSize": 20,
+    "fontFamily": 1
+  },
+  {
+    "type": "arrow",
+    "id": "01-decision-interface-6",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260926,
+    "x": 305,
+    "y": 165,
+    "width": 130,
+    "height": 110,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        60,
+        0
+      ],
+      [
+        130,
+        110
+      ]
+    ],
+    "endArrowhead": "arrow",
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "arrow",
+    "id": "01-decision-interface-7",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260927,
+    "x": 305,
+    "y": 375,
+    "width": 130,
+    "height": 70,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        60,
+        0
+      ],
+      [
+        130,
+        -70
+      ]
+    ],
+    "endArrowhead": "arrow",
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "rectangle",
+    "id": "01-decision-interface-8",
+    "roughness": 0.5,
+    "strokeColor": "#4b7864",
+    "strokeWidth": 1.5,
+    "seed": 20260928,
+    "x": 440,
+    "y": 225,
+    "width": 170,
+    "height": 95,
+    "backgroundColor": "#4b7864",
+    "fillStyle": "solid",
+    "roundness": {
+      "type": 3
+    },
+    "label": {
+      "text": "Jev 1.13.0",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "strokeColor": "#ffffff"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "01-decision-interface-9",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260929,
+    "x": 620,
+    "y": 270,
+    "width": 95,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        95,
+        0
+      ]
+    ],
+    "endArrowhead": "arrow",
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "rectangle",
+    "id": "01-decision-interface-10",
+    "roughness": 0.5,
+    "strokeColor": "#557f91",
+    "strokeWidth": 1.5,
+    "seed": 20260930,
+    "x": 725,
+    "y": 225,
+    "width": 220,
+    "height": 95,
+    "backgroundColor": "#557f91",
+    "fillStyle": "solid",
+    "roundness": {
+      "type": 3
+    },
+    "label": {
+      "text": "3  Probabilities",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "strokeColor": "#ffffff"
+    }
+  },
+  {
+    "type": "text",
+    "id": "01-decision-interface-11",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260931,
+    "x": 735,
+    "y": 348,
+    "text": "P(ADE) = 0.82\nP(not ADE) = 0.18",
+    "fontSize": 22,
+    "fontFamily": 2
+  },
+  {
+    "type": "text",
+    "id": "01-decision-interface-12",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260932,
+    "x": 435,
+    "y": 470,
+    "text": "Code can rank, threshold, and evaluate the answer.",
+    "fontSize": 20,
+    "fontFamily": 1
+  },
+  {
+    "type": "text",
+    "id": "01-decision-interface-13",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260933,
+    "x": 730,
+    "y": 125,
+    "text": "A bounded answer set\nstill permits a wrong choice.",
+    "fontSize": 20,
+    "fontFamily": 1
+  },
+  {
+    "type": "arrow",
+    "id": "01-decision-interface-14",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260934,
+    "x": 837,
+    "y": 192,
+    "width": 4,
+    "height": 26,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -4,
+        26
+      ]
+    ],
+    "endArrowhead": "arrow",
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "01-decision-interface-15",
+    "roughness": 0.5,
+    "strokeColor": "#666b68",
+    "strokeWidth": 1.5,
+    "seed": 20260935,
+    "x": 736,
+    "y": 415,
+    "text": "Illustrative values",
+    "fontSize": 17,
+    "fontFamily": 1
+  }
+]

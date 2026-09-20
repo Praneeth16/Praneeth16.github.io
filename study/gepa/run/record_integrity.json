@@ -1,0 +1,24 @@
+{
+  "append_journal_records": 1250,
+  "successful_evaluation_calls": 1260,
+  "recovered_full_records": 1257,
+  "missing_full_records": [
+    {
+      "candidate_id": "5651300f9e59ce402f583850d67f472093b4f66297480a5f6e1062bdc378b013",
+      "id": "1b304be7d35de8d90030437fc1492011cb760d9dd28ae353aed44ff9bce8af18",
+      "split": "train"
+    },
+    {
+      "candidate_id": "e17a0481e2d72f40c912cf746c5059175b4f27f734618d5ccc19d60b8987e6e4",
+      "id": "83e749f993f1aa0025e38c0023a31bbaac631ababc83c065b1c96c6dd9b94570",
+      "split": "validation"
+    },
+    {
+      "candidate_id": "ef04f594f8381fcea2acc3d3d6ed5207964c41e591e03b4433ace95911727efc",
+      "id": "cef5f8cc8d798a74e8e5647041ba65662689a65a6ab1f3fe66ad1197d773e312",
+      "split": "train"
+    }
+  ],
+  "test_records_complete": true,
+  "note": "Original response objects recovered from GEPA outputs and frozen test snapshots. No API calls repeated. Root cause of the incomplete append journal was not established. Usage and latency totals cover preserved records only."
+}

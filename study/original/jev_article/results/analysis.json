@@ -1,0 +1,360 @@
+{
+  "baseline_default": {
+    "n": 300,
+    "accuracy": 0.8566666666666667,
+    "ade_precision": 0.8461538461538461,
+    "ade_recall": 0.36065573770491804,
+    "ade_f1": 0.5057471264367817,
+    "macro_f1": 0.7109632318343753,
+    "brier": 0.10228827136297111,
+    "log_loss": 0.3349647004819826,
+    "ece_10": 0.05191030271949137,
+    "threshold": 0.5,
+    "tn": 235,
+    "fp": 4,
+    "fn": 39,
+    "tp": 22,
+    "recall_wilson_95": [
+      0.2517411151987451,
+      0.4860809463466307
+    ]
+  },
+  "baseline_validation_f1": {
+    "n": 300,
+    "accuracy": 0.8366666666666667,
+    "ade_precision": 0.5857142857142857,
+    "ade_recall": 0.6721311475409836,
+    "ade_f1": 0.6259541984732825,
+    "macro_f1": 0.760738293266492,
+    "brier": 0.10228827136297111,
+    "log_loss": 0.3349647004819826,
+    "ece_10": 0.05191030271949137,
+    "threshold": 0.30999999999999994,
+    "tn": 210,
+    "fp": 29,
+    "fn": 20,
+    "tp": 41,
+    "recall_wilson_95": [
+      0.5472180631353664,
+      0.7766488020144636
+    ]
+  },
+  "jev": {
+    "n": 300,
+    "accuracy": 0.82,
+    "ade_precision": 0.5321100917431193,
+    "ade_recall": 0.9508196721311475,
+    "ade_f1": 0.6823529411764706,
+    "macro_f1": 0.7783857729138167,
+    "brier": 0.15605166666666667,
+    "log_loss": 1.8487613540751586,
+    "ece_10": 0.1726333333333333,
+    "threshold": 0.5,
+    "tn": 188,
+    "fp": 51,
+    "fn": 3,
+    "tp": 58,
+    "recall_wilson_95": [
+      0.8650887247278409,
+      0.9831340173312375
+    ]
+  },
+  "baseline_routing": {
+    "lower_priority_fraction": 0.53,
+    "true_ades_in_lower_priority": 6,
+    "ade_retained_for_review": 0.9016393442622951,
+    "cutoff": 0.135,
+    "lower_priority_count": 159,
+    "review_count": 141,
+    "validation": {
+      "lower_priority_fraction": 0.505,
+      "true_ades_in_lower_priority": 2,
+      "ade_retained_for_review": 0.9512195121951219
+    }
+  },
+  "baseline_reliability": [
+    {
+      "bin": 0,
+      "n": 118,
+      "p_mean": 0.06224836541877799,
+      "observed_ade": 0.025423728813559324,
+      "wilson_95": [
+        0.008683514404083097,
+        0.07208914636303015
+      ]
+    },
+    {
+      "bin": 1,
+      "n": 75,
+      "p_mean": 0.13969248415330304,
+      "observed_ade": 0.09333333333333334,
+      "wilson_95": [
+        0.04594852339060043,
+        0.18034686849541504
+      ]
+    },
+    {
+      "bin": 2,
+      "n": 33,
+      "p_mean": 0.24168970434764236,
+      "observed_ade": 0.30303030303030304,
+      "wilson_95": [
+        0.17375531424053606,
+        0.47338135145800575
+      ]
+    },
+    {
+      "bin": 3,
+      "n": 25,
+      "p_mean": 0.34627262638263984,
+      "observed_ade": 0.32,
+      "wilson_95": [
+        0.17205190306907978,
+        0.5158973072689775
+      ]
+    },
+    {
+      "bin": 4,
+      "n": 23,
+      "p_mean": 0.44106179285417746,
+      "observed_ade": 0.4782608695652174,
+      "wilson_95": [
+        0.29237157416646653,
+        0.6703726266357259
+      ]
+    },
+    {
+      "bin": 5,
+      "n": 8,
+      "p_mean": 0.5494403927959579,
+      "observed_ade": 0.625,
+      "wilson_95": [
+        0.30574239460262737,
+        0.8631557141764026
+      ]
+    },
+    {
+      "bin": 6,
+      "n": 7,
+      "p_mean": 0.6425462041568999,
+      "observed_ade": 0.8571428571428571,
+      "wilson_95": [
+        0.4868721707256811,
+        0.9743203756552565
+      ]
+    },
+    {
+      "bin": 7,
+      "n": 6,
+      "p_mean": 0.7604090536265423,
+      "observed_ade": 1.0,
+      "wilson_95": [
+        0.6096657120978346,
+        1.0
+      ]
+    },
+    {
+      "bin": 8,
+      "n": 3,
+      "p_mean": 0.8280953882611021,
+      "observed_ade": 1.0,
+      "wilson_95": [
+        0.4385029682449546,
+        1.0
+      ]
+    },
+    {
+      "bin": 9,
+      "n": 2,
+      "p_mean": 0.9228498687526568,
+      "observed_ade": 1.0,
+      "wilson_95": [
+        0.34238022750665303,
+        1.0
+      ]
+    }
+  ],
+  "jev_routing": {
+    "lower_priority_fraction": 0.6266666666666667,
+    "true_ades_in_lower_priority": 3,
+    "ade_retained_for_review": 0.9508196721311475,
+    "cutoff": 0.4,
+    "lower_priority_count": 188,
+    "review_count": 112,
+    "validation": {
+      "lower_priority_fraction": 0.6,
+      "true_ades_in_lower_priority": 0,
+      "ade_retained_for_review": 1.0
+    }
+  },
+  "jev_reliability": [
+    {
+      "bin": 0,
+      "n": 158,
+      "p_mean": 0.009050632911392404,
+      "observed_ade": 0.006329113924050633,
+      "wilson_95": [
+        0.0011181190763210579,
+        0.03497559178898904
+      ]
+    },
+    {
+      "bin": 1,
+      "n": 12,
+      "p_mean": 0.12416666666666665,
+      "observed_ade": 0.08333333333333333,
+      "wilson_95": [
+        0.014865094404917095,
+        0.35387991114111694
+      ]
+    },
+    {
+      "bin": 2,
+      "n": 9,
+      "p_mean": 0.23444444444444443,
+      "observed_ade": 0.0,
+      "wilson_95": [
+        0.0,
+        0.2991450484195441
+      ]
+    },
+    {
+      "bin": 3,
+      "n": 8,
+      "p_mean": 0.35,
+      "observed_ade": 0.125,
+      "wilson_95": [
+        0.02241749145005667,
+        0.4708881822128535
+      ]
+    },
+    {
+      "bin": 4,
+      "n": 4,
+      "p_mean": 0.4125,
+      "observed_ade": 0.0,
+      "wilson_95": [
+        0.0,
+        0.4898908364545973
+      ]
+    },
+    {
+      "bin": 5,
+      "n": 1,
+      "p_mean": 0.52,
+      "observed_ade": 0.0,
+      "wilson_95": [
+        0.0,
+        0.7934506856227626
+      ]
+    },
+    {
+      "bin": 6,
+      "n": 6,
+      "p_mean": 0.6616666666666667,
+      "observed_ade": 0.0,
+      "wilson_95": [
+        2.7755575615628914e-17,
+        0.3903342879021653
+      ]
+    },
+    {
+      "bin": 7,
+      "n": 3,
+      "p_mean": 0.7566666666666667,
+      "observed_ade": 0.3333333333333333,
+      "wilson_95": [
+        0.06149194472039621,
+        0.7923403991979522
+      ]
+    },
+    {
+      "bin": 8,
+      "n": 9,
+      "p_mean": 0.8355555555555555,
+      "observed_ade": 0.2222222222222222,
+      "wilson_95": [
+        0.06322510711784671,
+        0.5474110308930111
+      ]
+    },
+    {
+      "bin": 9,
+      "n": 90,
+      "p_mean": 0.9892222222222222,
+      "observed_ade": 0.6111111111111112,
+      "wilson_95": [
+        0.5078245886506263,
+        0.7053008278906345
+      ]
+    }
+  ],
+  "jev_confidence": {
+    "errors": 54,
+    "confidence_1_n": 150,
+    "confidence_1_errors": 10,
+    "confidence_ge_09_n": 233,
+    "confidence_ge_09_errors": 30,
+    "p_zero_n": 109,
+    "p_zero_ades": 0,
+    "p_one_n": 61,
+    "p_one_nonades": 12
+  },
+  "run": {
+    "model_ids": [
+      "jev-1.13.0"
+    ],
+    "logged_requests": 505,
+    "benchmark_requests": 500,
+    "input_tokens": 213832,
+    "benchmark_input_tokens": 211690,
+    "smoke_input_tokens": 2142,
+    "estimated_cost_usd": 0.008980944000000001,
+    "note": "One interrupted in-flight request before checkpointed concurrency may have been billed and has no logged result. Cost is an estimate from logged usage, not an invoice.",
+    "smoke_latency_s": {
+      "min": 9.379327656999521,
+      "p50": 12.346735293001984,
+      "p95": 13.834739613998682,
+      "max": 14.006299502998445
+    },
+    "test_latency_s": {
+      "min": 12.27749300600044,
+      "p50": 14.686358377999568,
+      "p95": 15.623134525950263,
+      "max": 16.16004454400172
+    },
+    "benchmark_latency_s": {
+      "min": 12.09863249800037,
+      "p50": 14.74914025599901,
+      "p95": 15.802530964751167,
+      "max": 18.03351115300029
+    },
+    "timings": {
+      "validation": {
+        "workers": 12,
+        "new_requests": 198,
+        "wall_s": 251.01929255900177,
+        "resumed_records": 2
+      },
+      "test": {
+        "workers": 12,
+        "new_requests": 300,
+        "wall_s": 366.6235425160012,
+        "resumed_records": 0
+      }
+    }
+  },
+  "protocol": {
+    "raw_rows": 23516,
+    "unique_rows": 20895,
+    "train_n": 20395,
+    "val_n": 200,
+    "test_n": 300,
+    "val_positive": 41,
+    "test_positive": 61,
+    "test_negative": 239,
+    "dataset_revision": "4ba01c71687dd7c996597042449448ea312126cf",
+    "seed": 42,
+    "f1_selection": "Largest threshold maximizing validation ADE F1 over [0.01, 0.995] in steps of 0.005; no test labels used for selection."
+  }
+}

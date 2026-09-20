@@ -1,20 +1,2 @@
 import rss from '@astrojs/rss';
-import { getCollection } from 'astro:content';
-
-export async function GET(context) {
-  const entries = (await getCollection('writing', ({ data }) => !data.draft))
-    .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
-
-  return rss({
-    title: 'Praneeth Paikray',
-    description: 'Field notes on building, measuring, and operating AI systems.',
-    site: context.site,
-    items: entries.map((entry) => ({
-      title: entry.data.title,
-      description: entry.data.description,
-      pubDate: entry.data.publishedAt,
-      link: `/writing/${entry.id}/`,
-      categories: [entry.data.kind, ...entry.data.tags],
-    })),
-  });
-}
+export async function GET(context){return rss({title:'Praneeth Paikray',description:'Experiments and explanations on building AI systems.',site:context.site,items:[{title:'Adapting Jev to Your Domain with GEPA',description:'A medical-literature experiment in prompt optimization, confident mistakes, and review workload.',pubDate:new Date('2026-09-20T00:00:00Z'),link:'/blog/adapting-jev-with-gepa/',categories:['Jev','GEPA','Evaluation']} ]});}

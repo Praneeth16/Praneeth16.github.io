@@ -1,0 +1,282 @@
+[
+  {
+    "type": "cameraUpdate",
+    "width": 1200,
+    "height": 900,
+    "x": -100,
+    "y": -120
+  },
+  {
+    "type": "text",
+    "id": "03-experiment-design-1",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260921,
+    "x": 25,
+    "y": 18,
+    "text": "One public corpus. Two separate Jev evaluations.",
+    "fontSize": 25,
+    "fontFamily": 1
+  },
+  {
+    "type": "rectangle",
+    "id": "03-experiment-design-2",
+    "roughness": 0.5,
+    "strokeColor": "#557f91",
+    "strokeWidth": 1.5,
+    "seed": 20260922,
+    "x": 35,
+    "y": 95,
+    "width": 280,
+    "height": 75,
+    "backgroundColor": "#557f91",
+    "fillStyle": "solid",
+    "roundness": {
+      "type": 3
+    },
+    "label": {
+      "text": "23,516 source rows",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "strokeColor": "#ffffff"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "03-experiment-design-3",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260923,
+    "x": 327,
+    "y": 132,
+    "width": 82,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        82,
+        0
+      ]
+    ],
+    "endArrowhead": "arrow",
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "rectangle",
+    "id": "03-experiment-design-4",
+    "roughness": 0.5,
+    "strokeColor": "#557f91",
+    "strokeWidth": 1.5,
+    "seed": 20260924,
+    "x": 425,
+    "y": 95,
+    "width": 400,
+    "height": 75,
+    "backgroundColor": "#557f91",
+    "fillStyle": "solid",
+    "roundness": {
+      "type": 3
+    },
+    "label": {
+      "text": "20,895 unique sentences",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "strokeColor": "#ffffff"
+    }
+  },
+  {
+    "type": "text",
+    "id": "03-experiment-design-5",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260925,
+    "x": 438,
+    "y": 190,
+    "text": "Normalize case + whitespace, then deduplicate.",
+    "fontSize": 19,
+    "fontFamily": 1
+  },
+  {
+    "type": "rectangle",
+    "id": "03-experiment-design-6",
+    "roughness": 0.5,
+    "strokeColor": "#557f91",
+    "strokeWidth": 1.5,
+    "seed": 20260926,
+    "x": 35,
+    "y": 285,
+    "width": 290,
+    "height": 105,
+    "backgroundColor": "#557f91",
+    "fillStyle": "solid",
+    "roundness": {
+      "type": 3
+    },
+    "label": {
+      "text": "Experiment 1\n20,395 baseline training",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "strokeColor": "#ffffff"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "03-experiment-design-7",
+    "roughness": 0.5,
+    "strokeColor": "#4b7864",
+    "strokeWidth": 1.5,
+    "seed": 20260927,
+    "x": 350,
+    "y": 285,
+    "width": 250,
+    "height": 105,
+    "backgroundColor": "#4b7864",
+    "fillStyle": "solid",
+    "roundness": {
+      "type": 3
+    },
+    "label": {
+      "text": "200 validation\n41 positives",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "strokeColor": "#ffffff"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "03-experiment-design-8",
+    "roughness": 0.5,
+    "strokeColor": "#80658f",
+    "strokeWidth": 1.5,
+    "seed": 20260928,
+    "x": 625,
+    "y": 285,
+    "width": 250,
+    "height": 105,
+    "backgroundColor": "#80658f",
+    "fillStyle": "solid",
+    "roundness": {
+      "type": 3
+    },
+    "label": {
+      "text": "300 test\n61 positives",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "strokeColor": "#ffffff"
+    }
+  },
+  {
+    "type": "text",
+    "id": "03-experiment-design-9",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260929,
+    "x": 37,
+    "y": 237,
+    "text": "First: compare a local classifier with the fixed Jev prompt.",
+    "fontSize": 20,
+    "fontFamily": 1
+  },
+  {
+    "type": "text",
+    "id": "03-experiment-design-10",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260930,
+    "x": 37,
+    "y": 438,
+    "text": "Next: draw 500 different sentences from the original training pool.",
+    "fontSize": 20,
+    "fontFamily": 1
+  },
+  {
+    "type": "rectangle",
+    "id": "03-experiment-design-11",
+    "roughness": 0.5,
+    "strokeColor": "#557f91",
+    "strokeWidth": 1.5,
+    "seed": 20260931,
+    "x": 35,
+    "y": 493,
+    "width": 290,
+    "height": 98,
+    "backgroundColor": "#557f91",
+    "fillStyle": "solid",
+    "roundness": {
+      "type": 3
+    },
+    "label": {
+      "text": "Experiment 2\n100 reflection training",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "strokeColor": "#ffffff"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "03-experiment-design-12",
+    "roughness": 0.5,
+    "strokeColor": "#4b7864",
+    "strokeWidth": 1.5,
+    "seed": 20260932,
+    "x": 350,
+    "y": 493,
+    "width": 250,
+    "height": 98,
+    "backgroundColor": "#4b7864",
+    "fillStyle": "solid",
+    "roundness": {
+      "type": 3
+    },
+    "label": {
+      "text": "100 validation\n21 positives",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "strokeColor": "#ffffff"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "03-experiment-design-13",
+    "roughness": 0.5,
+    "strokeColor": "#80658f",
+    "strokeWidth": 1.5,
+    "seed": 20260933,
+    "x": 625,
+    "y": 493,
+    "width": 250,
+    "height": 98,
+    "backgroundColor": "#80658f",
+    "fillStyle": "solid",
+    "roundness": {
+      "type": 3
+    },
+    "label": {
+      "text": "300 fresh test\n61 positives",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "strokeColor": "#ffffff"
+    }
+  },
+  {
+    "type": "text",
+    "id": "03-experiment-design-14",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260934,
+    "x": 43,
+    "y": 629,
+    "text": "No repeated normalized sentences across Jev evaluations.\nDifferent sentences from the same article may still cross partitions.",
+    "fontSize": 19,
+    "fontFamily": 1
+  }
+]

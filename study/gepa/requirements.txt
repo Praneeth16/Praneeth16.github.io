@@ -1,0 +1,8 @@
+gepa==0.1.4
+numpy==2.3.5
+pandas==2.2.3
+scikit-learn==1.8.0
+pyarrow==25.0.1
+matplotlib==3.10.8
+markdown==3.10.3
+ipython==9.17.1

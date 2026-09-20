@@ -1,0 +1,288 @@
+[
+  {
+    "type": "cameraUpdate",
+    "width": 1200,
+    "height": 900,
+    "x": -100,
+    "y": -120
+  },
+  {
+    "type": "text",
+    "id": "04-gepa-loop-1",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260921,
+    "x": 35,
+    "y": 20,
+    "text": "Adapt the task definition. Keep Jev\u2019s weights fixed.",
+    "fontSize": 25,
+    "fontFamily": 1
+  },
+  {
+    "type": "rectangle",
+    "id": "04-gepa-loop-2",
+    "roughness": 0.5,
+    "strokeColor": "#80658f",
+    "strokeWidth": 1.5,
+    "seed": 20260922,
+    "x": 65,
+    "y": 138,
+    "width": 290,
+    "height": 92,
+    "backgroundColor": "#80658f",
+    "fillStyle": "solid",
+    "roundness": {
+      "type": 3
+    },
+    "label": {
+      "text": "1  Candidate prompt",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "strokeColor": "#ffffff"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "04-gepa-loop-3",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260923,
+    "x": 368,
+    "y": 183,
+    "width": 226,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        226,
+        0
+      ]
+    ],
+    "endArrowhead": "arrow",
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "rectangle",
+    "id": "04-gepa-loop-4",
+    "roughness": 0.5,
+    "strokeColor": "#557f91",
+    "strokeWidth": 1.5,
+    "seed": 20260924,
+    "x": 610,
+    "y": 138,
+    "width": 290,
+    "height": 92,
+    "backgroundColor": "#557f91",
+    "fillStyle": "solid",
+    "roundness": {
+      "type": 3
+    },
+    "label": {
+      "text": "2  Jev predictions",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "strokeColor": "#ffffff"
+    }
+  },
+  {
+    "type": "text",
+    "id": "04-gepa-loop-5",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260925,
+    "x": 419,
+    "y": 141,
+    "text": "Evaluate",
+    "fontSize": 19,
+    "fontFamily": 1
+  },
+  {
+    "type": "arrow",
+    "id": "04-gepa-loop-6",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260926,
+    "x": 755,
+    "y": 241,
+    "width": 0,
+    "height": 153,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        153
+      ]
+    ],
+    "endArrowhead": "arrow",
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "04-gepa-loop-7",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260927,
+    "x": 788,
+    "y": 278,
+    "text": "Compare with\ntraining labels",
+    "fontSize": 20,
+    "fontFamily": 1
+  },
+  {
+    "type": "rectangle",
+    "id": "04-gepa-loop-8",
+    "roughness": 0.5,
+    "strokeColor": "#b45b48",
+    "strokeWidth": 1.5,
+    "seed": 20260928,
+    "x": 610,
+    "y": 411,
+    "width": 290,
+    "height": 95,
+    "backgroundColor": "#b45b48",
+    "fillStyle": "solid",
+    "roundness": {
+      "type": 3
+    },
+    "label": {
+      "text": "3  Error feedback",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "strokeColor": "#ffffff"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "04-gepa-loop-9",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260929,
+    "x": 597,
+    "y": 458,
+    "width": 226,
+    "height": 0,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        -226,
+        0
+      ]
+    ],
+    "endArrowhead": "arrow",
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "04-gepa-loop-10",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260930,
+    "x": 420,
+    "y": 416,
+    "text": "Reflect",
+    "fontSize": 19,
+    "fontFamily": 1
+  },
+  {
+    "type": "rectangle",
+    "id": "04-gepa-loop-11",
+    "roughness": 0.5,
+    "strokeColor": "#80658f",
+    "strokeWidth": 1.5,
+    "seed": 20260931,
+    "x": 65,
+    "y": 411,
+    "width": 290,
+    "height": 95,
+    "backgroundColor": "#80658f",
+    "fillStyle": "solid",
+    "roundness": {
+      "type": 3
+    },
+    "label": {
+      "text": "4  Revised wording",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "strokeColor": "#ffffff"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "04-gepa-loop-12",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260932,
+    "x": 210,
+    "y": 398,
+    "width": 0,
+    "height": 154,
+    "points": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        -154
+      ]
+    ],
+    "endArrowhead": "arrow",
+    "strokeStyle": "solid"
+  },
+  {
+    "type": "text",
+    "id": "04-gepa-loop-13",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260933,
+    "x": 45,
+    "y": 280,
+    "text": "Revise the\nquestion",
+    "fontSize": 20,
+    "fontFamily": 1
+  },
+  {
+    "type": "text",
+    "id": "04-gepa-loop-14",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260934,
+    "x": 46,
+    "y": 545,
+    "text": "The assistant writes revisions. GEPA runs the search and selection.",
+    "fontSize": 20,
+    "fontFamily": 1
+  },
+  {
+    "type": "text",
+    "id": "04-gepa-loop-15",
+    "roughness": 0.5,
+    "strokeColor": "#292c2b",
+    "strokeWidth": 1.5,
+    "seed": 20260935,
+    "x": 46,
+    "y": 600,
+    "text": "Validation chooses a candidate. The fresh test stays closed until then.",
+    "fontSize": 20,
+    "fontFamily": 1
+  }
+]

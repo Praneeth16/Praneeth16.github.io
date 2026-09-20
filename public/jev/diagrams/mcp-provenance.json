@@ -1,0 +1,31 @@
+{
+  "server": "https://github.com/excalidraw/excalidraw-mcp",
+  "version": "0.3.2",
+  "transport": "local stdio",
+  "tools": [
+    "read_me",
+    "create_view"
+  ],
+  "diagrams": [
+    {
+      "file": "01-decision-interface.mcp.json",
+      "checkpointId": "e50f5ee3fd574dc39d"
+    },
+    {
+      "file": "02-probability-calibration.mcp.json",
+      "checkpointId": "9241dfd7e9b24c4895"
+    },
+    {
+      "file": "03-experiment-design.mcp.json",
+      "checkpointId": "4141b0f654034b9aa5"
+    },
+    {
+      "file": "04-gepa-loop.mcp.json",
+      "checkpointId": "1c74a523dacc4e78b8"
+    },
+    {
+      "file": "05-literature-workflow.mcp.json",
+      "checkpointId": "c9588c9ce01e42d6b9"
+    }
+  ]
+}

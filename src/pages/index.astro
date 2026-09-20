@@ -1,188 +1,23 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import WritingCard from '../components/WritingCard.astro';
-import ProjectCard from '../components/ProjectCard.astro';
-
-const writing = (await getCollection('writing', ({ data }) => !data.draft))
-  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
-const latestWriting = writing.slice(0, 5);
-const workshops = writing.filter((entry) => entry.data.kind === 'workshop').slice(0, 3);
-const projects = (await getCollection('projects'))
-  .filter((entry) => entry.data.featured)
-  .sort((a, b) => a.data.order - b.data.order)
-  .slice(0, 4);
 ---
-
-<BaseLayout>
+<BaseLayout title="Praneeth Paikray" description="Notes and experiments on building AI systems. Praneeth Paikray, AI Solutions Architect at Databricks, based in Bengaluru.">
   <div class="home container">
-    <section class="intro-panel" aria-labelledby="intro-heading">
-      <div class="intro-copy">
-        <h1 id="intro-heading">Hi, I’m Praneeth.</h1>
-        <p>I build production AI systems, evaluate how they behave, and write about the engineering work between a promising demo and a dependable product.</p>
-        <p>I work as a Solutions Architect focused on GenAI and agent systems at Databricks. My recent work covers agent evaluation, autonomous AI engineering, document intelligence, real-time agents, and technical workshops.</p>
-        <p>This site is where I keep the implementation details: what I built, what failed, what the measurements changed, and what another engineer can reuse.</p>
-        <p class="intro-links">
-          <a href="/about/">More about me</a>
-          <span>·</span>
-          <a href="https://github.com/Praneeth16">GitHub</a>
-          <span>·</span>
-          <a href="https://www.linkedin.com/in/praneeth-paikray/">LinkedIn</a>
-        </p>
+    <section aria-labelledby="intro-title">
+      <h1 id="intro-title">Hi, I’m Praneeth.</h1>
+      <div class="intro">
+        <p>I’m an AI Solutions Architect at Databricks, based in Bengaluru. I work on agent systems, evaluation, and the engineering that helps AI work reliably in practice.</p>
+        <p>Here I share experiments, code, and explanations of what the results tell us. My current interests include agent memory, domain-specific agents, and learning from evaluation feedback.</p>
       </div>
-
-      <aside class="now" aria-labelledby="now-heading">
-        <p id="now-heading" class="now-title">Currently exploring</p>
-        <ul>
-          <li>Agent harnesses and meta-harnesses</li>
-          <li>Trajectory-level evaluation</li>
-          <li>Self-improving AI systems</li>
-          <li>Reusable Databricks AI demos</li>
-        </ul>
-        <p class="now-note">Based in Bengaluru, India.</p>
-      </aside>
+      <div class="intro-links"><a href="https://github.com/Praneeth16">GitHub ↗</a><a href="https://www.linkedin.com/in/praneeth-paikray/">LinkedIn ↗</a></div>
     </section>
-
-    <section class="section" aria-labelledby="latest-heading">
-      <div class="section-heading">
-        <h2 id="latest-heading">Latest writing</h2>
-        <a class="text-link" href="/writing/">All essays and notes</a>
-      </div>
-      <div>
-        {latestWriting.map((entry) => <WritingCard entry={entry} />)}
-      </div>
-    </section>
-
-    <section class="section" aria-labelledby="projects-heading">
-      <div class="section-heading">
-        <h2 id="projects-heading">Selected projects</h2>
-        <a class="text-link" href="/projects/">All projects</a>
-      </div>
-      <div>
-        {projects.map((entry) => <ProjectCard entry={entry} />)}
-      </div>
-    </section>
-
-    <section class="section" aria-labelledby="workshops-heading">
-      <div class="section-heading">
-        <div>
-          <h2 id="workshops-heading">Workshops and teaching</h2>
-          <p>Hands-on material for teams moving from AI concepts to working systems.</p>
-        </div>
-        <a class="text-link" href="/writing/?kind=workshop">Workshop archive</a>
-      </div>
-      <div>
-        {workshops.map((entry) => <WritingCard entry={entry} />)}
-      </div>
-    </section>
-
-    <section class="small-note" aria-label="Site note">
-      <span aria-hidden="true">*</span>
-      <p>I prefer measured claims, practical code, and explanations that keep the tradeoffs visible.</p>
+    <section class="writing-list" aria-labelledby="writing-title">
+      <p class="section-label" id="writing-title">Writing</p>
+      <a class="post-link" href="/blog/adapting-jev-with-gepa/">
+        <h2>Adapting Jev to Your Domain with GEPA</h2>
+        <p>A medical-literature experiment in prompt optimization, confident mistakes, and the trade-off between better predictions and fewer missed cases.</p>
+        <span class="meta">20 Sep 2026 · 24 min read · Interactive study</span>
+      </a>
     </section>
   </div>
 </BaseLayout>
-
-<style>
-  .home {
-    padding: 1.8rem 0 3rem;
-  }
-
-  .intro-panel {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 260px;
-    gap: 2.5rem;
-    padding: 1.2rem;
-    border: 1px solid var(--rule-dark);
-    background: var(--surface);
-  }
-
-  h1 {
-    margin: 0 0 0.8rem;
-    font-size: 1.05rem;
-    font-weight: 600;
-  }
-
-  .intro-copy > p {
-    max-width: 630px;
-    margin: 0 0 0.85rem;
-    font-family: var(--sans);
-    font-size: 0.88rem;
-    line-height: 1.65;
-  }
-
-  .intro-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.55rem;
-    margin-bottom: 0 !important;
-    font-family: var(--mono) !important;
-    font-size: 0.73rem !important;
-  }
-
-  .intro-links span {
-    color: var(--rule-dark);
-  }
-
-  .now {
-    padding-left: 1.4rem;
-    border-left: 1px solid var(--rule);
-  }
-
-  .now-title {
-    margin: 0 0 0.65rem;
-    color: var(--warm);
-    font-size: 0.72rem;
-    text-transform: uppercase;
-  }
-
-  .now ul {
-    display: grid;
-    gap: 0.35rem;
-    margin: 0;
-    padding-left: 1.1rem;
-    color: var(--ink-soft);
-    font-family: var(--sans);
-    font-size: 0.78rem;
-  }
-
-  .now-note {
-    margin: 1rem 0 0;
-    color: var(--ink-faint);
-    font-size: 0.66rem;
-  }
-
-  .small-note {
-    display: flex;
-    gap: 0.6rem;
-    margin-top: 2.2rem;
-    padding: 0.8rem 1rem;
-    color: var(--ink-soft);
-    border: 1px dashed var(--rule-dark);
-    background: var(--surface-soft);
-    align-items: baseline;
-  }
-
-  .small-note span {
-    color: var(--warm);
-  }
-
-  .small-note p {
-    margin: 0;
-    font-family: var(--sans);
-    font-size: 0.78rem;
-  }
-
-  @media (max-width: 700px) {
-    .intro-panel {
-      grid-template-columns: 1fr;
-      gap: 1.4rem;
-    }
-
-    .now {
-      padding: 1rem 0 0;
-      border-top: 1px solid var(--rule);
-      border-left: 0;
-    }
-  }
-</style>
