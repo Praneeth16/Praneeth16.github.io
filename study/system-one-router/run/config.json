@@ -1,0 +1,12 @@
+{
+  "jev": "typesafe/jev-1.13",
+  "luna": "openai/gpt-6-luna",
+  "sol": "openai/gpt-6-sol",
+  "luna_reasoning": "none",
+  "sol_reasoning": "low",
+  "workers": 8,
+  "timeout_s": 120,
+  "max_calls": 4000,
+  "seed": 20260926,
+  "questions_digest": "9ac7ec4a477f943f542a9f20f29304d432b71d1e80930087f880a90c43389a27"
+}

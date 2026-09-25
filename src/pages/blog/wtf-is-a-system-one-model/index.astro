@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import body from '../../../generated/system-one/article.html?raw';
+import contents from '../../../generated/system-one/contents.html?raw';
+import metadata from '../../../generated/system-one/article-meta.json';
+---
+<BaseLayout title="WTF Is a System One Model?" description={metadata.subtitle} article ogImage="/system-one/og.png">
+  <article>
+    <header class="article-header container">
+      <h1>WTF Is a System One Model?</h1>
+      <p class="article-deck">{metadata.subtitle}</p>
+      <div class="article-meta"><span>Praneeth Paikray</span><time datetime="2026-09-26">26 September 2026</time><span>{metadata.readingMinutes} min read</span></div>
+      <div class="article-links"><a href="https://github.com/Praneeth16/Praneeth16.github.io/tree/main/study/system-one-router">Benchmark code &amp; records ↗</a><a href="#the-benchmark-jev-and-luna-as-routers">Jump to the benchmark</a></div>
+      <nav class="contents" aria-labelledby="contents-heading"><p class="contents-label" id="contents-heading">Contents</p><div set:html={contents}/></nav>
+    </header>
+    <div class="prose" set:html={body}/>
+  </article>
+  <dialog id="figure-dialog" aria-label="Expanded diagram"><button class="close" data-close>Close ×</button><img alt="Expanded diagram"/></dialog>
+  <script is:inline type="module" src="/system-one/explorers.js"></script>
+</BaseLayout>

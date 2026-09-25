@@ -8,6 +8,7 @@ interface Props {
   description?: string;
   canonical?: string;
   article?: boolean;
+  ogImage?: string;
 }
 
 const {
@@ -15,6 +16,7 @@ const {
   description = 'Production AI systems, agent evaluation, open-source experiments, technical essays, and workshops by Praneeth Paikray.',
   canonical = Astro.url.pathname,
   article = false,
+  ogImage = '/jev/og.png',
 } = Astro.props;
 const fullTitle = article || title.startsWith('Praneeth') ? title : `${title} | Praneeth Paikray`;
 const canonicalUrl = new URL(canonical, Astro.site);
@@ -36,7 +38,7 @@ const canonicalUrl = new URL(canonical, Astro.site);
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta property="og:image" content="https://praneeth16.github.io/jev/og.png" />
+    <meta property="og:image" content={new URL(ogImage, Astro.site).href} />
     <title>{fullTitle}</title>
   </head>
   <body>

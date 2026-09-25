@@ -1,0 +1,3082 @@
+[
+ {
+  "id": "a331f02bfbdc5e85",
+  "split": "dev",
+  "text": "can you tell me where i am",
+  "intent": "current_location",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "ee22afb10910d623",
+  "split": "dev",
+  "text": "help me schedule maintenance for my car",
+  "intent": "schedule_maintenance",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "6faad8dbe5b999b4",
+  "split": "dev",
+  "text": "i want to know how to change oil, tell me the steps one at a time while i work through it",
+  "intent": "oil_change_how",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "cd0581cee22462d7",
+  "split": "dev",
+  "text": "is it time for a tire change",
+  "intent": "tire_change",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "4dca447c4dedf7c7",
+  "split": "dev",
+  "text": "is there much traffic between here and work right now",
+  "intent": "traffic",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "d6ddbdea6aa8ecc7",
+  "split": "dev",
+  "text": "my car's tires are due to be looked at, can you help me get an appointment for that",
+  "intent": "schedule_maintenance",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "9143690273103196",
+  "split": "dev",
+  "text": "send me an uber now for four people and we are going to appleby's downtown",
+  "intent": "uber",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "1a681ccd7b1263a5",
+  "split": "dev",
+  "text": "what is my tire pressure",
+  "intent": "tire_pressure",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "3761aa2263e8cfe5",
+  "split": "dev",
+  "text": "what is the remaining time until we are at our destination",
+  "intent": "distance",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "b794e1c61d50b26e",
+  "split": "dev",
+  "text": "where is the closest red lobster to my location right now, which is 5th avenue",
+  "intent": "directions",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "b815ce32deebcfb2",
+  "split": "dev",
+  "text": "can anyone let me know the reason behind my frozen bank account",
+  "intent": "account_blocked",
+  "route": "banking"
+ },
+ {
+  "id": "be6457d382e8e1a1",
+  "split": "dev",
+  "text": "could you tell me what kind of money i've recently spent",
+  "intent": "spending_history",
+  "route": "banking"
+ },
+ {
+  "id": "1bf1f62d71637393",
+  "split": "dev",
+  "text": "how much money is in my bank accounts",
+  "intent": "balance",
+  "route": "banking"
+ },
+ {
+  "id": "66a9faf448dc54e9",
+  "split": "dev",
+  "text": "i want to report fraud on my american express",
+  "intent": "report_fraud",
+  "route": "banking"
+ },
+ {
+  "id": "96b76078b21bd921",
+  "split": "dev",
+  "text": "submit full payment to chase for my visa bill",
+  "intent": "pay_bill",
+  "route": "banking"
+ },
+ {
+  "id": "e158e16aa023e4b2",
+  "split": "dev",
+  "text": "what is my interest rate for my scotiabank account",
+  "intent": "interest_rate",
+  "route": "banking"
+ },
+ {
+  "id": "d50d011622392596",
+  "split": "dev",
+  "text": "what is the interest rate at pnc",
+  "intent": "interest_rate",
+  "route": "banking"
+ },
+ {
+  "id": "9511f7a348c872b7",
+  "split": "dev",
+  "text": "what is the least i can pay on my mortgage bill",
+  "intent": "min_payment",
+  "route": "banking"
+ },
+ {
+  "id": "8ed7635ec7110ca8",
+  "split": "dev",
+  "text": "what is the minimum amount due on my cable bill",
+  "intent": "min_payment",
+  "route": "banking"
+ },
+ {
+  "id": "b03d33d52b757f65",
+  "split": "dev",
+  "text": "what transactions did i put on my visa last month",
+  "intent": "transactions",
+  "route": "banking"
+ },
+ {
+  "id": "07ff3b8415408dbb",
+  "split": "dev",
+  "text": "how long does it take a new card to arrive in the mail to me",
+  "intent": "replacement_card_duration",
+  "route": "credit_cards"
+ },
+ {
+  "id": "15ea1367130fc417",
+  "split": "dev",
+  "text": "how much time does it take a new card to get mailed to me",
+  "intent": "replacement_card_duration",
+  "route": "credit_cards"
+ },
+ {
+  "id": "01afdb105da17681",
+  "split": "dev",
+  "text": "i want to apply for a new credit card",
+  "intent": "new_card",
+  "route": "credit_cards"
+ },
+ {
+  "id": "fcaae2b668413c4d",
+  "split": "dev",
+  "text": "is my apr high",
+  "intent": "apr",
+  "route": "credit_cards"
+ },
+ {
+  "id": "0efa28d56a8553c1",
+  "split": "dev",
+  "text": "is there a way to increase the limit of my credit to 5000 dollars",
+  "intent": "credit_limit_change",
+  "route": "credit_cards"
+ },
+ {
+  "id": "dbab5ea63f3a2dff",
+  "split": "dev",
+  "text": "my disney visa card is stolen",
+  "intent": "report_lost_card",
+  "route": "credit_cards"
+ },
+ {
+  "id": "31b0afa077aa4974",
+  "split": "dev",
+  "text": "please let me know if my discover card application has been approved",
+  "intent": "application_status",
+  "route": "credit_cards"
+ },
+ {
+  "id": "ab2a6d30b1163a29",
+  "split": "dev",
+  "text": "why was my card declined just now when i tried to buy a jeep at carmax",
+  "intent": "card_declined",
+  "route": "credit_cards"
+ },
+ {
+  "id": "06406446d7294232",
+  "split": "dev",
+  "text": "will i be charged if i use my card in russia",
+  "intent": "international_fees",
+  "route": "credit_cards"
+ },
+ {
+  "id": "57c5ce2668a61bd7",
+  "split": "dev",
+  "text": "will my card expire on a certain month",
+  "intent": "expiration_date",
+  "route": "credit_cards"
+ },
+ {
+  "id": "dc74ae234749c142",
+  "split": "dev",
+  "text": "add to friday's calendar a doctor's appointment",
+  "intent": "calendar_update",
+  "route": "home"
+ },
+ {
+  "id": "172e600994bf22ab",
+  "split": "dev",
+  "text": "did i remember to put eggs on my shopping list",
+  "intent": "shopping_list",
+  "route": "home"
+ },
+ {
+  "id": "299f4a83eb467fb9",
+  "split": "dev",
+  "text": "does my calendar show anything for thursday the 14th",
+  "intent": "calendar",
+  "route": "home"
+ },
+ {
+  "id": "9c738ac3a5dc0600",
+  "split": "dev",
+  "text": "i need to be reminded",
+  "intent": "reminder_update",
+  "route": "home"
+ },
+ {
+  "id": "390e16ab601bd5f9",
+  "split": "dev",
+  "text": "please place this track on my driving mix",
+  "intent": "update_playlist",
+  "route": "home"
+ },
+ {
+  "id": "e893ce863d5b00f6",
+  "split": "dev",
+  "text": "remind me to do something",
+  "intent": "reminder_update",
+  "route": "home"
+ },
+ {
+  "id": "bfacbba65e020d0b",
+  "split": "dev",
+  "text": "remind me to write that letter",
+  "intent": "reminder_update",
+  "route": "home"
+ },
+ {
+  "id": "a21851d45ac7a5af",
+  "split": "dev",
+  "text": "repeat my to do list",
+  "intent": "todo_list",
+  "route": "home"
+ },
+ {
+  "id": "98ad6b4d0f02500f",
+  "split": "dev",
+  "text": "what song is playing right now",
+  "intent": "what_song",
+  "route": "home"
+ },
+ {
+  "id": "149cc3a5a64c0399",
+  "split": "dev",
+  "text": "would you skip past this song and just play what comes next",
+  "intent": "next_song",
+  "route": "home"
+ },
+ {
+  "id": "007396022b1ec676",
+  "split": "dev",
+  "text": "after 3 days in the fridge is rice safe to eat",
+  "intent": "food_last",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "bde437140b6fea1b",
+  "split": "dev",
+  "text": "can i make reservations at grub burger",
+  "intent": "accept_reservations",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "6cedb1ccffcad27a",
+  "split": "dev",
+  "text": "cancel reservation at eight for the group",
+  "intent": "cancel_reservation",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "5b14c2515ba22393",
+  "split": "dev",
+  "text": "how do you make dumplings",
+  "intent": "recipe",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "47baa02e3213f6ac",
+  "split": "dev",
+  "text": "how healthy is pumpkin pie",
+  "intent": "nutrition_info",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "272b2666e8cdbd2d",
+  "split": "dev",
+  "text": "i am looking for good southeast asian restaurants in philadelphia",
+  "intent": "restaurant_suggestion",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "2b959c963de89dcf",
+  "split": "dev",
+  "text": "i need to quick dinner suggestions",
+  "intent": "meal_suggestion",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "cde44f827c92f667",
+  "split": "dev",
+  "text": "is rice ok after 3 days in the refrigerator",
+  "intent": "food_last",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "362d45e0200dff31",
+  "split": "dev",
+  "text": "what is the expiration date of my milk",
+  "intent": "food_last",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "78c0f79fd365f142",
+  "split": "dev",
+  "text": "will i be able to schedule a reservation at 4 seasons in los angeles",
+  "intent": "accept_reservations",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "04afe17e2084394e",
+  "split": "dev",
+  "text": "can you speak more slowly",
+  "intent": "change_speed",
+  "route": "meta"
+ },
+ {
+  "id": "29183fc680dfd7e1",
+  "split": "dev",
+  "text": "change over to the female voice",
+  "intent": "change_accent",
+  "route": "meta"
+ },
+ {
+  "id": "3fe335f53fa62715",
+  "split": "dev",
+  "text": "could you speed up your speech",
+  "intent": "change_speed",
+  "route": "meta"
+ },
+ {
+  "id": "33bd028f4ff64469",
+  "split": "dev",
+  "text": "i want to change your name to adam",
+  "intent": "change_ai_name",
+  "route": "meta"
+ },
+ {
+  "id": "3a4bfdc2a7242b39",
+  "split": "dev",
+  "text": "i'm sorry please repeat the question",
+  "intent": "repeat",
+  "route": "meta"
+ },
+ {
+  "id": "99b065906f2ab455",
+  "split": "dev",
+  "text": "ill pass",
+  "intent": "no",
+  "route": "meta"
+ },
+ {
+  "id": "3e6bff449ca98f79",
+  "split": "dev",
+  "text": "please don't talk any further",
+  "intent": "cancel",
+  "route": "meta"
+ },
+ {
+  "id": "5c62502774370339",
+  "split": "dev",
+  "text": "the name is nick",
+  "intent": "change_user_name",
+  "route": "meta"
+ },
+ {
+  "id": "53a6c426ebb2bbe1",
+  "split": "dev",
+  "text": "what name is saved for me",
+  "intent": "user_name",
+  "route": "meta"
+ },
+ {
+  "id": "14d8023acf70d06b",
+  "split": "dev",
+  "text": "what question did you just ask me",
+  "intent": "repeat",
+  "route": "meta"
+ },
+ {
+  "id": "129441d115d07add",
+  "split": "dev",
+  "text": "can you tell me how to compute price per ounce",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "095e30ac7c3706de",
+  "split": "dev",
+  "text": "how do i find the area of a circle",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "4933acde9b590e70",
+  "split": "dev",
+  "text": "how do i get better at go",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "7fe68258f14272a8",
+  "split": "dev",
+  "text": "is marijuana addictive",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "b91f98c8dbaee98e",
+  "split": "dev",
+  "text": "suo2",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "7554686312f26913",
+  "split": "dev",
+  "text": "what act score is considered good",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "2d7109695a1cde68",
+  "split": "dev",
+  "text": "what game has the best odds at a casino",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "79e824bacab641f7",
+  "split": "dev",
+  "text": "what is the friendliest breed",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "be365de6673596c0",
+  "split": "dev",
+  "text": "what site publishes the most fake news",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "69e3627d5a5c19bd",
+  "split": "dev",
+  "text": "what's the best crypto to buy in 2019",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "14ef7f670b599871",
+  "split": "dev",
+  "text": "do you think we have a higher calling",
+  "intent": "meaning_of_life",
+  "route": "small_talk"
+ },
+ {
+  "id": "f25eca4b688fdb20",
+  "split": "dev",
+  "text": "that you so much for the help",
+  "intent": "thank_you",
+  "route": "small_talk"
+ },
+ {
+  "id": "503e7b901556191c",
+  "split": "dev",
+  "text": "what all can i ask you",
+  "intent": "what_can_i_ask_you",
+  "route": "small_talk"
+ },
+ {
+  "id": "c4bb46eb8fde73bf",
+  "split": "dev",
+  "text": "what do you do with your free time",
+  "intent": "what_are_your_hobbies",
+  "route": "small_talk"
+ },
+ {
+  "id": "69a088b47cef6359",
+  "split": "dev",
+  "text": "what kind of questions can you answer",
+  "intent": "what_can_i_ask_you",
+  "route": "small_talk"
+ },
+ {
+  "id": "e0ea5d5d10b257ab",
+  "split": "dev",
+  "text": "what may i call you",
+  "intent": "what_is_your_name",
+  "route": "small_talk"
+ },
+ {
+  "id": "50fa453410c5f90a",
+  "split": "dev",
+  "text": "what place do you come from",
+  "intent": "where_are_you_from",
+  "route": "small_talk"
+ },
+ {
+  "id": "8b8de418f1a6d331",
+  "split": "dev",
+  "text": "what types of furry companions do you have",
+  "intent": "do_you_have_pets",
+  "route": "small_talk"
+ },
+ {
+  "id": "0075afd089139615",
+  "split": "dev",
+  "text": "where you from",
+  "intent": "where_are_you_from",
+  "route": "small_talk"
+ },
+ {
+  "id": "fd742ed7a044fcb2",
+  "split": "dev",
+  "text": "who makes you",
+  "intent": "who_made_you",
+  "route": "small_talk"
+ },
+ {
+  "id": "1df98190cb8d67e8",
+  "split": "dev",
+  "text": "can i travel to south africa without getting a shot",
+  "intent": "vaccines",
+  "route": "travel"
+ },
+ {
+  "id": "64a61330bbac4511",
+  "split": "dev",
+  "text": "can you make a reservation in tampa from may 2 to may 4",
+  "intent": "book_hotel",
+  "route": "travel"
+ },
+ {
+  "id": "5aad22e2d285aa55",
+  "split": "dev",
+  "text": "can you please update the status of flight dl123",
+  "intent": "flight_status",
+  "route": "travel"
+ },
+ {
+  "id": "4bf1241e35b2b8a2",
+  "split": "dev",
+  "text": "i will be telling my bank of my upcoming trip to spain",
+  "intent": "travel_notification",
+  "route": "travel"
+ },
+ {
+  "id": "6b073f6ccf372f2e",
+  "split": "dev",
+  "text": "i'm seeking a full circle flight from msy to msp for w to june 7",
+  "intent": "book_flight",
+  "route": "travel"
+ },
+ {
+  "id": "25cb4f6a1eb20bd2",
+  "split": "dev",
+  "text": "is traveling to france safe",
+  "intent": "travel_alert",
+  "route": "travel"
+ },
+ {
+  "id": "e8b36938925cbec9",
+  "split": "dev",
+  "text": "should i get an internation visa to go to switzerland",
+  "intent": "international_visa",
+  "route": "travel"
+ },
+ {
+  "id": "efc0624eebf28f28",
+  "split": "dev",
+  "text": "show me a hotel in boise that has positive reviews",
+  "intent": "book_hotel",
+  "route": "travel"
+ },
+ {
+  "id": "28d2b43c30e4345a",
+  "split": "dev",
+  "text": "what to do if i lost my luggage",
+  "intent": "lost_luggage",
+  "route": "travel"
+ },
+ {
+  "id": "2bbde3f971209f87",
+  "split": "dev",
+  "text": "who do i contact for lost luggage",
+  "intent": "lost_luggage",
+  "route": "travel"
+ },
+ {
+  "id": "879b7ce3c1bdae8e",
+  "split": "dev",
+  "text": "can you tell me where my phone is",
+  "intent": "find_phone",
+  "route": "utility"
+ },
+ {
+  "id": "c1f5cdd6907f0a99",
+  "split": "dev",
+  "text": "how many teaspoons in one tablespoon",
+  "intent": "measurement_conversion",
+  "route": "utility"
+ },
+ {
+  "id": "c41dafb9f8a1434c",
+  "split": "dev",
+  "text": "how many teaspoons make up in 1 tablespoon",
+  "intent": "measurement_conversion",
+  "route": "utility"
+ },
+ {
+  "id": "4f501b6bed97e216",
+  "split": "dev",
+  "text": "may i please have a definition for the work churlish",
+  "intent": "definition",
+  "route": "utility"
+ },
+ {
+  "id": "89134d72d8a3cf3f",
+  "split": "dev",
+  "text": "please define erection for me",
+  "intent": "definition",
+  "route": "utility"
+ },
+ {
+  "id": "a3f47f44d2e31940",
+  "split": "dev",
+  "text": "please help me find my lost phone",
+  "intent": "find_phone",
+  "route": "utility"
+ },
+ {
+  "id": "69bf6fe7dc105273",
+  "split": "dev",
+  "text": "share with current location with ben",
+  "intent": "share_location",
+  "route": "utility"
+ },
+ {
+  "id": "c39bbb9d564615b9",
+  "split": "dev",
+  "text": "tell me what today's date is",
+  "intent": "date",
+  "route": "utility"
+ },
+ {
+  "id": "6948867428013116",
+  "split": "dev",
+  "text": "what was the temperature yesterday",
+  "intent": "weather",
+  "route": "utility"
+ },
+ {
+  "id": "2e905b846c9d7c96",
+  "split": "dev",
+  "text": "what's the clock say",
+  "intent": "time",
+  "route": "utility"
+ },
+ {
+  "id": "1cdd99d480b9b875",
+  "split": "dev",
+  "text": "can you help me switch insurance plans",
+  "intent": "insurance_change",
+  "route": "work"
+ },
+ {
+  "id": "8191ba59ac671a17",
+  "split": "dev",
+  "text": "can you tell me what my federal tax burden is",
+  "intent": "taxes",
+  "route": "work"
+ },
+ {
+  "id": "e0bcf8513abd2e9f",
+  "split": "dev",
+  "text": "can you tell me whether or not you approved my vacation time",
+  "intent": "pto_request_status",
+  "route": "work"
+ },
+ {
+  "id": "b22caaa90c1eda9e",
+  "split": "dev",
+  "text": "has my maternity leave been approved",
+  "intent": "pto_request_status",
+  "route": "work"
+ },
+ {
+  "id": "a8201b498213380d",
+  "split": "dev",
+  "text": "how many pto days are in my possesion",
+  "intent": "pto_balance",
+  "route": "work"
+ },
+ {
+  "id": "3bd80e2ee0ea4966",
+  "split": "dev",
+  "text": "what if any meetings do i have today",
+  "intent": "meeting_schedule",
+  "route": "work"
+ },
+ {
+  "id": "bb36c64bb99ad4b1",
+  "split": "dev",
+  "text": "what's my income from work",
+  "intent": "income",
+  "route": "work"
+ },
+ {
+  "id": "bb7231aa89035ce1",
+  "split": "dev",
+  "text": "where do i go to get a form for w2s",
+  "intent": "w2",
+  "route": "work"
+ },
+ {
+  "id": "0232942baae58c9c",
+  "split": "dev",
+  "text": "where should i look for my w-2",
+  "intent": "w2",
+  "route": "work"
+ },
+ {
+  "id": "016ca9149af64e05",
+  "split": "dev",
+  "text": "where would i find my w-2",
+  "intent": "w2",
+  "route": "work"
+ },
+ {
+  "id": "91cdd0cf6f7523bc",
+  "split": "test",
+  "text": "can someone look at my check engine light",
+  "intent": "schedule_maintenance",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "56be88ed0fc99916",
+  "split": "test",
+  "text": "can you tell me about what time i should be arriving at the airport",
+  "intent": "distance",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "8e4777a3faca1eea",
+  "split": "test",
+  "text": "can you tell me how to change my oil and what kind i use",
+  "intent": "oil_change_how",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "c47cec0c8a815078",
+  "split": "test",
+  "text": "do i have enough fuel to travel to san diego from here",
+  "intent": "gas",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "21457dbf05f562cd",
+  "split": "test",
+  "text": "find me an uber and get it here",
+  "intent": "uber",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "2785e424ae98003c",
+  "split": "test",
+  "text": "how is the traffic normally driving into downtown washington, dc, from baltimore at 4:00 pm",
+  "intent": "traffic",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "49c9d7129ac50685",
+  "split": "test",
+  "text": "how often should i change the tires on my car",
+  "intent": "tire_change",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "46e2f12ecc42c46a",
+  "split": "test",
+  "text": "i am currently located in what town",
+  "intent": "current_location",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "6c269bbb0476e9bb",
+  "split": "test",
+  "text": "i gotta jump start my car",
+  "intent": "jump_start",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "3e16495ebe8a88fd",
+  "split": "test",
+  "text": "i need an uber for 5 people to go to the statue of liberty",
+  "intent": "uber",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "16fdba203cdee22d",
+  "split": "test",
+  "text": "i need gas what type do i need for this car",
+  "intent": "gas_type",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "1aead46f3aceb8e1",
+  "split": "test",
+  "text": "i want directions to phoenix",
+  "intent": "directions",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "94948c700bfa61d0",
+  "split": "test",
+  "text": "i would like to know the mpg of my car",
+  "intent": "mpg",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "5528dd5814edc15a",
+  "split": "test",
+  "text": "my current location is what",
+  "intent": "current_location",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "eb2e8bec4f906ed3",
+  "split": "test",
+  "text": "please give me the approximate amount of time i will need to go from jfk international airport to penn station",
+  "intent": "distance",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "7391340ee9c7d49e",
+  "split": "test",
+  "text": "please tell me my car's tire pressure",
+  "intent": "tire_pressure",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "041571f0f2c2c44c",
+  "split": "test",
+  "text": "show me my location",
+  "intent": "current_location",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "ab9dfd0d10579516",
+  "split": "test",
+  "text": "tell me when i got my car checked last",
+  "intent": "last_maintenance",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "a679dbb091f47083",
+  "split": "test",
+  "text": "what raiting of gas is called for",
+  "intent": "gas_type",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "c47187ea955eae04",
+  "split": "test",
+  "text": "what the mpg",
+  "intent": "mpg",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "f6c6314785328b48",
+  "split": "test",
+  "text": "what was the date of my last car appointment",
+  "intent": "last_maintenance",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "d3d085db7e7c5171",
+  "split": "test",
+  "text": "what's my map location",
+  "intent": "current_location",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "429f38ca865e31d7",
+  "split": "test",
+  "text": "whats the mpg of this car",
+  "intent": "mpg",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "2aee74a2116aa43a",
+  "split": "test",
+  "text": "when will my tires need to be changed",
+  "intent": "tire_change",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "32bcce9ed5ce9743",
+  "split": "test",
+  "text": "when's the next time i ought to change my oil",
+  "intent": "oil_change_when",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "03cccd38607d2ef4",
+  "split": "test",
+  "text": "where am i currently",
+  "intent": "current_location",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "2e5308bc10a7cd09",
+  "split": "test",
+  "text": "where is the closest pharmacy",
+  "intent": "directions",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "c095990c65230323",
+  "split": "test",
+  "text": "where is the nearest fry's",
+  "intent": "directions",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "4daaa775a78b3272",
+  "split": "test",
+  "text": "where is the nearest wal mart",
+  "intent": "directions",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "660ce96d5acc059d",
+  "split": "test",
+  "text": "which way do we go and how long will it take to get to the sears tower in chicago",
+  "intent": "distance",
+  "route": "auto_and_commute"
+ },
+ {
+  "id": "f47c72f22edc4b7b",
+  "split": "test",
+  "text": "about how much did i spend recently",
+  "intent": "spending_history",
+  "route": "banking"
+ },
+ {
+  "id": "de7e8e90cb9612e5",
+  "split": "test",
+  "text": "change the pin on my savings account to 1234",
+  "intent": "pin_change",
+  "route": "banking"
+ },
+ {
+  "id": "051991e426056db0",
+  "split": "test",
+  "text": "check with my bank to see why my account is frozen",
+  "intent": "account_blocked",
+  "route": "banking"
+ },
+ {
+  "id": "545bf3c97428c97a",
+  "split": "test",
+  "text": "could i get some more checkbooks sent to me, please",
+  "intent": "order_checks",
+  "route": "banking"
+ },
+ {
+  "id": "8193f89297a2c189",
+  "split": "test",
+  "text": "for my savings account i would like to know the interest rate",
+  "intent": "interest_rate",
+  "route": "banking"
+ },
+ {
+  "id": "a3ebabb0d696cf3a",
+  "split": "test",
+  "text": "how do i pay my electric bill",
+  "intent": "pay_bill",
+  "route": "banking"
+ },
+ {
+  "id": "73fa4f2e025c911c",
+  "split": "test",
+  "text": "how much cash do i have in my various bank accounts",
+  "intent": "balance",
+  "route": "banking"
+ },
+ {
+  "id": "31f6d500b5bf921a",
+  "split": "test",
+  "text": "how much have i spent on my bank card sine i last paid my bill",
+  "intent": "transactions",
+  "route": "banking"
+ },
+ {
+  "id": "b669132cee9cf788",
+  "split": "test",
+  "text": "i need $360 transfered from savings to checking account",
+  "intent": "transfer",
+  "route": "banking"
+ },
+ {
+  "id": "b398dbf32f32c18a",
+  "split": "test",
+  "text": "i need my checking account's interest rate",
+  "intent": "interest_rate",
+  "route": "banking"
+ },
+ {
+  "id": "83ae70d1276a7b68",
+  "split": "test",
+  "text": "i want to know when the deadline is to pay my car loan",
+  "intent": "bill_due",
+  "route": "banking"
+ },
+ {
+  "id": "f0dccb1106163e24",
+  "split": "test",
+  "text": "i would like to put 100 dollars from the checking into the savings account now",
+  "intent": "transfer",
+  "route": "banking"
+ },
+ {
+  "id": "e4e41c0ff27ef022",
+  "split": "test",
+  "text": "i've got a fraudulent purchase from kayak on my account",
+  "intent": "report_fraud",
+  "route": "banking"
+ },
+ {
+  "id": "e6736e2c1ef50876",
+  "split": "test",
+  "text": "if i wanted to spend the lowest for my electric bill, then how much would it be",
+  "intent": "min_payment",
+  "route": "banking"
+ },
+ {
+  "id": "ccba3764b10ce013",
+  "split": "test",
+  "text": "make an immediate transfer of ten thousand from money market to checking",
+  "intent": "transfer",
+  "route": "banking"
+ },
+ {
+  "id": "a84dbf4c1a6ba2e9",
+  "split": "test",
+  "text": "make my pin 1234 for my checking account",
+  "intent": "pin_change",
+  "route": "banking"
+ },
+ {
+  "id": "89dbab9c09bf8ecb",
+  "split": "test",
+  "text": "pull up my electric bill, i want to pay it",
+  "intent": "pay_bill",
+  "route": "banking"
+ },
+ {
+  "id": "28e7dea56ac4862b",
+  "split": "test",
+  "text": "show me my ten most recent transactions on account xyz",
+  "intent": "transactions",
+  "route": "banking"
+ },
+ {
+  "id": "a85714bd4e10910c",
+  "split": "test",
+  "text": "tell me when my water bill is due",
+  "intent": "bill_due",
+  "route": "banking"
+ },
+ {
+  "id": "63b259bdcffe4272",
+  "split": "test",
+  "text": "the pin number to my card has been forgotten",
+  "intent": "pin_change",
+  "route": "banking"
+ },
+ {
+  "id": "ef21c7c0e439a066",
+  "split": "test",
+  "text": "what does my cable bill look like",
+  "intent": "bill_balance",
+  "route": "banking"
+ },
+ {
+  "id": "381fcf2803a82fc5",
+  "split": "test",
+  "text": "what is my minimum payment and when is it due",
+  "intent": "min_payment",
+  "route": "banking"
+ },
+ {
+  "id": "37a794b7d20d3834",
+  "split": "test",
+  "text": "what is the minimum payable amount for my rent bill this month",
+  "intent": "min_payment",
+  "route": "banking"
+ },
+ {
+  "id": "0b47a27fe018212e",
+  "split": "test",
+  "text": "what was my recent transaction on my visa card",
+  "intent": "transactions",
+  "route": "banking"
+ },
+ {
+  "id": "28113e3c3dd78052",
+  "split": "test",
+  "text": "what will i be paying for utilities this month",
+  "intent": "bill_balance",
+  "route": "banking"
+ },
+ {
+  "id": "8e9289d9757dc1af",
+  "split": "test",
+  "text": "what's the least i can pay this month",
+  "intent": "min_payment",
+  "route": "banking"
+ },
+ {
+  "id": "d6b8c59704a096af",
+  "split": "test",
+  "text": "when did i last make a purchase",
+  "intent": "transactions",
+  "route": "banking"
+ },
+ {
+  "id": "fc93d9b5fae5947c",
+  "split": "test",
+  "text": "where can i find my routing number",
+  "intent": "routing",
+  "route": "banking"
+ },
+ {
+  "id": "9ba2955ca816a62f",
+  "split": "test",
+  "text": "where can i find wells fargo's routing number",
+  "intent": "routing",
+  "route": "banking"
+ },
+ {
+  "id": "f35d1ab763c97a6e",
+  "split": "test",
+  "text": "would you say i've spent too much money on chips as of late",
+  "intent": "spending_history",
+  "route": "banking"
+ },
+ {
+  "id": "f28f20730c5a07f9",
+  "split": "test",
+  "text": "can you tell me how to report a card lost",
+  "intent": "report_lost_card",
+  "route": "credit_cards"
+ },
+ {
+  "id": "33f2c65409a7c177",
+  "split": "test",
+  "text": "can you tell me my apr on my credit card",
+  "intent": "apr",
+  "route": "credit_cards"
+ },
+ {
+  "id": "0b9310892b75ab1b",
+  "split": "test",
+  "text": "does my card ending in 1234, or any of my cards, expire soon",
+  "intent": "expiration_date",
+  "route": "credit_cards"
+ },
+ {
+  "id": "a4eb9008ce397d60",
+  "split": "test",
+  "text": "how do i cash in my amex reward points",
+  "intent": "redeem_rewards",
+  "route": "credit_cards"
+ },
+ {
+  "id": "ede97e21c082a852",
+  "split": "test",
+  "text": "how do i report that i lost my card",
+  "intent": "report_lost_card",
+  "route": "credit_cards"
+ },
+ {
+  "id": "3a1e5ce0d024b886",
+  "split": "test",
+  "text": "how is my credit score numberwise",
+  "intent": "credit_score",
+  "route": "credit_cards"
+ },
+ {
+  "id": "6fc15c9a896ab568",
+  "split": "test",
+  "text": "how long before my new card is mailed to me",
+  "intent": "replacement_card_duration",
+  "route": "credit_cards"
+ },
+ {
+  "id": "64d259f998a03205",
+  "split": "test",
+  "text": "how many points do i have to cash",
+  "intent": "redeem_rewards",
+  "route": "credit_cards"
+ },
+ {
+  "id": "cc3143ff638bc985",
+  "split": "test",
+  "text": "how many points earned do i have with my american express card",
+  "intent": "rewards_balance",
+  "route": "credit_cards"
+ },
+ {
+  "id": "a5294a3d44be29b1",
+  "split": "test",
+  "text": "i accidentally deactivated the magnetic stripe on my visa debit card and i need to report it",
+  "intent": "damaged_card",
+  "route": "credit_cards"
+ },
+ {
+  "id": "e831a5c319abe7c5",
+  "split": "test",
+  "text": "i can't use my card because it\u2019s messed up",
+  "intent": "damaged_card",
+  "route": "credit_cards"
+ },
+ {
+  "id": "5fcbd4a5ef6df3b6",
+  "split": "test",
+  "text": "i cannot use my card cuz it's damaged",
+  "intent": "damaged_card",
+  "route": "credit_cards"
+ },
+ {
+  "id": "4802910b37d06c9f",
+  "split": "test",
+  "text": "i lost my card and need to report it",
+  "intent": "report_lost_card",
+  "route": "credit_cards"
+ },
+ {
+  "id": "d724270f7c66fcc8",
+  "split": "test",
+  "text": "i need to know the apr on my wells fargo credit card",
+  "intent": "apr",
+  "route": "credit_cards"
+ },
+ {
+  "id": "f1ee3bea1f08da01",
+  "split": "test",
+  "text": "i was in thailand and i could not use my card to buy snacks",
+  "intent": "card_declined",
+  "route": "credit_cards"
+ },
+ {
+  "id": "7fc587ba6580e0b2",
+  "split": "test",
+  "text": "i would like to report my american express card stolen",
+  "intent": "report_lost_card",
+  "route": "credit_cards"
+ },
+ {
+  "id": "56401d0a8d1790e3",
+  "split": "test",
+  "text": "is my apr rate better than most",
+  "intent": "apr",
+  "route": "credit_cards"
+ },
+ {
+  "id": "5b5b6eed639eebe2",
+  "split": "test",
+  "text": "is my card's apr a decent rate",
+  "intent": "apr",
+  "route": "credit_cards"
+ },
+ {
+  "id": "a5e85b732a6c0e29",
+  "split": "test",
+  "text": "my card declined",
+  "intent": "card_declined",
+  "route": "credit_cards"
+ },
+ {
+  "id": "6a6f7f756506a554",
+  "split": "test",
+  "text": "my card has become too frayed and torn to use",
+  "intent": "damaged_card",
+  "route": "credit_cards"
+ },
+ {
+  "id": "525b53fb0c6a7f97",
+  "split": "test",
+  "text": "my credit rating is what",
+  "intent": "credit_score",
+  "route": "credit_cards"
+ },
+ {
+  "id": "60b28c989c6d7211",
+  "split": "test",
+  "text": "please tell me how to go about reporting a lost card",
+  "intent": "report_lost_card",
+  "route": "credit_cards"
+ },
+ {
+  "id": "61025374e1c3835a",
+  "split": "test",
+  "text": "put in a request for cashing in credit points",
+  "intent": "redeem_rewards",
+  "route": "credit_cards"
+ },
+ {
+  "id": "98b00d30f3d1f13c",
+  "split": "test",
+  "text": "what is amount of time it takes to get a new credit card i lost mine recently",
+  "intent": "replacement_card_duration",
+  "route": "credit_cards"
+ },
+ {
+  "id": "87994ec3c87c0055",
+  "split": "test",
+  "text": "what is my visa credit limit",
+  "intent": "credit_limit",
+  "route": "credit_cards"
+ },
+ {
+  "id": "4d58b5e9e2f90cdc",
+  "split": "test",
+  "text": "what's the annual percentage rate for my credit card",
+  "intent": "apr",
+  "route": "credit_cards"
+ },
+ {
+  "id": "8ea8af4b5b55d570",
+  "split": "test",
+  "text": "who do i need to contact to ask for a credit limit increase on my discover card",
+  "intent": "credit_limit_change",
+  "route": "credit_cards"
+ },
+ {
+  "id": "72e4be932a59762e",
+  "split": "test",
+  "text": "why did my card get declined at public when i was trying to buy food",
+  "intent": "card_declined",
+  "route": "credit_cards"
+ },
+ {
+  "id": "4dd5d7d1a49c5ffc",
+  "split": "test",
+  "text": "why didn't my card work",
+  "intent": "card_declined",
+  "route": "credit_cards"
+ },
+ {
+  "id": "f9beee755a0b8a56",
+  "split": "test",
+  "text": "why won't you let me pay with my credit card",
+  "intent": "card_declined",
+  "route": "credit_cards"
+ },
+ {
+  "id": "3bba6f3f7608d94a",
+  "split": "test",
+  "text": "add milk to my shopping list",
+  "intent": "shopping_list_update",
+  "route": "home"
+ },
+ {
+  "id": "a02263cbadec52aa",
+  "split": "test",
+  "text": "add what im listening to to my rock playlist",
+  "intent": "update_playlist",
+  "route": "home"
+ },
+ {
+  "id": "c6ed5608d01cd86a",
+  "split": "test",
+  "text": "can you adjust the lights down",
+  "intent": "smart_home",
+  "route": "home"
+ },
+ {
+  "id": "62eaa27fbc6c4bed",
+  "split": "test",
+  "text": "can you buy something",
+  "intent": "order",
+  "route": "home"
+ },
+ {
+  "id": "ee237473fcdde320",
+  "split": "test",
+  "text": "can you monitor my package's progress",
+  "intent": "order_status",
+  "route": "home"
+ },
+ {
+  "id": "729c21d1253a3e1a",
+  "split": "test",
+  "text": "can you tell me when my item will get here",
+  "intent": "order_status",
+  "route": "home"
+ },
+ {
+  "id": "22821c9cd97c35d3",
+  "split": "test",
+  "text": "clear my calendar on feb 28",
+  "intent": "calendar_update",
+  "route": "home"
+ },
+ {
+  "id": "cb0ea50c278f6d7d",
+  "split": "test",
+  "text": "did i mark the mechanic's appointment on my calendar",
+  "intent": "calendar",
+  "route": "home"
+ },
+ {
+  "id": "22ee604e5ea3d0f6",
+  "split": "test",
+  "text": "did i tell you to remind me about laundry",
+  "intent": "reminder",
+  "route": "home"
+ },
+ {
+  "id": "08128b5cbbdd09a7",
+  "split": "test",
+  "text": "do i have my nephew's birthday marked for november 10th",
+  "intent": "calendar",
+  "route": "home"
+ },
+ {
+  "id": "c76d8033b1eb1fd6",
+  "split": "test",
+  "text": "i need a reminder to alert me to wish my mom a happy birthday",
+  "intent": "reminder_update",
+  "route": "home"
+ },
+ {
+  "id": "477a4d1ad88ca821",
+  "split": "test",
+  "text": "i need a reminder to wash dishes",
+  "intent": "reminder_update",
+  "route": "home"
+ },
+ {
+  "id": "e714a2021c32a24b",
+  "split": "test",
+  "text": "i need milk on my shopping list",
+  "intent": "shopping_list_update",
+  "route": "home"
+ },
+ {
+  "id": "4639e558a45f0d25",
+  "split": "test",
+  "text": "i need this song on my jam playlist",
+  "intent": "update_playlist",
+  "route": "home"
+ },
+ {
+  "id": "f7950d1a61dd116e",
+  "split": "test",
+  "text": "i need to buy something, please",
+  "intent": "order",
+  "route": "home"
+ },
+ {
+  "id": "64f2b5cdb02a5311",
+  "split": "test",
+  "text": "is milk in my shopping list if not, add it",
+  "intent": "shopping_list_update",
+  "route": "home"
+ },
+ {
+  "id": "f70bc9dc9b5b3597",
+  "split": "test",
+  "text": "is milk one of the things i need to buy",
+  "intent": "shopping_list",
+  "route": "home"
+ },
+ {
+  "id": "acc95b4069f6a28a",
+  "split": "test",
+  "text": "move forward one song",
+  "intent": "next_song",
+  "route": "home"
+ },
+ {
+  "id": "5290ff63740308b2",
+  "split": "test",
+  "text": "order all items on my shopping list",
+  "intent": "order",
+  "route": "home"
+ },
+ {
+  "id": "f43099460096f4d7",
+  "split": "test",
+  "text": "play the song called wreckless love",
+  "intent": "play_music",
+  "route": "home"
+ },
+ {
+  "id": "d1bb0ac72bf0aa09",
+  "split": "test",
+  "text": "purchase grass seed from the store",
+  "intent": "order",
+  "route": "home"
+ },
+ {
+  "id": "5c4099fd4cb3a450",
+  "split": "test",
+  "text": "skip this track",
+  "intent": "next_song",
+  "route": "home"
+ },
+ {
+  "id": "bfa79d0f5ff1d3e1",
+  "split": "test",
+  "text": "take the doctor appointment off my calendar please",
+  "intent": "calendar_update",
+  "route": "home"
+ },
+ {
+  "id": "790eb1fec103e90e",
+  "split": "test",
+  "text": "the tv turn it on",
+  "intent": "smart_home",
+  "route": "home"
+ },
+ {
+  "id": "0df363b154aa95f7",
+  "split": "test",
+  "text": "what events do i have going on on march 11th",
+  "intent": "calendar",
+  "route": "home"
+ },
+ {
+  "id": "649d9962928b4404",
+  "split": "test",
+  "text": "what is the status of the order i placed with you yesterday",
+  "intent": "order_status",
+  "route": "home"
+ },
+ {
+  "id": "c5ac3a191b33bcd0",
+  "split": "test",
+  "text": "what is this song called",
+  "intent": "what_song",
+  "route": "home"
+ },
+ {
+  "id": "594292b467f04306",
+  "split": "test",
+  "text": "what song is currently playing",
+  "intent": "what_song",
+  "route": "home"
+ },
+ {
+  "id": "bcb2caac57c0127e",
+  "split": "test",
+  "text": "what things are on my todo list",
+  "intent": "todo_list",
+  "route": "home"
+ },
+ {
+  "id": "0fc6ed3cbf44627d",
+  "split": "test",
+  "text": "will you please go on amazon so i can buy speakers",
+  "intent": "order",
+  "route": "home"
+ },
+ {
+  "id": "5fbf05781771eaeb",
+  "split": "test",
+  "text": "are ned's reviews good",
+  "intent": "restaurant_reviews",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "c8678074ab1d032b",
+  "split": "test",
+  "text": "can you check the amount of calories in a chicken sandwich",
+  "intent": "calories",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "b5dc8db5283a62a0",
+  "split": "test",
+  "text": "cancel my reservation for dinner this saturday, please",
+  "intent": "cancel_reservation",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "56c3a3436ad38409",
+  "split": "test",
+  "text": "do you think they'll let me reserve a table at the olive garden",
+  "intent": "accept_reservations",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "39c5fb93f1478c48",
+  "split": "test",
+  "text": "does olive garden have good customer reviews",
+  "intent": "restaurant_reviews",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "c187b3f032944de6",
+  "split": "test",
+  "text": "find the nutrition info for bell peppers for me",
+  "intent": "nutrition_info",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "6f85ec4db7a4c55f",
+  "split": "test",
+  "text": "give me restaurant reccomendations",
+  "intent": "restaurant_suggestion",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "afeb6c96886af6c2",
+  "split": "test",
+  "text": "how healthy is a cheeseburger",
+  "intent": "nutrition_info",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "33c1feffbd722100",
+  "split": "test",
+  "text": "how healthy is mcdonalds",
+  "intent": "nutrition_info",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "9d515debe949f7b2",
+  "split": "test",
+  "text": "how many calories are in a taco",
+  "intent": "calories",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "60523c33fe33c99a",
+  "split": "test",
+  "text": "i do not actually need my reservation anymore",
+  "intent": "cancel_reservation",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "6206fe52c5162640",
+  "split": "test",
+  "text": "i need a table at gemma for nine at two",
+  "intent": "restaurant_reservation",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "70f7a487c1415b99",
+  "split": "test",
+  "text": "i need to cancel my reservation after all, please",
+  "intent": "cancel_reservation",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "c39d5291782712f4",
+  "split": "test",
+  "text": "i need to confirm my reservation for red lobster for frank",
+  "intent": "confirm_reservation",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "0b59414c986a6363",
+  "split": "test",
+  "text": "i need to know how busy denny's is at 6 am",
+  "intent": "how_busy",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "aebe110f1a02d943",
+  "split": "test",
+  "text": "is the resataurant busy at 5:00 pm",
+  "intent": "how_busy",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "621225eb6b0368fa",
+  "split": "test",
+  "text": "look up recipe time for this",
+  "intent": "cook_time",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "81984c0b7e47ae66",
+  "split": "test",
+  "text": "please delete the reservation for roberts at village tavern",
+  "intent": "cancel_reservation",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "f37b0d2d35714ffc",
+  "split": "test",
+  "text": "pull up some recommendations for places serving fish in maine",
+  "intent": "restaurant_suggestion",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "d4fa5a11b8f79c34",
+  "split": "test",
+  "text": "reserve table for 5 at red robin under the name sara at 3",
+  "intent": "restaurant_reservation",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "e272bfc1727dd16f",
+  "split": "test",
+  "text": "show me ideas for hamburger",
+  "intent": "recipe",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "e096f31a8ca9d3dd",
+  "split": "test",
+  "text": "they sold out of tacos at the buffet",
+  "intent": "restaurant_reviews",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "de9fa08e341cf94e",
+  "split": "test",
+  "text": "what is the expiration date for honey",
+  "intent": "food_last",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "04048cb9fb16ce6e",
+  "split": "test",
+  "text": "what is the proper cooking time for this",
+  "intent": "cook_time",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "65455422aa013ac0",
+  "split": "test",
+  "text": "what kind of calories do chicken tenders have",
+  "intent": "calories",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "53fe32df00bb4e2e",
+  "split": "test",
+  "text": "what kind of reviews does the olive garden have",
+  "intent": "restaurant_reviews",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "a9e8fa853b4d6d19",
+  "split": "test",
+  "text": "what's a good, popular american meal",
+  "intent": "meal_suggestion",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "b68c7ddcf90b338b",
+  "split": "test",
+  "text": "when is the egg expired",
+  "intent": "food_last",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "88830031a746e5f7",
+  "split": "test",
+  "text": "where can i satisfy my craving for french food in milwaukee",
+  "intent": "restaurant_suggestion",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "0dcd3d326e3f0fd9",
+  "split": "test",
+  "text": "within what time is is fine to eat cooked tilapia kept in the fridge",
+  "intent": "food_last",
+  "route": "kitchen_and_dining"
+ },
+ {
+  "id": "e7daba5f80bb6ce1",
+  "split": "test",
+  "text": "10-4",
+  "intent": "yes",
+  "route": "meta"
+ },
+ {
+  "id": "c918a949da4c41b3",
+  "split": "test",
+  "text": "ai, call me deb",
+  "intent": "change_user_name",
+  "route": "meta"
+ },
+ {
+  "id": "e040659f01e4d6ee",
+  "split": "test",
+  "text": "alter your accent",
+  "intent": "change_accent",
+  "route": "meta"
+ },
+ {
+  "id": "92e5320c22ce1e5a",
+  "split": "test",
+  "text": "both could be",
+  "intent": "maybe",
+  "route": "meta"
+ },
+ {
+  "id": "5cbc01f1612a6ba6",
+  "split": "test",
+  "text": "call me shane",
+  "intent": "change_user_name",
+  "route": "meta"
+ },
+ {
+  "id": "e261d63f39255921",
+  "split": "test",
+  "text": "can we change your name to clara",
+  "intent": "change_ai_name",
+  "route": "meta"
+ },
+ {
+  "id": "be4cb9b0405c13c2",
+  "split": "test",
+  "text": "can you adjust the speed of your voice",
+  "intent": "change_speed",
+  "route": "meta"
+ },
+ {
+  "id": "067e03b2603c8763",
+  "split": "test",
+  "text": "can you cancel that request",
+  "intent": "cancel",
+  "route": "meta"
+ },
+ {
+  "id": "22f06208974a3680",
+  "split": "test",
+  "text": "change from whisper mode",
+  "intent": "whisper_mode",
+  "route": "meta"
+ },
+ {
+  "id": "9be945ff82c55921",
+  "split": "test",
+  "text": "come again",
+  "intent": "repeat",
+  "route": "meta"
+ },
+ {
+  "id": "777dabcb6130feb4",
+  "split": "test",
+  "text": "go faster",
+  "intent": "change_speed",
+  "route": "meta"
+ },
+ {
+  "id": "f853869ea4353669",
+  "split": "test",
+  "text": "i agree",
+  "intent": "yes",
+  "route": "meta"
+ },
+ {
+  "id": "1e9b40d1f88b7917",
+  "split": "test",
+  "text": "i didn't understand you",
+  "intent": "repeat",
+  "route": "meta"
+ },
+ {
+  "id": "45161feb1a4bcac7",
+  "split": "test",
+  "text": "i would like to know the name you have for me",
+  "intent": "user_name",
+  "route": "meta"
+ },
+ {
+  "id": "1a39c9ebab2d4e73",
+  "split": "test",
+  "text": "please cancel the last input",
+  "intent": "cancel",
+  "route": "meta"
+ },
+ {
+  "id": "ba709beb5950dd2f",
+  "split": "test",
+  "text": "slow down your voice",
+  "intent": "change_speed",
+  "route": "meta"
+ },
+ {
+  "id": "05b88ea6e8382bf2",
+  "split": "test",
+  "text": "switch off whisper mode",
+  "intent": "whisper_mode",
+  "route": "meta"
+ },
+ {
+  "id": "7efa13decebb14d7",
+  "split": "test",
+  "text": "talk to me in a different accent",
+  "intent": "change_accent",
+  "route": "meta"
+ },
+ {
+  "id": "81a122793fd3d4d1",
+  "split": "test",
+  "text": "that is incorrect",
+  "intent": "no",
+  "route": "meta"
+ },
+ {
+  "id": "4a70af00be8efdab",
+  "split": "test",
+  "text": "that isn't right",
+  "intent": "no",
+  "route": "meta"
+ },
+ {
+  "id": "bdf6ef10d62c13b1",
+  "split": "test",
+  "text": "thats right",
+  "intent": "yes",
+  "route": "meta"
+ },
+ {
+  "id": "cd67106d4a7f8d8d",
+  "split": "test",
+  "text": "the male voice please",
+  "intent": "change_accent",
+  "route": "meta"
+ },
+ {
+  "id": "2c0e7d1d11eed69b",
+  "split": "test",
+  "text": "unsync yourself from my device",
+  "intent": "sync_device",
+  "route": "meta"
+ },
+ {
+  "id": "59db33962dd0f1b2",
+  "split": "test",
+  "text": "what did you just say",
+  "intent": "repeat",
+  "route": "meta"
+ },
+ {
+  "id": "f63b5d99f891373e",
+  "split": "test",
+  "text": "what do you think about me calling you cora",
+  "intent": "change_ai_name",
+  "route": "meta"
+ },
+ {
+  "id": "5dfc12611082e8fd",
+  "split": "test",
+  "text": "what name do you have for me",
+  "intent": "user_name",
+  "route": "meta"
+ },
+ {
+  "id": "cf0f67e705d085ee",
+  "split": "test",
+  "text": "whisper mode, please",
+  "intent": "whisper_mode",
+  "route": "meta"
+ },
+ {
+  "id": "d7222e33f2d98799",
+  "split": "test",
+  "text": "would you change your voice to the male british accent for me",
+  "intent": "change_accent",
+  "route": "meta"
+ },
+ {
+  "id": "1875dddff75a1186",
+  "split": "test",
+  "text": "yes is my answer",
+  "intent": "yes",
+  "route": "meta"
+ },
+ {
+  "id": "fff01f8e748e2721",
+  "split": "test",
+  "text": "yup",
+  "intent": "yes",
+  "route": "meta"
+ },
+ {
+  "id": "19c9f42c7e103426",
+  "split": "test",
+  "text": "are people with a mental illness eligible for disability",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "ef1247a219689248",
+  "split": "test",
+  "text": "are you allowed to call someone a dirty name as part of free speech",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "7d666313d33fb548",
+  "split": "test",
+  "text": "are your step-parent's parents considered your grandparents",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "acce8af15be1897e",
+  "split": "test",
+  "text": "can you look at what average reviews say about the new windows phone on amazon for me",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "d3f6757998159548",
+  "split": "test",
+  "text": "find a credit counseling service for me on the web",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "8f1bf8cb932d2a54",
+  "split": "test",
+  "text": "how long does it take the irs to issue a tax refund",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "6d8d0279c3b96d1d",
+  "split": "test",
+  "text": "how long does it take to call an ambulance",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "386f363d654399e8",
+  "split": "test",
+  "text": "how many books are in piers anthony virtual mode series",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "e7a49539f414cea1",
+  "split": "test",
+  "text": "how to fix walls",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "8a9e2198d0241cf0",
+  "split": "test",
+  "text": "how to get the right medicine",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "4f1339cafaf54387",
+  "split": "test",
+  "text": "i have a rash, what can i use for it",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "421fac52e3c8c525",
+  "split": "test",
+  "text": "is the stop sign around the corner still knocked over",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "c8db5964f584c8f4",
+  "split": "test",
+  "text": "is there a vaccine for ebola",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "48bf21e24cf0593d",
+  "split": "test",
+  "text": "look up the average temperature changes over the last 30 years for my area",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "fa99eb65b8061ca9",
+  "split": "test",
+  "text": "open up internet browser",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "c7a215c8bc0e7f83",
+  "split": "test",
+  "text": "please spell check my resume",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "57658256eb1af137",
+  "split": "test",
+  "text": "program my new robot to bring me snacks",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "ae768e1526dbdc54",
+  "split": "test",
+  "text": "search information on how to apply foundation",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "c7d5dedae461c64d",
+  "split": "test",
+  "text": "see if you can find a good vegetable wash for me",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "92c6c719d43f11e0",
+  "split": "test",
+  "text": "should i do a complete stop at red lights",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "3f7b01dd2da64d9a",
+  "split": "test",
+  "text": "sign me up for the slack employment forum",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "4a34bb1faad09d04",
+  "split": "test",
+  "text": "tell me about the oscars",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "3619cedb0a6b1ccb",
+  "split": "test",
+  "text": "what casino game has the best odds",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "805c70d7536a946f",
+  "split": "test",
+  "text": "what is the cheapest new car for this year",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "5fd059c1b555c0ea",
+  "split": "test",
+  "text": "what time is a star is born showing",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "aafbdbdd21df13e6",
+  "split": "test",
+  "text": "what's the best hand to have in texas hold em",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "2da9035c04c06613",
+  "split": "test",
+  "text": "what's the best style shoe to wear to the prom",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "c3ddc058c5808523",
+  "split": "test",
+  "text": "when are the winter olympic games",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "57d1a21e4e9a60f9",
+  "split": "test",
+  "text": "when is it cheapest to travel to hawaii",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "3bf9d617adf84494",
+  "split": "test",
+  "text": "when was the gold rush",
+  "intent": "oos",
+  "route": "out_of_scope"
+ },
+ {
+  "id": "bf9330f4ce0f7ea7",
+  "split": "test",
+  "text": "can you tell me what you can help with",
+  "intent": "what_can_i_ask_you",
+  "route": "small_talk"
+ },
+ {
+  "id": "7d8028a7df5cf27c",
+  "split": "test",
+  "text": "could you tell me if you're a real person",
+  "intent": "are_you_a_bot",
+  "route": "small_talk"
+ },
+ {
+  "id": "92b8ac94f8ec3e04",
+  "split": "test",
+  "text": "do you have cats or dogs or something else as a pet",
+  "intent": "do_you_have_pets",
+  "route": "small_talk"
+ },
+ {
+  "id": "6d3f2d533f9563c8",
+  "split": "test",
+  "text": "enjoy your day, goodbye",
+  "intent": "goodbye",
+  "route": "small_talk"
+ },
+ {
+  "id": "57fb6f8f7ea28b68",
+  "split": "test",
+  "text": "give me a joke about water",
+  "intent": "tell_joke",
+  "route": "small_talk"
+ },
+ {
+  "id": "50e7ff4f6277aa5c",
+  "split": "test",
+  "text": "great, thanks!",
+  "intent": "thank_you",
+  "route": "small_talk"
+ },
+ {
+  "id": "1e4fc447c52e2b14",
+  "split": "test",
+  "text": "hello there ai",
+  "intent": "greeting",
+  "route": "small_talk"
+ },
+ {
+  "id": "f409daa9e3f89f9b",
+  "split": "test",
+  "text": "hi, how are you today",
+  "intent": "greeting",
+  "route": "small_talk"
+ },
+ {
+  "id": "6e3bcc525220eefe",
+  "split": "test",
+  "text": "how old would you be",
+  "intent": "how_old_are_you",
+  "route": "small_talk"
+ },
+ {
+  "id": "3b791e2abb1f9b3b",
+  "split": "test",
+  "text": "how should i address you",
+  "intent": "what_is_your_name",
+  "route": "small_talk"
+ },
+ {
+  "id": "7661cb99a363c884",
+  "split": "test",
+  "text": "i am needing to know what some of your hobbies are",
+  "intent": "what_are_your_hobbies",
+  "route": "small_talk"
+ },
+ {
+  "id": "8e35137539f41d16",
+  "split": "test",
+  "text": "i need to know whether you are a human or are a computer",
+  "intent": "are_you_a_bot",
+  "route": "small_talk"
+ },
+ {
+  "id": "8589f939fbd09abd",
+  "split": "test",
+  "text": "i want to know the meaning of life",
+  "intent": "meaning_of_life",
+  "route": "small_talk"
+ },
+ {
+  "id": "feb2232d54aed7dd",
+  "split": "test",
+  "text": "i would like to hear something funny",
+  "intent": "tell_joke",
+  "route": "small_talk"
+ },
+ {
+  "id": "331cc9d33e0faf93",
+  "split": "test",
+  "text": "i'd like to hear a lawyer joke",
+  "intent": "tell_joke",
+  "route": "small_talk"
+ },
+ {
+  "id": "1fcef281e16b94c0",
+  "split": "test",
+  "text": "may i have your name",
+  "intent": "what_is_your_name",
+  "route": "small_talk"
+ },
+ {
+  "id": "9945a3a534a8946e",
+  "split": "test",
+  "text": "name unusual facts about the circus",
+  "intent": "fun_fact",
+  "route": "small_talk"
+ },
+ {
+  "id": "3aa61771b5bdea64",
+  "split": "test",
+  "text": "tell me a joke about elephants",
+  "intent": "tell_joke",
+  "route": "small_talk"
+ },
+ {
+  "id": "a8cb2452265d449d",
+  "split": "test",
+  "text": "tell me fun facts on science topics",
+  "intent": "fun_fact",
+  "route": "small_talk"
+ },
+ {
+  "id": "d130270cdaf7cae7",
+  "split": "test",
+  "text": "tell me what subjects you like",
+  "intent": "what_can_i_ask_you",
+  "route": "small_talk"
+ },
+ {
+  "id": "98e56de94ff8788c",
+  "split": "test",
+  "text": "tell me what the point of life is",
+  "intent": "meaning_of_life",
+  "route": "small_talk"
+ },
+ {
+  "id": "fb57e1045a30a8a8",
+  "split": "test",
+  "text": "tell me what you can do for me",
+  "intent": "what_can_i_ask_you",
+  "route": "small_talk"
+ },
+ {
+  "id": "3d752b506bb3c95f",
+  "split": "test",
+  "text": "thank you for the heip",
+  "intent": "thank_you",
+  "route": "small_talk"
+ },
+ {
+  "id": "56dbd0e0eea73a58",
+  "split": "test",
+  "text": "what do you know about the meaning of life",
+  "intent": "meaning_of_life",
+  "route": "small_talk"
+ },
+ {
+  "id": "69e13ad552c50968",
+  "split": "test",
+  "text": "what hobbies do you like to do",
+  "intent": "what_are_your_hobbies",
+  "route": "small_talk"
+ },
+ {
+  "id": "6c7f2dc946eb37f0",
+  "split": "test",
+  "text": "what is the name of the place you work at",
+  "intent": "who_do_you_work_for",
+  "route": "small_talk"
+ },
+ {
+  "id": "e12d3efce7bc10d8",
+  "split": "test",
+  "text": "what should you be called",
+  "intent": "what_is_your_name",
+  "route": "small_talk"
+ },
+ {
+  "id": "6b6d37d955fa8183",
+  "split": "test",
+  "text": "where are you from originally",
+  "intent": "where_are_you_from",
+  "route": "small_talk"
+ },
+ {
+  "id": "e59a4a993219bf39",
+  "split": "test",
+  "text": "which company were you designed by",
+  "intent": "who_made_you",
+  "route": "small_talk"
+ },
+ {
+  "id": "42a51a9880de269e",
+  "split": "test",
+  "text": "would you call yourself a cat or dog person",
+  "intent": "do_you_have_pets",
+  "route": "small_talk"
+ },
+ {
+  "id": "0a38dd6239888153",
+  "split": "test",
+  "text": "alert my bank of my travel to dubai for the dates april 14th through april 22nd",
+  "intent": "travel_notification",
+  "route": "travel"
+ },
+ {
+  "id": "5d6336711a05667c",
+  "split": "test",
+  "text": "are there any required shots in indonesia",
+  "intent": "vaccines",
+  "route": "travel"
+ },
+ {
+  "id": "13697cafdd46c19c",
+  "split": "test",
+  "text": "can i get to cuba with this visa",
+  "intent": "international_visa",
+  "route": "travel"
+ },
+ {
+  "id": "08bac984614ac3a8",
+  "split": "test",
+  "text": "can i used the same type of plug in z as i do in the us",
+  "intent": "plug_type",
+  "route": "travel"
+ },
+ {
+  "id": "023f4b5968c397be",
+  "split": "test",
+  "text": "do i require a plug converter when i visit puerto rico",
+  "intent": "plug_type",
+  "route": "travel"
+ },
+ {
+  "id": "855cd73db766b2a6",
+  "split": "test",
+  "text": "does cuba require vaccines",
+  "intent": "vaccines",
+  "route": "travel"
+ },
+ {
+  "id": "55d5b1c8767d66ff",
+  "split": "test",
+  "text": "find a decent rental care for next week at the philadelphia airport",
+  "intent": "car_rental",
+  "route": "travel"
+ },
+ {
+  "id": "aeb31d8576649eb1",
+  "split": "test",
+  "text": "has flight dl123 landed",
+  "intent": "flight_status",
+  "route": "travel"
+ },
+ {
+  "id": "4fa0e58a1feb21ee",
+  "split": "test",
+  "text": "how do you say fast in spanish",
+  "intent": "translate",
+  "route": "travel"
+ },
+ {
+  "id": "d8b8663378cf3691",
+  "split": "test",
+  "text": "how many carry ons can i take on a flight with delta to seattle",
+  "intent": "carry_on",
+  "route": "travel"
+ },
+ {
+  "id": "6ae28a3f132a0ec0",
+  "split": "test",
+  "text": "how would i say i am lost if i were japanese",
+  "intent": "translate",
+  "route": "travel"
+ },
+ {
+  "id": "b237fba43cc72744",
+  "split": "test",
+  "text": "i am a bit panicked because my luggage seems to have gone missing",
+  "intent": "lost_luggage",
+  "route": "travel"
+ },
+ {
+  "id": "ed6742ef1b0cb7ba",
+  "split": "test",
+  "text": "i need to get a hotel in phoenix near chase field from january 4th to the 8th",
+  "intent": "book_hotel",
+  "route": "travel"
+ },
+ {
+  "id": "6772aadb768a0475",
+  "split": "test",
+  "text": "i think my luggage is lost",
+  "intent": "lost_luggage",
+  "route": "travel"
+ },
+ {
+  "id": "8093370abef3d9b5",
+  "split": "test",
+  "text": "i wanna find a hotel with good reviews in phoenix",
+  "intent": "book_hotel",
+  "route": "travel"
+ },
+ {
+  "id": "6efd2894e72cf74f",
+  "split": "test",
+  "text": "i want a rental car that is available tomorrow and that i can keep for four days please find me one",
+  "intent": "car_rental",
+  "route": "travel"
+ },
+ {
+  "id": "c7778a5b6cee1d91",
+  "split": "test",
+  "text": "i would like to book a place to stay in phoenix from the 5th to the 9th of march",
+  "intent": "book_hotel",
+  "route": "travel"
+ },
+ {
+  "id": "d17dbd9b0e617390",
+  "split": "test",
+  "text": "is socket converter required in france",
+  "intent": "plug_type",
+  "route": "travel"
+ },
+ {
+  "id": "7234323b53198ab1",
+  "split": "test",
+  "text": "safety concerns for malaysia",
+  "intent": "travel_alert",
+  "route": "travel"
+ },
+ {
+  "id": "f6ed2f9cdb793a3e",
+  "split": "test",
+  "text": "schedule a rental car starting monday the 5th thru friday the 9th at rent a car in town",
+  "intent": "car_rental",
+  "route": "travel"
+ },
+ {
+  "id": "14af455f215357be",
+  "split": "test",
+  "text": "tell me the status of my american airlines flight",
+  "intent": "flight_status",
+  "route": "travel"
+ },
+ {
+  "id": "b5b60a7f6519c370",
+  "split": "test",
+  "text": "what are some fun local experiences in canada",
+  "intent": "travel_suggestion",
+  "route": "travel"
+ },
+ {
+  "id": "9e6f7c4dc963a992",
+  "split": "test",
+  "text": "what is the present exchange rate between usd and british pound",
+  "intent": "exchange_rate",
+  "route": "travel"
+ },
+ {
+  "id": "50b17f13254a7b5f",
+  "split": "test",
+  "text": "what is the timezone for san francisco",
+  "intent": "timezone",
+  "route": "travel"
+ },
+ {
+  "id": "21131fab8a4d3230",
+  "split": "test",
+  "text": "what shots do i need if i'm travelling to odessa",
+  "intent": "vaccines",
+  "route": "travel"
+ },
+ {
+  "id": "19f32ed14f09a956",
+  "split": "test",
+  "text": "what should i do about losing my luggage",
+  "intent": "lost_luggage",
+  "route": "travel"
+ },
+ {
+  "id": "c58af22d4d644640",
+  "split": "test",
+  "text": "what's the spanish word for pasta",
+  "intent": "translate",
+  "route": "travel"
+ },
+ {
+  "id": "673b51e81e27a759",
+  "split": "test",
+  "text": "what's the status for my delta flight this afternoon",
+  "intent": "flight_status",
+  "route": "travel"
+ },
+ {
+  "id": "8ce209a5da531d95",
+  "split": "test",
+  "text": "what's the timezone for britain",
+  "intent": "timezone",
+  "route": "travel"
+ },
+ {
+  "id": "8353af217b26cc4b",
+  "split": "test",
+  "text": "where would i find my luggage",
+  "intent": "lost_luggage",
+  "route": "travel"
+ },
+ {
+  "id": "88d9ea09627d4908",
+  "split": "test",
+  "text": "ai pick up the dice, then drop it",
+  "intent": "roll_dice",
+  "route": "utility"
+ },
+ {
+  "id": "6cbcc5e3ffd9eec5",
+  "split": "test",
+  "text": "ai toss the dice",
+  "intent": "roll_dice",
+  "route": "utility"
+ },
+ {
+  "id": "18b93a001feb4d74",
+  "split": "test",
+  "text": "call mom",
+  "intent": "make_call",
+  "route": "utility"
+ },
+ {
+  "id": "5dadc14febbb4811",
+  "split": "test",
+  "text": "can you do a coin flip for me ai",
+  "intent": "flip_coin",
+  "route": "utility"
+ },
+ {
+  "id": "f6adbb2e73424036",
+  "split": "test",
+  "text": "can you set an alarm",
+  "intent": "alarm",
+  "route": "utility"
+ },
+ {
+  "id": "27aabd446b10158c",
+  "split": "test",
+  "text": "can you spell out \"wonderful",
+  "intent": "spelling",
+  "route": "utility"
+ },
+ {
+  "id": "6e0fd20836aa977b",
+  "split": "test",
+  "text": "could you help me locate my phone, please",
+  "intent": "find_phone",
+  "route": "utility"
+ },
+ {
+  "id": "4021bcb79fb20b8d",
+  "split": "test",
+  "text": "could you set a timer",
+  "intent": "timer",
+  "route": "utility"
+ },
+ {
+  "id": "4a93ca6416c94a92",
+  "split": "test",
+  "text": "don't forget to set an alarm for noon",
+  "intent": "alarm",
+  "route": "utility"
+ },
+ {
+  "id": "761b4c407c48ab14",
+  "split": "test",
+  "text": "flip a coin for me and i call heads",
+  "intent": "flip_coin",
+  "route": "utility"
+ },
+ {
+  "id": "1f7dd82786f265e6",
+  "split": "test",
+  "text": "get a text to mark",
+  "intent": "text",
+  "route": "utility"
+ },
+ {
+  "id": "f63183b39f25f002",
+  "split": "test",
+  "text": "i don't know how to spell apoplectic, can you tell me",
+  "intent": "spelling",
+  "route": "utility"
+ },
+ {
+  "id": "a91cc49fe7871fd5",
+  "split": "test",
+  "text": "i have to make a phone call",
+  "intent": "make_call",
+  "route": "utility"
+ },
+ {
+  "id": "c2978bc1e6d78b4d",
+  "split": "test",
+  "text": "i need an alarm set now",
+  "intent": "alarm",
+  "route": "utility"
+ },
+ {
+  "id": "117cd2688ed6a1bd",
+  "split": "test",
+  "text": "i need to know how many pounds are in 10 kilos",
+  "intent": "measurement_conversion",
+  "route": "utility"
+ },
+ {
+  "id": "67c6e511bef5f10e",
+  "split": "test",
+  "text": "make a call for me to the vet",
+  "intent": "make_call",
+  "route": "utility"
+ },
+ {
+  "id": "ecbb3f3f65be0845",
+  "split": "test",
+  "text": "make my location available with david and kate",
+  "intent": "share_location",
+  "route": "utility"
+ },
+ {
+  "id": "eb32e95939ff1109",
+  "split": "test",
+  "text": "please explain the word catastrophic to me",
+  "intent": "definition",
+  "route": "utility"
+ },
+ {
+  "id": "7c0f3cf4ca9aa79d",
+  "split": "test",
+  "text": "please give me the time in tanzania at this moment",
+  "intent": "time",
+  "route": "utility"
+ },
+ {
+  "id": "6ee540e7a22c9658",
+  "split": "test",
+  "text": "please make a call to stefan larson",
+  "intent": "make_call",
+  "route": "utility"
+ },
+ {
+  "id": "61e8ca6adca56944",
+  "split": "test",
+  "text": "please make sure the alarm is set",
+  "intent": "alarm",
+  "route": "utility"
+ },
+ {
+  "id": "f0fab970818edb42",
+  "split": "test",
+  "text": "spell aaron for me",
+  "intent": "spelling",
+  "route": "utility"
+ },
+ {
+  "id": "3cfa968b2597e674",
+  "split": "test",
+  "text": "tell time for another city: dallas",
+  "intent": "time",
+  "route": "utility"
+ },
+ {
+  "id": "dbc1d16367a53728",
+  "split": "test",
+  "text": "text dave, i'll be there soon",
+  "intent": "text",
+  "route": "utility"
+ },
+ {
+  "id": "fa7f904de6e0553f",
+  "split": "test",
+  "text": "what is the date in 5 days",
+  "intent": "date",
+  "route": "utility"
+ },
+ {
+  "id": "88d69b7b76947c50",
+  "split": "test",
+  "text": "what is the meaning of the word girn",
+  "intent": "definition",
+  "route": "utility"
+ },
+ {
+  "id": "9f4e21af24906ecb",
+  "split": "test",
+  "text": "what is the time is central time zone",
+  "intent": "time",
+  "route": "utility"
+ },
+ {
+  "id": "0d2440b9f581441e",
+  "split": "test",
+  "text": "what would the date be 5 days from today",
+  "intent": "date",
+  "route": "utility"
+ },
+ {
+  "id": "19f94ecef8dd989f",
+  "split": "test",
+  "text": "what's the meaning of naff",
+  "intent": "definition",
+  "route": "utility"
+ },
+ {
+  "id": "1e1023781cb2de80",
+  "split": "test",
+  "text": "where the bleep did i put my bleeping phone",
+  "intent": "find_phone",
+  "route": "utility"
+ },
+ {
+  "id": "af89f53f64a6cc67",
+  "split": "test",
+  "text": "can i purchase a vacation using this",
+  "intent": "pto_request",
+  "route": "work"
+ },
+ {
+  "id": "c11fbe4552d9d5cf",
+  "split": "test",
+  "text": "can you notify me when my vacation days have approved",
+  "intent": "pto_request_status",
+  "route": "work"
+ },
+ {
+  "id": "5883a3016a28a035",
+  "split": "test",
+  "text": "can you tell me how to transfer my 401k",
+  "intent": "rollover_401k",
+  "route": "work"
+ },
+ {
+  "id": "e41ce483200352d1",
+  "split": "test",
+  "text": "can you tell me the process for obtaining a copy of my w2 for my taxes",
+  "intent": "w2",
+  "route": "work"
+ },
+ {
+  "id": "65f40baab929b973",
+  "split": "test",
+  "text": "could you tell me how to direct deposit my check from work into nations bank",
+  "intent": "direct_deposit",
+  "route": "work"
+ },
+ {
+  "id": "8ea2e65a3b541613",
+  "split": "test",
+  "text": "do you know the price for my taxes in income",
+  "intent": "taxes",
+  "route": "work"
+ },
+ {
+  "id": "feb1640e06d7d507",
+  "split": "test",
+  "text": "how many days are remaining on my vacation days",
+  "intent": "pto_balance",
+  "route": "work"
+ },
+ {
+  "id": "3ae69279599daa4b",
+  "split": "test",
+  "text": "how many sick days do i have",
+  "intent": "pto_balance",
+  "route": "work"
+ },
+ {
+  "id": "92e9d17a65de608f",
+  "split": "test",
+  "text": "how much are the taxes on my income",
+  "intent": "taxes",
+  "route": "work"
+ },
+ {
+  "id": "13443d157bb93ec8",
+  "split": "test",
+  "text": "how much vacation time do i have",
+  "intent": "pto_balance",
+  "route": "work"
+ },
+ {
+  "id": "8707c4434f5876b6",
+  "split": "test",
+  "text": "how much vacation time have i earned",
+  "intent": "pto_balance",
+  "route": "work"
+ },
+ {
+  "id": "0995e2e858e50a55",
+  "split": "test",
+  "text": "i must get the w-2 form",
+  "intent": "w2",
+  "route": "work"
+ },
+ {
+  "id": "7587a4f93f99522e",
+  "split": "test",
+  "text": "i need to change my insurance policy, do you know how",
+  "intent": "insurance_change",
+  "route": "work"
+ },
+ {
+  "id": "0aca1dc6a68c8e9b",
+  "split": "test",
+  "text": "i need to know how to do direct deposit with my paycheck at nations bank",
+  "intent": "direct_deposit",
+  "route": "work"
+ },
+ {
+  "id": "7ef6365fa0866235",
+  "split": "test",
+  "text": "i need to sign up for a new allstate plan",
+  "intent": "insurance_change",
+  "route": "work"
+ },
+ {
+  "id": "5e55fe6702c9a38a",
+  "split": "test",
+  "text": "i want to get the w-2 form",
+  "intent": "w2",
+  "route": "work"
+ },
+ {
+  "id": "1ff42f392e86e647",
+  "split": "test",
+  "text": "is my vacation approved",
+  "intent": "pto_request_status",
+  "route": "work"
+ },
+ {
+  "id": "b6171878bd89d18f",
+  "split": "test",
+  "text": "look up the date for my next payday",
+  "intent": "payday",
+  "route": "work"
+ },
+ {
+  "id": "8cbbe1be92f7c997",
+  "split": "test",
+  "text": "please let me know the status of my vacation request",
+  "intent": "pto_request_status",
+  "route": "work"
+ },
+ {
+  "id": "0eb6e0f2e3d4d68f",
+  "split": "test",
+  "text": "please put in a vacation request",
+  "intent": "pto_request",
+  "route": "work"
+ },
+ {
+  "id": "70b5f901e91255cf",
+  "split": "test",
+  "text": "reserve a meeting room for 5pm on friday",
+  "intent": "schedule_meeting",
+  "route": "work"
+ },
+ {
+  "id": "e3b63081e823d168",
+  "split": "test",
+  "text": "so far how much pto have i used",
+  "intent": "pto_used",
+  "route": "work"
+ },
+ {
+  "id": "0b2f1a0cbf34f927",
+  "split": "test",
+  "text": "tell me how long until the next day off",
+  "intent": "next_holiday",
+  "route": "work"
+ },
+ {
+  "id": "d47a81ee6867c0a8",
+  "split": "test",
+  "text": "what do i need to do to get new insurance",
+  "intent": "insurance_change",
+  "route": "work"
+ },
+ {
+  "id": "1db0fae4b428f6e3",
+  "split": "test",
+  "text": "what is my current salary",
+  "intent": "income",
+  "route": "work"
+ },
+ {
+  "id": "e0ece073b1b9f4ad",
+  "split": "test",
+  "text": "what is the price of my state taxes that i owe",
+  "intent": "taxes",
+  "route": "work"
+ },
+ {
+  "id": "1ab027c7de2fcf42",
+  "split": "test",
+  "text": "what is the year to date total on my vacation days",
+  "intent": "pto_balance",
+  "route": "work"
+ },
+ {
+  "id": "d02428634894b036",
+  "split": "test",
+  "text": "what taxes do i owe",
+  "intent": "taxes",
+  "route": "work"
+ },
+ {
+  "id": "0a6646dcb8381fab",
+  "split": "test",
+  "text": "when can i expect to be paid",
+  "intent": "payday",
+  "route": "work"
+ },
+ {
+  "id": "75022b0ba895e769",
+  "split": "test",
+  "text": "when will my next vacation day be",
+  "intent": "next_holiday",
+  "route": "work"
+ }
+]

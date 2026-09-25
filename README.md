@@ -1,9 +1,10 @@
 # Praneeth Paikray
 
-A minimal personal site and one interactive research article, built with Astro and published to GitHub Pages.
+A minimal personal site and two interactive research articles, built with Astro and published to GitHub Pages.
 
 - Home: https://praneeth16.github.io/
 - Article: https://praneeth16.github.io/blog/adapting-jev-with-gepa/
+- Article: https://praneeth16.github.io/blog/wtf-is-a-system-one-model/
 - Recorded experiments: `study/`
 
 ## Local development
@@ -29,4 +30,10 @@ The typography uses self-hosted Spectral, Schibsted Grotesk, and Fragment Mono, 
 
 Five explanatory scenes were sent to the official Excalidraw MCP server (`excalidraw/excalidraw-mcp`, v0.3.2, source commit `157aa23ceb1976008aadc89eb05e3444060f09d6`) through `read_me` and `create_view`. `public/jev/diagrams/` includes scene inputs, editable `.excalidraw` files, SVG and PNG exports, and MCP provenance. Numerical charts are drawn from the saved results; diagrams are conceptual.
 
-No TypeSafe or generative-model API credentials belong in this repository.
+## System One article
+
+`src/content/system-one-article.md` is the source. Run `python scripts/compile_article.py jev system-one` to compile both articles. `study/system-one-router/` holds the Jev vs GPT-6 Luna routing benchmark and every recorded response; see its README. `scripts/draw_system_one_plots.py` redraws the figures from `public/system-one/evidence.json`.
+
+The six diagrams are skeletons in `scripts/system_one_diagrams.py`, rendered with `@excalidraw/excalidraw` 0.18.0 in a browser: start `python scripts/excalidraw/serve.py`, open `http://127.0.0.1:8766/scripts/excalidraw/render.html`, and call `renderAll()`. It writes `.excalidraw`, `.svg`, and `.png` files to `public/system-one/diagrams/`.
+
+No TypeSafe, OpenRouter, or generative-model API credentials belong in this repository.

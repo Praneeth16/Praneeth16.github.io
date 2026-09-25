@@ -6,7 +6,7 @@ const isHome=Astro.url.pathname==='/';
     <a class="brand" href="/">Praneeth Paikray</a>
     <nav class="site-nav" aria-label="Primary navigation">
       <a href="/" aria-current={isHome?'page':undefined}>About</a>
-      <a href="/blog/adapting-jev-with-gepa/" aria-current={!isHome?'page':undefined}>Writing</a>
+      <a href="/#writing-title" aria-current={!isHome?'page':undefined}>Writing</a>
     </nav>
   </div>
   <div id="reading-progress" aria-hidden="true"></div>

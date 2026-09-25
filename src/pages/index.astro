@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import metadata from '../generated/article-meta.json';
+import systemOne from '../generated/system-one/article-meta.json';
 ---
 <BaseLayout title="Praneeth Paikray" description="Notes and experiments on building AI systems. Praneeth Paikray, AI Solutions Architect at Databricks, based in Bengaluru.">
   <div class="home container">
@@ -14,6 +15,11 @@ import metadata from '../generated/article-meta.json';
     </section>
     <section class="writing-list" aria-labelledby="writing-title">
       <p class="section-label" id="writing-title">Writing</p>
+      <a class="post-link" href="/blog/wtf-is-a-system-one-model/">
+        <h2>WTF Is a System One Model?</h2>
+        <p>{systemOne.subtitle}</p>
+        <span class="meta">26 Sep 2026 · {systemOne.readingMinutes} min read · Benchmark</span>
+      </a>
       <a class="post-link" href="/blog/adapting-jev-with-gepa/">
         <h2>Adapting Jev to Your Domain with GEPA</h2>
         <p>{metadata.subtitle}</p>
