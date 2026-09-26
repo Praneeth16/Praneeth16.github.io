@@ -26,7 +26,7 @@ Source sentences load on demand from the public Hugging Face rows service. The b
 
 ## Design
 
-The typography uses self-hosted Spectral, Schibsted Grotesk, and Fragment Mono, with their Open Font Licenses in `public/fonts/`. The font stack and restrained palette were informed by Jasper Lu's GRPO article. The site implementation, diagrams, and study viewers are original.
+The typography uses self-hosted Fraunces for headings, Spectral for article text, and DM Mono for the interface, with their Open Font Licenses in `public/fonts/`. The heading and interface fonts follow codos.ai; the restrained palette was informed by Jasper Lu's GRPO article. Schibsted Grotesk and Fragment Mono remain only because the Jev article's figures and share card were drawn with them. The site implementation, diagrams, and study viewers are original.
 
 Five explanatory scenes were sent to the official Excalidraw MCP server (`excalidraw/excalidraw-mcp`, v0.3.2, source commit `157aa23ceb1976008aadc89eb05e3444060f09d6`) through `read_me` and `create_view`. `public/jev/diagrams/` includes scene inputs, editable `.excalidraw` files, SVG and PNG exports, and MCP provenance. Numerical charts are drawn from the saved results; diagrams are conceptual.
 

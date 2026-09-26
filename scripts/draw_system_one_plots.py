@@ -9,7 +9,7 @@ import matplotlib.ticker
 from matplotlib import font_manager
 root=Path(__file__).resolve().parents[1];data=json.loads((root/'public/system-one/evidence.json').read_text());out=root/'public/system-one/figures';out.mkdir(exist_ok=True)
 for p in (root/'public/fonts').glob('*.ttf'):font_manager.fontManager.addfont(p)
-plt.rcParams.update({'font.family':'Schibsted Grotesk','font.size':11,'axes.labelcolor':'#59605d','text.color':'#292c2b','xtick.color':'#626965','ytick.color':'#626965','axes.edgecolor':'#cbd0cc','axes.spines.top':False,'axes.spines.right':False,'figure.facecolor':'none','axes.facecolor':'none','savefig.transparent':True,'svg.fonttype':'path'})
+plt.rcParams.update({'font.family':'DM Mono','font.size':10,'axes.labelcolor':'#59605d','text.color':'#292c2b','xtick.color':'#626965','ytick.color':'#626965','axes.edgecolor':'#cbd0cc','axes.spines.top':False,'axes.spines.right':False,'figure.facecolor':'none','axes.facecolor':'none','savefig.transparent':True,'svg.fonttype':'path'})
 JEV='#4e8766';LUNA='#a38b6e';SOL='#8a709b';GRAY='#a2a5a4';RUST='#b45445'
 def save(fig,name):
  fig.savefig(out/(name+'.svg'),bbox_inches='tight',pad_inches=.16)

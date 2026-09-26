@@ -1,37 +1,30 @@
 @font-face {
-  font-family: 'Fragment Mono';
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url(/fonts/fraunces-variable.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'DM Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/dmmono-400.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'DM Mono';
   font-style: italic;
   font-weight: 400;
   font-display: swap;
-  src: url(/fonts/type-00.ttf) format('truetype');
+  src: url(/fonts/dmmono-400-italic.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Fragment Mono';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url(/fonts/type-01.ttf) format('truetype');
-}
-@font-face {
-  font-family: 'Schibsted Grotesk';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url(/fonts/type-02.ttf) format('truetype');
-}
-@font-face {
-  font-family: 'Schibsted Grotesk';
+  font-family: 'DM Mono';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url(/fonts/type-03.ttf) format('truetype');
-}
-@font-face {
-  font-family: 'Schibsted Grotesk';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url(/fonts/type-04.ttf) format('truetype');
+  src: url(/fonts/dmmono-500.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Spectral';
