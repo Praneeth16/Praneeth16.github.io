@@ -40,7 +40,7 @@ He starts with a puzzle. Models are solving unsolved math problems, yet customer
 
 Then he ties that to how models are trained. RLHF collects human preferences and optimizes for them, so, in his words, "overpromising is a feature. This is by design." Answering a question from the audience, he describes an asymmetry in the reward model that pushes models "to drop modes and be confident because it's very easy to see when the model is not confident and to punish that." [7](#ref-7)
 
-If Almeida is right, a model trained that way learns to sound certain whether or not it is. My benchmark cannot test that explanation, only the symptom. A person reading a chat reply can shrug off a confident 0.99. A router that trusts the same number has nothing left to catch a mistake with.
+If Almeida is right, a model trained that way learns to sound certain whether or not it is. My benchmark cannot test that explanation, only the symptom. A person reading a chat reply can shrug off a confident 0.99. A router that trusts the same number loses its best signal for catching a mistake.
 
 His proposed fix is a third post-training target. RLHF optimizes for preference, RLVR for verifiable correctness, and TypeSafe "a third thing that is optimized for calibrated decision-making." [7](#ref-7) TypeSafe's docs call it Reinforcement Learning for Calibrated Decisions, or RLCD, and publish little beyond that description. [3](#ref-3)
 
@@ -64,7 +64,7 @@ That is the gap a System One model is meant to fill. Sydney Runkle, writing for 
 
 The idea is older than the branding. Logistic regression returns class probabilities. In 2019, researchers showed that a natural-language-inference model could classify text into labels it had never seen, by scoring whether "this text is about travel" follows from the input. [29](#ref-29) Any LLM that exposes log probabilities can be read the same way: ask a multiple-choice question and look at the probability of each answer letter.
 
-Jev puts four things behind one API call: labels written in plain language at request time, several questions answered in parallel against one state, a training objective aimed at calibration, and a price low enough to call it on every step. Each piece has precedent. Getting all four together is new.
+Jev puts four things behind one API call: labels written in plain language at request time, several questions answered in parallel against one state, a training objective aimed at calibration, and a price low enough to call it on every step. Each piece has precedent. What TypeSafe launched is a product that offers all four at once.
 
 LLMs can also report confidence, but differently. When Luna writes `"confidence": 0.95`, those are tokens chosen to fit the prompt. Work on verbalized confidence has found that such numbers are often poorly calibrated, although asking carefully helps. [28](#ref-28) My benchmark ended up measuring that difference directly.
 
@@ -194,7 +194,7 @@ The practical test is selective routing: auto-route only the most confident shar
 
 Read off the test curve, requests Jev handled on its own at 80% coverage were 96.2% correct, compared with 90.6% for Luna. Those thresholds were picked in hindsight. Fixing them on the development set first gives the fairer number: Jev's threshold of 0.86 covered 77.0% of test requests at 97.2% accuracy, and Luna's 0.95 covered 76.1% at 90.8%. On this task, Jev's probabilities ranked its own mistakes better.
 
-I also tried the obvious cascade, sending Jev's low-confidence requests to Luna. The best threshold on the test set, 0.45, sent two requests to Luna and gained one correct route: 303 of 330 against 302 for Jev alone, at slightly higher cost. On the development set, no threshold beat Jev alone. A fallback that is weaker overall can only help on the few requests where it happens to be right, so the gains stay small.
+I also tried the obvious cascade, sending Jev's low-confidence requests to Luna. The best threshold on the test set, 0.45, sent two requests to Luna and gained one correct route: 303 of 330 against 302 for Jev alone, at slightly higher cost. On the development set, no threshold beat Jev alone. A fallback that is weaker overall can still help where its errors differ from the first stage's. In this run that happened on one request.
 
 ### Speed and cost
 
