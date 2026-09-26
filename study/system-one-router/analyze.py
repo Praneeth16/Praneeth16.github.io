@@ -131,8 +131,18 @@ def route_task(rows, calls):
             cascade.append({'t': float(t), 'jev_share': float(keep.mean()), 'accuracy': acc,
                             'cost_per_1k': float((jev_cost.sum() + luna_cost[~keep].sum())/len(ids)*1000)})
         res['cascade'] = cascade
-        res['_ids'] = ids
+        res['_ids'] = ids; res['_p'] = ps; res['_correct'] = {'jev': cj, 'luna': cl}
+        res['cascade_best'] = max(cascade, key=lambda c: (round(c['accuracy'], 6), c['jev_share']))
         out[split] = res
+    # Selective routing with the threshold fixed on dev, then applied to test.
+    out['selective_dev_selected'] = {}
+    for name in ('jev', 'luna'):
+        for g, point in out['dev'][name]['selective_at'].items():
+            keep = out['test']['_p'][name] >= point['t']
+            out['selective_dev_selected'][f'{name}/{g}'] = {'t': point['t'], 'coverage': float(keep.mean()),
+                                                           'accuracy': float(out['test']['_correct'][name][keep].mean())}
+    for split in ('dev', 'test'):
+        del out[split]['_p'], out[split]['_correct']
     best = max(out['dev']['cascade'], key=lambda c: (round(c['accuracy'], 6), c['jev_share']))
     out['dev_threshold'] = best['t']
     out['test_at_dev_threshold'] = next(c for c in out['test']['cascade'] if c['t'] == best['t'])
@@ -157,7 +167,8 @@ def tier_task(rows, calls):
                'sol_completion_tokens_mean': float(np.mean([calls[('answer_sol', 0)][i]['usage'].get('completion_tokens', 0) for i in ids])),
                'sol_latency_p50': pct([calls[('answer_sol', 0)][i]['latency_s'] for i in ids], 50),
                'luna_latency_p50': pct([calls[('answer_luna', 0)][i]['latency_s'] for i in ids], 50),
-               'oracle_cost_per_1k': float(np.where(luna_ok == 1, luna_c, luna_c + sol_c).mean()*1000),
+               # A perfect router picks one answering model up front: Luna when Luna is right, otherwise Sol.
+               'oracle_cost_per_1k': float(np.where(luna_ok == 1, luna_c, sol_c).mean()*1000),
                'per_category': {}}
         cats = np.array([rows['mmlu'][i]['category'] for i in ids])
         for c in sorted(set(cats)):
@@ -225,12 +236,13 @@ def main():
     tier_rows = []
     for i in b['test']['_ids']:
         r = rows['mmlu'][i]
-        tier_rows.append({'q': r['question'][:420], 'category': r['category'], 'answer': r['answer'],
+        tier_rows.append({'q': r['question'], 'options': r['options'], 'category': r['category'], 'answer': r['answer'],
                           'lunaAnswer': calls[('answer_luna', 0)][i]['parsed']['answer'], 'solAnswer': calls[('answer_sol', 0)][i]['parsed']['answer'],
                           'lunaOk': calls[('answer_luna', 0)][i]['parsed']['correct'], 'solOk': calls[('answer_sol', 0)][i]['parsed']['correct'],
                           'pJev': calls[('tier_jev', 0)][i]['parsed']['p'], 'pLuna': calls[('tier_luna', 0)][i]['parsed']['p']})
     strip = lambda d: {k: v for k, v in d.items() if not k.startswith('_')}
     evidence = {'route': {'test': strip(a['test']), 'dev_threshold': a['dev_threshold'], 'test_at_dev_threshold': a['test_at_dev_threshold'],
+                          'selective_dev_selected': a['selective_dev_selected'],
                           'serial_latency': a['serial_latency'], 'concurrent_latency_values': a['concurrent_latency_values'], 'rows': ex_rows,
                           'routes': list(Q.ROUTES)},
                 'tier': {'test': strip(b['test']), 'jev_operating_point': b['jev_operating_point'], 'luna_operating_point': b['luna_operating_point'], 'rows': tier_rows},

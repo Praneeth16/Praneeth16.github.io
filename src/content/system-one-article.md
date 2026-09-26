@@ -40,7 +40,7 @@ He starts with a puzzle. Models are solving unsolved math problems, yet customer
 
 Then he ties that to how models are trained. RLHF collects human preferences and optimizes for them, so, in his words, "overpromising is a feature. This is by design." Answering a question from the audience, he describes an asymmetry in the reward model that pushes models "to drop modes and be confident because it's very easy to see when the model is not confident and to punish that." [7](#ref-7)
 
-A model trained that way will state 0.99 because 0.99 reads well. For a person reading a chat reply, that is mostly harmless. For a server deciding where a request goes, it removes the one signal you would use to catch a mistake.
+If Almeida is right, a model trained that way learns to sound certain whether or not it is. My benchmark cannot test that explanation, only the symptom. A person reading a chat reply can shrug off a confident 0.99. A router that trusts the same number has nothing left to catch a mistake with.
 
 His proposed fix is a third post-training target. RLHF optimizes for preference, RLVR for verifiable correctness, and TypeSafe "a third thing that is optimized for calibrated decision-making." [7](#ref-7) TypeSafe's docs call it Reinforcement Learning for Calibrated Decisions, or RLCD, and publish little beyond that description. [3](#ref-3)
 
@@ -64,7 +64,7 @@ That is the gap a System One model is meant to fill. Sydney Runkle, writing for 
 
 The idea is older than the branding. Logistic regression returns class probabilities. In 2019, researchers showed that a natural-language-inference model could classify text into labels it had never seen, by scoring whether "this text is about travel" follows from the input. [29](#ref-29) Any LLM that exposes log probabilities can be read the same way: ask a multiple-choice question and look at the probability of each answer letter.
 
-What is new is the combination: labels written in plain language at request time, several questions answered in parallel against one state, a training objective aimed at calibration, and a price low enough to call it on every step. You can argue about how new each piece is. The combination is what people are reacting to.
+Jev puts four things behind one API call: labels written in plain language at request time, several questions answered in parallel against one state, a training objective aimed at calibration, and a price low enough to call it on every step. Each piece has precedent. Getting all four together is new.
 
 LLMs can also report confidence, but differently. When Luna writes `"confidence": 0.95`, those are tokens chosen to fit the prompt. Work on verbalized confidence has found that such numbers are often poorly calibrated, although asking carefully helps. [28](#ref-28) My benchmark ended up measuring that difference directly.
 
@@ -116,7 +116,7 @@ I gave both models two routing jobs.
 
 **Task A, which specialist?** CLINC150 is a public intent dataset with 150 intents grouped into ten domains, plus out-of-scope queries that match none of them. [24](#ref-24) I treated each domain as a specialist agent and added `out_of_scope` as an eleventh route. I sampled 30 test utterances per route (330 total) and 10 per route for a development set.
 
-**Task B, does this need the big model?** Here the router decides whether a cheap model can answer a question or whether it should go to an expensive one. I sampled 308 test questions and 98 development questions from MMLU-Pro, a harder ten-option version of MMLU, evenly across its 14 subjects. [25](#ref-25) Luna, with reasoning off, and GPT-6 Sol, with low reasoning effort, answered every question. The label is whether Luna got it right. The routers see the question and options, never an answer.
+**Task B, does this need the big model?** Here the router decides whether a cheap model can answer a question or whether it should go to an expensive one. I sampled 308 test questions and 98 development questions from MMLU-Pro, a harder version of MMLU with up to ten options per question, evenly across its 14 subjects. [25](#ref-25) Luna, with reasoning off, and GPT-6 Sol, with low reasoning effort, answered every question. The label is whether Luna got it right. The routers see the question and options, never an answer.
 
 This is the setup RouteLLM and FrugalGPT studied: send easy queries to a cheap model and the rest to a strong one. [26](#ref-26), [27](#ref-27) Those systems train a router on preference or outcome data. Here both routers work zero-shot from a written description.
 
@@ -170,6 +170,8 @@ Jev's own misses clustered around bills. "Tell me when my water bill is due" is 
 
 Neither router handled out-of-scope requests well. "Should I do a complete stop at red lights" went to the auto specialist from both, at 0.96 and 0.99. An out-of-scope route defined only as "none of the above" is the hardest criterion to write, and both models treated it that way.
 
+Some of these misses say more about CLINC's taxonomy than about the routers. CLINC labels "how long does it take the irs to issue a tax refund" out of scope, but my work specialist's description includes taxes, and both routers sent it there. Out-of-scope recall here measures agreement with CLINC's boundaries, which my criteria did not fully reproduce.
+
 <!-- explorer:disagreements -->
 
 ## What the confidence is worth
@@ -182,15 +184,17 @@ A router's probability matters because code acts on it. The usual policy routes 
 
 Jev's expected calibration error was 0.033, and Luna's was 0.101. [31](#ref-31) Luna gave 154 requests a confidence of 0.99 or more; Jev gave 187 requests that much. The difference is what happened near the top. Among requests at 0.9 or above, Jev was wrong 7 times and Luna 31.
 
+This compares two interfaces as well as two models. Jev returns a probability for every route. Luna writes one confidence number because the prompt asks for it. The result shows which signal a router can use as offered. It does not show that Jev's training, rather than the interface, made the difference. A fairer LLM baseline would read token probabilities or sample Luna several times, and I did neither.
+
 The practical test is selective routing: auto-route only the most confident share of traffic and send the rest to a person.
 
 ![Accuracy on the automatically routed share of traffic as coverage increases, for both routers.](figures/09-route-selective.svg)
 
-*Figure 9. Move the threshold in the web edition to see how many requests each router handles and how accurate those handled requests are.*
+*Figure 9. Selective routing on the test set, with thresholds swept in hindsight. Move the slider in the web edition to see how many requests each router handles and how accurate those handled requests are.*
 
-At 80% coverage, requests Jev handled on its own were 96.2% correct, compared with 90.6% for Luna. At 90% coverage, the numbers were 94.0% and 88.6%. On this task, Jev's probabilities ranked its own mistakes better.
+Read off the test curve, requests Jev handled on its own at 80% coverage were 96.2% correct, compared with 90.6% for Luna. Those thresholds were picked in hindsight. Fixing them on the development set first gives the fairer number: Jev's threshold of 0.86 covered 77.0% of test requests at 97.2% accuracy, and Luna's 0.95 covered 76.1% at 90.8%. On this task, Jev's probabilities ranked its own mistakes better.
 
-I also tried the obvious cascade, sending Jev's low-confidence requests to Luna. It never beat Jev alone, because Luna was the weaker router. A cascade only pays off when the fallback is stronger than the first stage.
+I also tried the obvious cascade, sending Jev's low-confidence requests to Luna. The best threshold on the test set, 0.45, sent two requests to Luna and gained one correct route: 303 of 330 against 302 for Jev alone, at slightly higher cost. On the development set, no threshold beat Jev alone. A fallback that is weaker overall can only help on the few requests where it happens to be right, so the gains stay small.
 
 ### Speed and cost
 
@@ -214,7 +218,7 @@ Latency surprised me for a different reason. In my previous Jev experiment, call
 
 ## Task B: Jev knew which questions were hard
 
-Luna answered 58.4% of the 308 MMLU-Pro test questions correctly. Sol answered 86.0%. Sol also cost 34 times as much per question ($1.05 versus $0.031 per thousand) and took 2.8 seconds at the median. A perfect router, sending a question to Sol only when Luna would get it wrong, would reach 88.3% for $0.58 per thousand.
+Luna answered 58.4% of the 308 MMLU-Pro test questions correctly. Sol answered 86.0%. Sol also cost 34 times as much per question ($1.05 versus $0.031 per thousand) and took 2.8 seconds at the median. A perfect router, sending a question to Sol only when Luna would get it wrong, would reach 88.3% for $0.57 per thousand.
 
 Neither router got close to perfect, but they were far apart.
 
@@ -262,13 +266,13 @@ Finally, latency is client-observed through one provider on one day. TypeSafe's 
 
 ## When I would reach for which
 
-For a fixed set of routes where code acts on the result, I would now start with a decision model. On both tasks here, Jev was more accurate, faster, and cheaper than the cheapest capable LLM, and its probabilities were good enough to set thresholds on. The benefit that held up best was calibration, more than speed or price.
+For a fixed set of routes where code acts on the result, I would now start with a decision model and test it against the cheap LLM I would otherwise use. In Task A, Jev was more accurate, faster, and cheaper than GPT-6 Luna with reasoning off. In Task B, Jev ranked hard questions better than Luna did. Its dev-selected policy gave up 2.3 points of accuracy for a 21% saving over always using Sol, while Luna's selected policy kept Sol's accuracy only by sending everything to Sol. The benefit that held up in both tasks was the quality of the probabilities, more than speed or price.
 
 I would still write criteria the way the jaggedness page suggests: state the exact condition, put boundary cases in the option descriptions, and keep arithmetic, counting, and date comparison in code. [5](#ref-5) Out-of-scope needs positive descriptions of what does not belong, not just "none of the above."
 
 I would keep an LLM for anything that needs an explanation, a generated answer, or several steps of reasoning. That is the System 2 side of Figure 1, and it is where the answering model in Task B lives.
 
-The remaining question is the one the clones raise. If a diffusion model with a vLLM patch, or a 4B model fine-tuned for $17, gives you the same interface, the lasting difference has to be the training objective. This benchmark suggests that calibration is measurable and matters for routing. It does not tell you whether RLCD is the only way to get it.
+The clones raise a question this benchmark cannot answer. A diffusion model with a vLLM patch and a 4B model fine-tuned for $17 offer the same interface. Whether their probabilities are as usable as Jev's, and how much of Jev's edge comes from RLCD, needs the same head-to-head test run against them.
 
 ## Reproduce the benchmark
 

@@ -1478,7 +1478,13 @@
     "bb7231aa89035ce1",
     "0232942baae58c9c",
     "016ca9149af64e05"
-   ]
+   ],
+   "cascade_best": {
+    "t": 0.0,
+    "jev_share": 1.0,
+    "accuracy": 0.9272727272727272,
+    "cost_per_1k": 0.03493979999999999
+   }
   },
   "test": {
    "n": 330,
@@ -3358,7 +3364,45 @@
     "d02428634894b036",
     "0a6646dcb8381fab",
     "75022b0ba895e769"
-   ]
+   ],
+   "cascade_best": {
+    "t": 0.45,
+    "jev_share": 0.9939393939393939,
+    "accuracy": 0.9181818181818182,
+    "cost_per_1k": 0.035340557575757575
+   }
+  },
+  "selective_dev_selected": {
+   "jev/0.5": {
+    "t": 1.0,
+    "coverage": 0.48484848484848486,
+    "accuracy": 0.9875
+   },
+   "jev/0.8": {
+    "t": 0.86,
+    "coverage": 0.7696969696969697,
+    "accuracy": 0.9724409448818898
+   },
+   "jev/0.9": {
+    "t": 0.69,
+    "coverage": 0.8606060606060606,
+    "accuracy": 0.9471830985915493
+   },
+   "luna/0.5": {
+    "t": 0.98,
+    "coverage": 0.6424242424242425,
+    "accuracy": 0.9198113207547169
+   },
+   "luna/0.8": {
+    "t": 0.95,
+    "coverage": 0.7606060606060606,
+    "accuracy": 0.9083665338645418
+   },
+   "luna/0.9": {
+    "t": 0.88,
+    "coverage": 0.896969696969697,
+    "accuracy": 0.8851351351351351
+   }
   },
   "dev_threshold": 0.0,
   "test_at_dev_threshold": {
@@ -4147,7 +4191,7 @@
    "sol_completion_tokens_mean": 40.83673469387755,
    "sol_latency_p50": 2.8871115834917873,
    "luna_latency_p50": 1.1348573954892345,
-   "oracle_cost_per_1k": 0.4246153061224489,
+   "oracle_cost_per_1k": 0.41391428571428573,
    "per_category": {
     "biology": {
      "n": 7,
@@ -5169,7 +5213,7 @@
    "sol_completion_tokens_mean": 54.642857142857146,
    "sol_latency_p50": 2.839083958475385,
    "luna_latency_p50": 1.1205632709898055,
-   "oracle_cost_per_1k": 0.5788107142857143,
+   "oracle_cost_per_1k": 0.5658275974025974,
    "per_category": {
     "biology": {
      "n": 22,
