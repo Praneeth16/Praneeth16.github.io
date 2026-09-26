@@ -24,10 +24,10 @@
       "roundness": null,
       "seed": 20260927,
       "version": 2,
-      "versionNonce": 1677973706,
+      "versionNonce": 1710462903,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660265,
+      "updated": 1790439624139,
       "link": null,
       "locked": false,
       "text": "DiffusionGemma as a decision model.",
@@ -61,10 +61,10 @@
       "roundness": null,
       "seed": 20260928,
       "version": 2,
-      "versionNonce": 828010710,
+      "versionNonce": 1450976057,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660265,
+      "updated": 1790439624139,
       "link": null,
       "locked": false,
       "text": "Pin every token you already know. Leave one slot open. Denoise once. Read the slot.",
@@ -100,15 +100,15 @@
       },
       "seed": 20260929,
       "version": 2,
-      "versionNonce": 2086809482,
+      "versionNonce": 2033551575,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "xFYhdoDXkqhM4dOSQ5NU3"
+          "id": "zWhCsWnznhWVRKFewdTSd"
         }
       ],
-      "updated": 1790373660265,
+      "updated": 1790439624139,
       "link": null,
       "locked": false
     },
@@ -135,15 +135,15 @@
       },
       "seed": 20260930,
       "version": 2,
-      "versionNonce": 365028886,
+      "versionNonce": 90526745,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "NpN-Wu5MAWS8JJX1aHyhk"
+          "id": "n9UtLkwpRSR-nfFHgK7VH"
         }
       ],
-      "updated": 1790373660265,
+      "updated": 1790439624139,
       "link": null,
       "locked": false
     },
@@ -170,15 +170,15 @@
       },
       "seed": 20260931,
       "version": 2,
-      "versionNonce": 206024266,
+      "versionNonce": 1834767863,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "G2_HDtPLG_XWrwBmBj3Og"
+          "id": "LO9-yts099wOmLveFoBIn"
         }
       ],
-      "updated": 1790373660265,
+      "updated": 1790439624139,
       "link": null,
       "locked": false
     },
@@ -205,15 +205,15 @@
       },
       "seed": 20260932,
       "version": 2,
-      "versionNonce": 570198,
+      "versionNonce": 1706387705,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "WXWJcyzKxVO6JqeFs1fGB"
+          "id": "sjLLPljuzBNJKYUD60buF"
         }
       ],
-      "updated": 1790373660265,
+      "updated": 1790439624139,
       "link": null,
       "locked": false
     },
@@ -240,15 +240,15 @@
       },
       "seed": 20260933,
       "version": 2,
-      "versionNonce": 1754223882,
+      "versionNonce": 158105367,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "W3RDP21X3WzRMJzHLlGXz"
+          "id": "jD7NJ7BYwQlU-Ns2MGDVz"
         }
       ],
-      "updated": 1790373660265,
+      "updated": 1790439624139,
       "link": null,
       "locked": false
     },
@@ -275,15 +275,15 @@
       },
       "seed": 20260934,
       "version": 2,
-      "versionNonce": 713283734,
+      "versionNonce": 1894769113,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "C0nOAz85yjvRWHGu3pJs5"
+          "id": "jyhKDhjJUmHApBCrlf9cG"
         }
       ],
-      "updated": 1790373660265,
+      "updated": 1790439624139,
       "link": null,
       "locked": false
     },
@@ -310,15 +310,15 @@
       },
       "seed": 20260935,
       "version": 2,
-      "versionNonce": 313795530,
+      "versionNonce": 1071285303,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "9cc6oFFSOdSzDq-_t6gt9"
+          "id": "XsEMSNphXaGkIFEQxl4Ut"
         }
       ],
-      "updated": 1790373660265,
+      "updated": 1790439624139,
       "link": null,
       "locked": false
     },
@@ -343,10 +343,10 @@
       "roundness": null,
       "seed": 20260936,
       "version": 2,
-      "versionNonce": 1021859286,
+      "versionNonce": 606617273,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660265,
+      "updated": 1790439624139,
       "link": null,
       "locked": false,
       "text": "pinned",
@@ -380,10 +380,10 @@
       "roundness": null,
       "seed": 20260937,
       "version": 2,
-      "versionNonce": 617683594,
+      "versionNonce": 1082844503,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660265,
+      "updated": 1790439624139,
       "link": null,
       "locked": false,
       "text": "open slot",
@@ -417,10 +417,10 @@
       "roundness": null,
       "seed": 20260938,
       "version": 2,
-      "versionNonce": 541797142,
+      "versionNonce": 235011993,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660265,
+      "updated": 1790439624139,
       "link": null,
       "locked": false,
       "points": [
@@ -461,10 +461,10 @@
       "roundness": null,
       "seed": 20260939,
       "version": 2,
-      "versionNonce": 1033976138,
+      "versionNonce": 1255285367,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660265,
+      "updated": 1790439624139,
       "link": null,
       "locked": false,
       "text": "one denoising step,\nlogprobs at temperature 1",
@@ -500,15 +500,15 @@
       },
       "seed": 20260940,
       "version": 2,
-      "versionNonce": 1394694230,
+      "versionNonce": 481338489,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "bpGDUH7wHFTc_vGzCQer0"
+          "id": "oXiYLUQIBJXbGTw2Bt1lA"
         }
       ],
-      "updated": 1790373660265,
+      "updated": 1790439624139,
       "link": null,
       "locked": false
     },
@@ -533,10 +533,10 @@
       "roundness": null,
       "seed": 20260941,
       "version": 2,
-      "versionNonce": 1820295178,
+      "versionNonce": 1064614807,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660265,
+      "updated": 1790439624139,
       "link": null,
       "locked": false,
       "text": "A  travel        0.81\nB  out_of_scope  0.12\nC  utility       0.07",
@@ -570,10 +570,10 @@
       "roundness": null,
       "seed": 20260942,
       "version": 2,
-      "versionNonce": 1027595670,
+      "versionNonce": 737652057,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660265,
+      "updated": 1790439624139,
       "link": null,
       "locked": false,
       "text": "Options must map to single tokens so the canvas cannot shift. Low entropy: answer. High entropy: sample again.",
@@ -607,10 +607,10 @@
       "roundness": null,
       "seed": 20260943,
       "version": 2,
-      "versionNonce": 493285066,
+      "versionNonce": 1923559607,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660265,
+      "updated": 1790439624139,
       "link": null,
       "locked": false,
       "text": "From Matt Mastracci’s vLLM pull request #57250. Illustrative values.",
@@ -624,7 +624,7 @@
       "lineHeight": 1.25
     },
     {
-      "id": "xFYhdoDXkqhM4dOSQ5NU3",
+      "id": "zWhCsWnznhWVRKFewdTSd",
       "type": "text",
       "x": 57.48486328125,
       "y": 154.65,
@@ -642,12 +642,12 @@
       "frameId": null,
       "index": "aH",
       "roundness": null,
-      "seed": 64731862,
+      "seed": 1395300921,
       "version": 3,
-      "versionNonce": 687015126,
+      "versionNonce": 1890718009,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660265,
+      "updated": 1790439624140,
       "link": null,
       "locked": false,
       "text": "Q: route",
@@ -661,7 +661,7 @@
       "lineHeight": 1.15
     },
     {
-      "id": "NpN-Wu5MAWS8JJX1aHyhk",
+      "id": "n9UtLkwpRSR-nfFHgK7VH",
       "type": "text",
       "x": 185.99462890625,
       "y": 154.65,
@@ -679,12 +679,12 @@
       "frameId": null,
       "index": "aI",
       "roundness": null,
-      "seed": 1569320982,
+      "seed": 1932323609,
       "version": 3,
-      "versionNonce": 1464654730,
+      "versionNonce": 941456087,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660265,
+      "updated": 1790439624140,
       "link": null,
       "locked": false,
       "text": "this",
@@ -698,7 +698,7 @@
       "lineHeight": 1.15
     },
     {
-      "id": "G2_HDtPLG_XWrwBmBj3Og",
+      "id": "LO9-yts099wOmLveFoBIn",
       "type": "text",
       "x": 279.98095703125,
       "y": 154.65,
@@ -716,12 +716,12 @@
       "frameId": null,
       "index": "aJ",
       "roundness": null,
-      "seed": 1715436886,
+      "seed": 74588153,
       "version": 3,
-      "versionNonce": 891812374,
+      "versionNonce": 2125300249,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660265,
+      "updated": 1790439624140,
       "link": null,
       "locked": false,
       "text": "request",
@@ -735,7 +735,7 @@
       "lineHeight": 1.15
     },
     {
-      "id": "WXWJcyzKxVO6JqeFs1fGB",
+      "id": "sjLLPljuzBNJKYUD60buF",
       "type": "text",
       "x": 387.4892578125,
       "y": 154.65,
@@ -753,12 +753,12 @@
       "frameId": null,
       "index": "aK",
       "roundness": null,
-      "seed": 1934713494,
+      "seed": 620607705,
       "version": 3,
-      "versionNonce": 217897546,
+      "versionNonce": 779487223,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660265,
+      "updated": 1790439624140,
       "link": null,
       "locked": false,
       "text": "Answer:",
@@ -772,7 +772,7 @@
       "lineHeight": 1.15
     },
     {
-      "id": "W3RDP21X3WzRMJzHLlGXz",
+      "id": "jD7NJ7BYwQlU-Ns2MGDVz",
       "type": "text",
       "x": 514.99267578125,
       "y": 154.65,
@@ -790,12 +790,12 @@
       "frameId": null,
       "index": "aL",
       "roundness": null,
-      "seed": 1735696342,
+      "seed": 1717777849,
       "version": 3,
-      "versionNonce": 1905018710,
+      "versionNonce": 566744825,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660265,
+      "updated": 1790439624140,
       "link": null,
       "locked": false,
       "text": "[ ? ]",
@@ -809,7 +809,7 @@
       "lineHeight": 1.15
     },
     {
-      "id": "C0nOAz85yjvRWHGu3pJs5",
+      "id": "jyhKDhjJUmHApBCrlf9cG",
       "type": "text",
       "x": 622.48779296875,
       "y": 154.65,
@@ -827,12 +827,12 @@
       "frameId": null,
       "index": "aM",
       "roundness": null,
-      "seed": 113128726,
+      "seed": 1539708569,
       "version": 3,
-      "versionNonce": 1908343050,
+      "versionNonce": 545255703,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660265,
+      "updated": 1790439624140,
       "link": null,
       "locked": false,
       "text": "</s>",
@@ -846,7 +846,7 @@
       "lineHeight": 1.15
     },
     {
-      "id": "9cc6oFFSOdSzDq-_t6gt9",
+      "id": "XsEMSNphXaGkIFEQxl4Ut",
       "type": "text",
       "x": 734.98388671875,
       "y": 154.65,
@@ -864,12 +864,12 @@
       "frameId": null,
       "index": "aN",
       "roundness": null,
-      "seed": 1252205142,
+      "seed": 1742330745,
       "version": 3,
-      "versionNonce": 1316285590,
+      "versionNonce": 478449625,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660265,
+      "updated": 1790439624140,
       "link": null,
       "locked": false,
       "text": "pad",
@@ -883,7 +883,7 @@
       "lineHeight": 1.15
     },
     {
-      "id": "bpGDUH7wHFTc_vGzCQer0",
+      "id": "oXiYLUQIBJXbGTw2Bt1lA",
       "type": "text",
       "x": 435.224609375,
       "y": 373.5,
@@ -901,12 +901,12 @@
       "frameId": null,
       "index": "aO",
       "roundness": null,
-      "seed": 905471894,
+      "seed": 1256326233,
       "version": 3,
-      "versionNonce": 823021514,
+      "versionNonce": 1202697783,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660265,
+      "updated": 1790439624140,
       "link": null,
       "locked": false,
       "text": "P(slot = option token)",

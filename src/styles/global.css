@@ -11,3 +11,4 @@
 .kv-bar{display:grid;grid-template-columns:110px 1fr 42px;align-items:center;gap:8px;font:12px var(--mono);margin:5px 0}.kv-bar i{display:block;height:9px;border-radius:2px;min-width:2px}.kv-bar b{font-weight:400;text-align:right}.kv-bar span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .stat-row.four{grid-template-columns:repeat(4,1fr)}@media(max-width:640px){.stat-row.four{grid-template-columns:repeat(2,1fr)}.kv-bar{grid-template-columns:80px 1fr 38px}}
 .options{margin:0 0 14px;padding-left:1.4em;font:13px/1.5 var(--sans)}.options li{margin:3px 0}.options li.answer{color:var(--good)}
+.prose.fit figure.breakout,.prose.fit .interactive{grid-column:content;width:auto;justify-self:stretch;max-width:none}

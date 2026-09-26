@@ -24,10 +24,10 @@
       "roundness": null,
       "seed": 20260927,
       "version": 2,
-      "versionNonce": 1673396374,
+      "versionNonce": 838680025,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660418,
+      "updated": 1790439624242,
       "link": null,
       "locked": false,
       "text": "Two routing jobs. The same two routers on each.",
@@ -63,15 +63,15 @@
       },
       "seed": 20260928,
       "version": 2,
-      "versionNonce": 1066433482,
+      "versionNonce": 1709238327,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "s-H8QlR-8Z2QP_4Nj4nj_"
+          "id": "UvuX8HVQkRADmno3-ROkH"
         }
       ],
-      "updated": 1790373660418,
+      "updated": 1790439624242,
       "link": null,
       "locked": false
     },
@@ -96,10 +96,10 @@
       "roundness": null,
       "seed": 20260929,
       "version": 2,
-      "versionNonce": 480083414,
+      "versionNonce": 321526457,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660418,
+      "updated": 1790439624242,
       "link": null,
       "locked": false,
       "text": "CLINC150 utterances, 11 routes:\n10 domains + out_of_scope\n110 dev · 330 test (30 per route)",
@@ -135,15 +135,15 @@
       },
       "seed": 20260930,
       "version": 2,
-      "versionNonce": 610431626,
+      "versionNonce": 539281751,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "zF-S0kEoU96ZZObot8U6H"
+          "id": "LIVnr40YqDQ4I0pqN7POd"
         }
       ],
-      "updated": 1790373660418,
+      "updated": 1790439624242,
       "link": null,
       "locked": false
     },
@@ -168,10 +168,10 @@
       "roundness": null,
       "seed": 20260931,
       "version": 2,
-      "versionNonce": 521884438,
+      "versionNonce": 2020105113,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660418,
+      "updated": 1790439624242,
       "link": null,
       "locked": false,
       "text": "MMLU-Pro, 14 subjects\n98 dev · 308 test\nlabel = did Luna answer correctly?",
@@ -207,15 +207,15 @@
       },
       "seed": 20260932,
       "version": 2,
-      "versionNonce": 1900515658,
+      "versionNonce": 1703904887,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "uPz5jmvIeyJNV2rhuPijB"
+          "id": "FVLfzk55SOlidMnv4ubPI"
         }
       ],
-      "updated": 1790373660418,
+      "updated": 1790439624242,
       "link": null,
       "locked": false
     },
@@ -242,15 +242,15 @@
       },
       "seed": 20260933,
       "version": 2,
-      "versionNonce": 1437368406,
+      "versionNonce": 569081977,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "Nmy2YG8rJ5PqlgzvBHk38"
+          "id": "KTQxN0zBqS4PRTBBSmMww"
         }
       ],
-      "updated": 1790373660418,
+      "updated": 1790439624242,
       "link": null,
       "locked": false
     },
@@ -275,10 +275,10 @@
       "roundness": null,
       "seed": 20260934,
       "version": 2,
-      "versionNonce": 161142794,
+      "versionNonce": 1692770199,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660418,
+      "updated": 1790439624242,
       "link": null,
       "locked": false,
       "text": "Choice over routes · Noul for B\nvs JSON schema + stated confidence\nsame criteria text, frozen before test",
@@ -314,15 +314,15 @@
       },
       "seed": 20260935,
       "version": 2,
-      "versionNonce": 338036118,
+      "versionNonce": 2104953177,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "pOAPVG4C3pjHrDFAae0nI"
+          "id": "UTcm13o2mUI2LctBjF7qP"
         }
       ],
-      "updated": 1790373660418,
+      "updated": 1790439624242,
       "link": null,
       "locked": false
     },
@@ -349,15 +349,15 @@
       },
       "seed": 20260936,
       "version": 2,
-      "versionNonce": 760694474,
+      "versionNonce": 6001847,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "vARxXTj0-i5vTDR3k6zbe"
+          "id": "qeCXRf2B2k2CF9H5z7dZC"
         }
       ],
-      "updated": 1790373660418,
+      "updated": 1790439624242,
       "link": null,
       "locked": false
     },
@@ -382,10 +382,10 @@
       "roundness": null,
       "seed": 20260937,
       "version": 2,
-      "versionNonce": 1807540950,
+      "versionNonce": 1952347705,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660418,
+      "updated": 1790439624242,
       "link": null,
       "locked": false,
       "text": "Ground truth only.\nRouters never see an answer.",
@@ -419,10 +419,10 @@
       "roundness": null,
       "seed": 20260938,
       "version": 2,
-      "versionNonce": 1696062858,
+      "versionNonce": 1603659223,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660418,
+      "updated": 1790439624242,
       "link": null,
       "locked": false,
       "text": "All calls through OpenRouter, reasoning off for Luna, 8 in flight.",
@@ -436,7 +436,7 @@
       "lineHeight": 1.25
     },
     {
-      "id": "s-H8QlR-8Z2QP_4Nj4nj_",
+      "id": "UvuX8HVQkRADmno3-ROkH",
       "type": "text",
       "x": 151.57470703125,
       "y": 107.35,
@@ -454,12 +454,12 @@
       "frameId": null,
       "index": "aC",
       "roundness": null,
-      "seed": 2131105814,
+      "seed": 2038777625,
       "version": 3,
-      "versionNonce": 641109910,
+      "versionNonce": 1648713817,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660418,
+      "updated": 1790439624242,
       "link": null,
       "locked": false,
       "text": "A  Which specialist?",
@@ -473,7 +473,7 @@
       "lineHeight": 1.15
     },
     {
-      "id": "zF-S0kEoU96ZZObot8U6H",
+      "id": "LIVnr40YqDQ4I0pqN7POd",
       "type": "text",
       "x": 596.409423828125,
       "y": 107.925,
@@ -491,12 +491,12 @@
       "frameId": null,
       "index": "aD",
       "roundness": null,
-      "seed": 1442227542,
+      "seed": 1465842681,
       "version": 3,
-      "versionNonce": 1777097930,
+      "versionNonce": 1468149175,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660418,
+      "updated": 1790439624242,
       "link": null,
       "locked": false,
       "text": "B  Does it need the big model?",
@@ -510,7 +510,7 @@
       "lineHeight": 1.15
     },
     {
-      "id": "uPz5jmvIeyJNV2rhuPijB",
+      "id": "FVLfzk55SOlidMnv4ubPI",
       "type": "text",
       "x": 88.4169921875,
       "y": 354.85,
@@ -528,12 +528,12 @@
       "frameId": null,
       "index": "aE",
       "roundness": null,
-      "seed": 836995734,
+      "seed": 1039078617,
       "version": 3,
-      "versionNonce": 1059859670,
+      "versionNonce": 2068442425,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660418,
+      "updated": 1790439624242,
       "link": null,
       "locked": false,
       "text": "Jev 1.13",
@@ -547,7 +547,7 @@
       "lineHeight": 1.15
     },
     {
-      "id": "Nmy2YG8rJ5PqlgzvBHk38",
+      "id": "KTQxN0zBqS4PRTBBSmMww",
       "type": "text",
       "x": 305.681640625,
       "y": 354.85,
@@ -565,12 +565,12 @@
       "frameId": null,
       "index": "aF",
       "roundness": null,
-      "seed": 1635895254,
+      "seed": 281612729,
       "version": 3,
-      "versionNonce": 983184266,
+      "versionNonce": 679567063,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660418,
+      "updated": 1790439624242,
       "link": null,
       "locked": false,
       "text": "GPT-6 Luna",
@@ -584,7 +584,7 @@
       "lineHeight": 1.15
     },
     {
-      "id": "pOAPVG4C3pjHrDFAae0nI",
+      "id": "UTcm13o2mUI2LctBjF7qP",
       "type": "text",
       "x": 557.7392578125,
       "y": 356,
@@ -602,12 +602,12 @@
       "frameId": null,
       "index": "aG",
       "roundness": null,
-      "seed": 350641430,
+      "seed": 1964012185,
       "version": 3,
-      "versionNonce": 2046566934,
+      "versionNonce": 568974873,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660418,
+      "updated": 1790439624242,
       "link": null,
       "locked": false,
       "text": "Luna answers",
@@ -621,7 +621,7 @@
       "lineHeight": 1.15
     },
     {
-      "id": "vARxXTj0-i5vTDR3k6zbe",
+      "id": "qeCXRf2B2k2CF9H5z7dZC",
       "type": "text",
       "x": 800.5322265625,
       "y": 356,
@@ -639,12 +639,12 @@
       "frameId": null,
       "index": "aH",
       "roundness": null,
-      "seed": 830884438,
+      "seed": 528004985,
       "version": 3,
-      "versionNonce": 1289695818,
+      "versionNonce": 817720311,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1790373660418,
+      "updated": 1790439624242,
       "link": null,
       "locked": false,
       "text": "Sol answers",
