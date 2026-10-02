@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import body from '../../../generated/genrec/article.html?raw';
+import '../../../styles/genrec.css';
+---
+<BaseLayout title="Reading Tastes, Ranking Titles" description="An interactive guide to Netflix GenRec, language-based recommendation, and the ideas that led here." article ogImage="">
+  <article class="genrec" id="genrec">
+    <header class="gr-header">
+      <p class="gr-kicker">Recommendation systems · An interactive essay</p>
+      <h1>Reading tastes,<br />ranking titles.</h1>
+      <p class="gr-deck">How language models became recommenders,<br class="desktop-break" /> and what Netflix’s GenRec changes.</p>
+      <div class="gr-byline"><span>Praneeth Paikray</span><time datetime="2026-10-02">2 October 2026</time><span>12 min read + explorations</span></div>
+      <p class="gr-source">A reading of <a href="https://arxiv.org/html/2608.10257v2">GenRec, v2</a>, by Ying Li and colleagues. Independent commentary; no affiliation with Netflix.</p>
+    </header>
+    <nav class="gr-toc" aria-label="Article contents">
+      <a href="#read-or-generate">01 The idea</a><a href="#scoring">02 The mechanics</a><a href="#learning">03 Learning</a><a href="#cost">04 Cost</a><a href="#evidence">05 Evidence</a><a href="#comparison">06 Comparisons</a><a href="#evolution">07 The lineage</a>
+    </nav>
+    <div class="gr-body" set:html={body}></div>
+    <footer class="gr-end"><a href="/">Back to all writing</a><span>All demonstrations run locally in your browser.</span></footer>
+  </article>
+  <script is:inline type="module" src="/genrec/explorers.js"></script>
+</BaseLayout>
