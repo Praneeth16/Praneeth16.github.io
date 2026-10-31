@@ -3,15 +3,15 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import body from '../../../generated/agents/article.html?raw';
 import contents from '../../../generated/agents/contents.html?raw';
 import '../../../styles/agents.css';
-const deck = 'Harrison Chase says agent observability looks more like Databricks than Datadog. I agree, and here is the whole loop on Databricks today: one bad tool call, followed from trace to SQL row to test case to retrained open model.';
+const deck = 'Everyone building agents asks what the platform for agents will be, the way Databricks became the platform for data. It already exists. One bad tool call, followed from trace to SQL row to test case to fine-tuned model, all on Databricks.';
 ---
 <BaseLayout title="Databricks Is Databricks for Agents" description={deck} article ogImage="/agents/og.png">
   <article id="agent-article">
     <header class="article-header container">
       <h1>Databricks Is Databricks for Agents</h1>
       <p class="article-deck">{deck}</p>
-      <div class="article-meta"><span>Praneeth Paikray</span><time datetime="2026-10-31">31 October 2026</time><span>11 min read</span></div>
-      <div class="article-links"><a href="#the-loop">Drag a trace around the loop</a><a href="#a-trace-is-a-row">Query 480 traces</a></div>
+      <div class="article-meta"><span>Praneeth Paikray</span><time datetime="2026-10-31">31 October 2026</time><span>9 min read</span></div>
+      <div class="article-links"><a href="#the-loop">Drag a trace around the loop</a><a href="#a-trace-is-a-row">Query 480 traces</a><a href="#from-trace-to-model">Trace to fine-tuned model</a></div>
       <nav class="contents" aria-labelledby="contents-heading"><p class="contents-label" id="contents-heading">Contents</p><div set:html={contents}/></nav>
     </header>
     <div class="prose fit" set:html={body}/>

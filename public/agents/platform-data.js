@@ -38,8 +38,8 @@ export const stages = [
   {
     verb: 'Train', glyph: 'GPU', shape: 'a checkpoint',
     product: 'AI RUNTIME · NVIDIA NEMO · TRL',
-    title: 'If prompts aren’t enough, adapt a model.',
-    body: 'Reviewed examples, kept apart from the test set, become training data. AI Runtime supplies the GPUs. The run, its data, and its checkpoints are logged to MLflow, so you can trace a model back to the traces it learned from.',
+    title: 'Fine-tune an open model on your traces.',
+    body: 'Reviewed traces, kept apart from the test set, become a training table. AI Runtime fine-tunes an open model on it with serverless GPUs, reading straight from Unity Catalog. MLflow logs the run, so the model links back to the traces it learned from.',
     artifact: 'A checkpoint or LoRA adapter linked to an MLflow run.',
     code: 'databricks air run --file workload.yaml --watch',
     href: 'https://docs.databricks.com/aws/en/machine-learning/ai-runtime/overview',
