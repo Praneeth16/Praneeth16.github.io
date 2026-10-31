@@ -1,0 +1,23 @@
+import assert from 'node:assert/strict';
+// Import the actual browser module with no rendered controls; test its pure rules.
+globalThis.document = {getElementById:()=>null,querySelectorAll:()=>[]};
+globalThis.window = {addEventListener:()=>{}};
+const {policyDecision,calculateCosts} = await import('../public/agents/explorers.js');
+assert.deepEqual(policyDecision(21,14,30,true),{proposed:true,eligible:false,committed:false,blocked:true});
+assert.deepEqual(policyDecision(21,14,30,false),{proposed:true,eligible:false,committed:true,blocked:false});
+assert.equal(policyDecision(14,14,14,true).committed,true);
+assert.equal(policyDecision(15,14,14,true).proposed,false);
+assert.equal(policyDecision(30,30,30,true).committed,true);
+assert.equal(policyDecision(31,30,30,false).committed,false);
+const inputs={volume:10000,gpu:2,hours:730,training:100,other:.03,success:.85,reference:.15,refsuccess:.9};
+const costs=calculateCosts(inputs);
+assert.ok(Math.abs(costs.specialist-1860/8500)<1e-12);
+assert.ok(Math.abs(costs.reference-1/6)<1e-12);
+assert.ok(costs.specialist>costs.reference);
+assert.ok(calculateCosts({...inputs,volume:100000}).specialist<costs.reference);
+const crossover=calculateCosts({...inputs,volume:costs.threshold});
+assert.ok(Math.abs(crossover.specialist-crossover.reference)<1e-12);
+assert.equal(calculateCosts({...inputs,other:1}).threshold,null);
+assert.equal(calculateCosts({...inputs,gpu:0,training:0,other:0}).specialist,0);
+assert.ok(calculateCosts({...inputs,success:.5}).specialist>costs.specialist);
+console.log('14 policy-boundary and cost-accounting checks passed.');
