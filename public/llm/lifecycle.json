@@ -1,0 +1,683 @@
+{
+  "description": "Bounded abstract lifecycle model. States do not represent LLM quality, correctness, or safety. Cache model allows one unprocessed sampled token.",
+  "invariants": [
+    "Release requires completed evaluation",
+    "Inference preserves released weights",
+    "Cached positions never exceed context",
+    "Serving requires release"
+  ],
+  "states": [
+    {
+      "id": 0,
+      "phase": "raw",
+      "version": 0,
+      "releaseVersion": 0,
+      "checked": false,
+      "released": false,
+      "context": 0,
+      "cached": 0
+    },
+    {
+      "id": 1,
+      "phase": "curated",
+      "version": 0,
+      "releaseVersion": 0,
+      "checked": false,
+      "released": false,
+      "context": 0,
+      "cached": 0
+    },
+    {
+      "id": 2,
+      "phase": "tokenized",
+      "version": 0,
+      "releaseVersion": 0,
+      "checked": false,
+      "released": false,
+      "context": 0,
+      "cached": 0
+    },
+    {
+      "id": 3,
+      "phase": "base",
+      "version": 1,
+      "releaseVersion": 0,
+      "checked": false,
+      "released": false,
+      "context": 0,
+      "cached": 0
+    },
+    {
+      "id": 4,
+      "phase": "assistant",
+      "version": 2,
+      "releaseVersion": 0,
+      "checked": false,
+      "released": false,
+      "context": 0,
+      "cached": 0
+    },
+    {
+      "id": 5,
+      "phase": "evaluated",
+      "version": 1,
+      "releaseVersion": 0,
+      "checked": true,
+      "released": false,
+      "context": 0,
+      "cached": 0
+    },
+    {
+      "id": 6,
+      "phase": "preferred",
+      "version": 3,
+      "releaseVersion": 0,
+      "checked": false,
+      "released": false,
+      "context": 0,
+      "cached": 0
+    },
+    {
+      "id": 7,
+      "phase": "evaluated",
+      "version": 2,
+      "releaseVersion": 0,
+      "checked": true,
+      "released": false,
+      "context": 0,
+      "cached": 0
+    },
+    {
+      "id": 8,
+      "phase": "serve",
+      "version": 1,
+      "releaseVersion": 1,
+      "checked": true,
+      "released": true,
+      "context": 0,
+      "cached": 0
+    },
+    {
+      "id": 9,
+      "phase": "evaluated",
+      "version": 3,
+      "releaseVersion": 0,
+      "checked": true,
+      "released": false,
+      "context": 0,
+      "cached": 0
+    },
+    {
+      "id": 10,
+      "phase": "serve",
+      "version": 2,
+      "releaseVersion": 2,
+      "checked": true,
+      "released": true,
+      "context": 0,
+      "cached": 0
+    },
+    {
+      "id": 11,
+      "phase": "prefill",
+      "version": 1,
+      "releaseVersion": 1,
+      "checked": true,
+      "released": true,
+      "context": 3,
+      "cached": 3
+    },
+    {
+      "id": 12,
+      "phase": "serve",
+      "version": 3,
+      "releaseVersion": 3,
+      "checked": true,
+      "released": true,
+      "context": 0,
+      "cached": 0
+    },
+    {
+      "id": 13,
+      "phase": "prefill",
+      "version": 2,
+      "releaseVersion": 2,
+      "checked": true,
+      "released": true,
+      "context": 3,
+      "cached": 3
+    },
+    {
+      "id": 14,
+      "phase": "decode",
+      "version": 1,
+      "releaseVersion": 1,
+      "checked": true,
+      "released": true,
+      "context": 4,
+      "cached": 3
+    },
+    {
+      "id": 15,
+      "phase": "done",
+      "version": 1,
+      "releaseVersion": 1,
+      "checked": true,
+      "released": true,
+      "context": 3,
+      "cached": 3
+    },
+    {
+      "id": 16,
+      "phase": "prefill",
+      "version": 3,
+      "releaseVersion": 3,
+      "checked": true,
+      "released": true,
+      "context": 3,
+      "cached": 3
+    },
+    {
+      "id": 17,
+      "phase": "decode",
+      "version": 2,
+      "releaseVersion": 2,
+      "checked": true,
+      "released": true,
+      "context": 4,
+      "cached": 3
+    },
+    {
+      "id": 18,
+      "phase": "done",
+      "version": 2,
+      "releaseVersion": 2,
+      "checked": true,
+      "released": true,
+      "context": 3,
+      "cached": 3
+    },
+    {
+      "id": 19,
+      "phase": "decode",
+      "version": 1,
+      "releaseVersion": 1,
+      "checked": true,
+      "released": true,
+      "context": 5,
+      "cached": 4
+    },
+    {
+      "id": 20,
+      "phase": "done",
+      "version": 1,
+      "releaseVersion": 1,
+      "checked": true,
+      "released": true,
+      "context": 4,
+      "cached": 3
+    },
+    {
+      "id": 21,
+      "phase": "decode",
+      "version": 3,
+      "releaseVersion": 3,
+      "checked": true,
+      "released": true,
+      "context": 4,
+      "cached": 3
+    },
+    {
+      "id": 22,
+      "phase": "done",
+      "version": 3,
+      "releaseVersion": 3,
+      "checked": true,
+      "released": true,
+      "context": 3,
+      "cached": 3
+    },
+    {
+      "id": 23,
+      "phase": "decode",
+      "version": 2,
+      "releaseVersion": 2,
+      "checked": true,
+      "released": true,
+      "context": 5,
+      "cached": 4
+    },
+    {
+      "id": 24,
+      "phase": "done",
+      "version": 2,
+      "releaseVersion": 2,
+      "checked": true,
+      "released": true,
+      "context": 4,
+      "cached": 3
+    },
+    {
+      "id": 25,
+      "phase": "decode",
+      "version": 1,
+      "releaseVersion": 1,
+      "checked": true,
+      "released": true,
+      "context": 6,
+      "cached": 5
+    },
+    {
+      "id": 26,
+      "phase": "done",
+      "version": 1,
+      "releaseVersion": 1,
+      "checked": true,
+      "released": true,
+      "context": 5,
+      "cached": 4
+    },
+    {
+      "id": 27,
+      "phase": "decode",
+      "version": 3,
+      "releaseVersion": 3,
+      "checked": true,
+      "released": true,
+      "context": 5,
+      "cached": 4
+    },
+    {
+      "id": 28,
+      "phase": "done",
+      "version": 3,
+      "releaseVersion": 3,
+      "checked": true,
+      "released": true,
+      "context": 4,
+      "cached": 3
+    },
+    {
+      "id": 29,
+      "phase": "decode",
+      "version": 2,
+      "releaseVersion": 2,
+      "checked": true,
+      "released": true,
+      "context": 6,
+      "cached": 5
+    },
+    {
+      "id": 30,
+      "phase": "done",
+      "version": 2,
+      "releaseVersion": 2,
+      "checked": true,
+      "released": true,
+      "context": 5,
+      "cached": 4
+    },
+    {
+      "id": 31,
+      "phase": "done",
+      "version": 1,
+      "releaseVersion": 1,
+      "checked": true,
+      "released": true,
+      "context": 6,
+      "cached": 5
+    },
+    {
+      "id": 32,
+      "phase": "decode",
+      "version": 3,
+      "releaseVersion": 3,
+      "checked": true,
+      "released": true,
+      "context": 6,
+      "cached": 5
+    },
+    {
+      "id": 33,
+      "phase": "done",
+      "version": 3,
+      "releaseVersion": 3,
+      "checked": true,
+      "released": true,
+      "context": 5,
+      "cached": 4
+    },
+    {
+      "id": 34,
+      "phase": "done",
+      "version": 2,
+      "releaseVersion": 2,
+      "checked": true,
+      "released": true,
+      "context": 6,
+      "cached": 5
+    },
+    {
+      "id": 35,
+      "phase": "done",
+      "version": 3,
+      "releaseVersion": 3,
+      "checked": true,
+      "released": true,
+      "context": 6,
+      "cached": 5
+    }
+  ],
+  "edges": [
+    {
+      "from": 0,
+      "to": 1,
+      "action": "Curate"
+    },
+    {
+      "from": 1,
+      "to": 2,
+      "action": "Tokenize"
+    },
+    {
+      "from": 2,
+      "to": 3,
+      "action": "Pretrain"
+    },
+    {
+      "from": 3,
+      "to": 4,
+      "action": "SFT"
+    },
+    {
+      "from": 3,
+      "to": 5,
+      "action": "Evaluate"
+    },
+    {
+      "from": 4,
+      "to": 6,
+      "action": "Preference"
+    },
+    {
+      "from": 4,
+      "to": 7,
+      "action": "Evaluate"
+    },
+    {
+      "from": 5,
+      "to": 0,
+      "action": "Revise"
+    },
+    {
+      "from": 5,
+      "to": 8,
+      "action": "Release"
+    },
+    {
+      "from": 6,
+      "to": 9,
+      "action": "Evaluate"
+    },
+    {
+      "from": 7,
+      "to": 0,
+      "action": "Revise"
+    },
+    {
+      "from": 7,
+      "to": 10,
+      "action": "Release"
+    },
+    {
+      "from": 8,
+      "to": 11,
+      "action": "Prefill"
+    },
+    {
+      "from": 9,
+      "to": 0,
+      "action": "Revise"
+    },
+    {
+      "from": 9,
+      "to": 12,
+      "action": "Release"
+    },
+    {
+      "from": 10,
+      "to": 13,
+      "action": "Prefill"
+    },
+    {
+      "from": 11,
+      "to": 14,
+      "action": "Sample"
+    },
+    {
+      "from": 11,
+      "to": 15,
+      "action": "End"
+    },
+    {
+      "from": 12,
+      "to": 16,
+      "action": "Prefill"
+    },
+    {
+      "from": 13,
+      "to": 17,
+      "action": "Sample"
+    },
+    {
+      "from": 13,
+      "to": 18,
+      "action": "End"
+    },
+    {
+      "from": 14,
+      "to": 19,
+      "action": "Sample"
+    },
+    {
+      "from": 14,
+      "to": 20,
+      "action": "End"
+    },
+    {
+      "from": 15,
+      "to": 8,
+      "action": "NewRequest"
+    },
+    {
+      "from": 15,
+      "to": 15,
+      "action": "Done"
+    },
+    {
+      "from": 16,
+      "to": 21,
+      "action": "Sample"
+    },
+    {
+      "from": 16,
+      "to": 22,
+      "action": "End"
+    },
+    {
+      "from": 17,
+      "to": 23,
+      "action": "Sample"
+    },
+    {
+      "from": 17,
+      "to": 24,
+      "action": "End"
+    },
+    {
+      "from": 18,
+      "to": 10,
+      "action": "NewRequest"
+    },
+    {
+      "from": 18,
+      "to": 18,
+      "action": "Done"
+    },
+    {
+      "from": 19,
+      "to": 25,
+      "action": "Sample"
+    },
+    {
+      "from": 19,
+      "to": 26,
+      "action": "End"
+    },
+    {
+      "from": 20,
+      "to": 8,
+      "action": "NewRequest"
+    },
+    {
+      "from": 20,
+      "to": 20,
+      "action": "Done"
+    },
+    {
+      "from": 21,
+      "to": 27,
+      "action": "Sample"
+    },
+    {
+      "from": 21,
+      "to": 28,
+      "action": "End"
+    },
+    {
+      "from": 22,
+      "to": 12,
+      "action": "NewRequest"
+    },
+    {
+      "from": 22,
+      "to": 22,
+      "action": "Done"
+    },
+    {
+      "from": 23,
+      "to": 29,
+      "action": "Sample"
+    },
+    {
+      "from": 23,
+      "to": 30,
+      "action": "End"
+    },
+    {
+      "from": 24,
+      "to": 10,
+      "action": "NewRequest"
+    },
+    {
+      "from": 24,
+      "to": 24,
+      "action": "Done"
+    },
+    {
+      "from": 25,
+      "to": 31,
+      "action": "End"
+    },
+    {
+      "from": 26,
+      "to": 8,
+      "action": "NewRequest"
+    },
+    {
+      "from": 26,
+      "to": 26,
+      "action": "Done"
+    },
+    {
+      "from": 27,
+      "to": 32,
+      "action": "Sample"
+    },
+    {
+      "from": 27,
+      "to": 33,
+      "action": "End"
+    },
+    {
+      "from": 28,
+      "to": 12,
+      "action": "NewRequest"
+    },
+    {
+      "from": 28,
+      "to": 28,
+      "action": "Done"
+    },
+    {
+      "from": 29,
+      "to": 34,
+      "action": "End"
+    },
+    {
+      "from": 30,
+      "to": 10,
+      "action": "NewRequest"
+    },
+    {
+      "from": 30,
+      "to": 30,
+      "action": "Done"
+    },
+    {
+      "from": 31,
+      "to": 8,
+      "action": "NewRequest"
+    },
+    {
+      "from": 31,
+      "to": 31,
+      "action": "Done"
+    },
+    {
+      "from": 32,
+      "to": 35,
+      "action": "End"
+    },
+    {
+      "from": 33,
+      "to": 12,
+      "action": "NewRequest"
+    },
+    {
+      "from": 33,
+      "to": 33,
+      "action": "Done"
+    },
+    {
+      "from": 34,
+      "to": 10,
+      "action": "NewRequest"
+    },
+    {
+      "from": 34,
+      "to": 34,
+      "action": "Done"
+    },
+    {
+      "from": 35,
+      "to": 12,
+      "action": "NewRequest"
+    },
+    {
+      "from": 35,
+      "to": 35,
+      "action": "Done"
+    }
+  ]
+}

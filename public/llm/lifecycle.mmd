@@ -1,0 +1,48 @@
+---
+title: "A language model, from corpus to request"
+---
+stateDiagram-v2
+  state "Legend" as legend {
+    lg0: development
+    lg1: inference
+  }
+  class lg0 tan
+  class lg1 teal
+  s0: Collected text
+  s1: Curated text
+  s2: Token sequences
+  s3: Base model
+  s4: Assistant model
+  s5: Evaluation complete
+  s6: Preference-tuned model
+  s7: Released checkpoint
+  s8: Prompt processed
+  s9: Request complete
+  s10: Generating tokens
+  [*] --> s0
+  s0 --> s1: select and filter
+  s1 --> s2: encode the text
+  s2 --> s3: optimize next-token loss
+  s3 --> s4: learn from demonstrations
+  s3 --> s5: check held-out behavior
+  s4 --> s6: learn from comparisons
+  s4 --> s5: check held-out behavior
+  s5 --> s0: return for revision
+  s5 --> s7: accept the checkpoint
+  s6 --> s5: check held-out behavior
+  s7 --> s8: process the prompt
+  s8 --> s9: stop the request
+  s8 --> s10: process pending token, then sample
+  s9 --> s7: start a new request
+  s10 --> s9: stop the request
+  class s0 tan
+  class s1 tan
+  class s2 tan
+  class s3 tan
+  class s4 tan
+  class s5 tan
+  class s6 tan
+  class s7 teal
+  class s8 teal
+  class s9 teal
+  class s10 teal
