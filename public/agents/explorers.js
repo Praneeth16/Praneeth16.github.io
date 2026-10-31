@@ -1,5 +1,5 @@
 /* Explanatory widgets. The trace data is synthetic and generated in the browser; nothing here calls a workspace. */
-import {stages,traceSpans} from './platform-data.js';
+import {stages,traceSpans,capabilities,buildPaths,modelRoutes} from './platform-data.js?v=capabilities-20261101';
 const $=(root,s)=>root.querySelector(s);
 const $$=(root,s)=>Array.from(root.querySelectorAll(s));
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -79,8 +79,28 @@ function traceTable(host){
  renderTray();render();
 }
 
+
+function stack(host){
+ let path='hosted',selected='context';
+ host.innerHTML=header('Choose how to build the agent','Architecture explorer · documented capabilities, not a live workspace')+`<div class="widget-body"><div class="path-tabs" role="group" aria-label="Agent build path">${Object.entries(buildPaths).map(([k,p])=>`<button type="button" data-path="${k}" aria-pressed="${k===path}">${esc(p.label)}</button>`).join('')}</div><div class="capability-layout"><div class="capability-rows" role="group" aria-label="Databricks capabilities">${capabilities.map(c=>`<button type="button" class="capability-row" data-cap="${c.id}" aria-pressed="${c.id===selected}"><span>${esc(c.label)}</span><strong>${esc(c.products)}</strong><small data-state></small></button>`).join('')}</div><div class="capability-detail" aria-live="polite"><p class="micro" data-product></p><h4 data-title></h4><p class="widget-text" data-job></p><dl><dt>Input</dt><dd data-input></dd><dt>Output</dt><dd data-output></dd></dl><a class="micro" data-doc href="#">Documentation ↗</a></div></div><div class="path-result" aria-live="polite"><span class="micro">THIS BUILD PATH</span><p data-description></p><p data-artifact></p></div></div>`;
+ function render(){const p=buildPaths[path],c=capabilities.find(x=>x.id===selected);
+  $$(host,'[data-path]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.path===path)));
+  $$(host,'[data-cap]').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.cap===selected));const active=p.active.includes(b.dataset.cap);b.classList.toggle('outside-path',!active);$(b,'[data-state]').textContent=active?'used':'optional';});
+  $(host,'[data-product]').textContent=c.id==='model'?p.model:c.products;
+  $(host,'[data-title]').textContent=c.label;$(host,'[data-job]').textContent=c.job;
+  $(host,'[data-input]').textContent=c.input;$(host,'[data-output]').textContent=c.output;$(host,'[data-doc]').href=c.href;
+  $(host,'[data-description]').textContent=p.adapt;$(host,'[data-artifact]').textContent='Release artifacts: '+p.artifact;
+ }
+ $$(host,'[data-path]').forEach(b=>b.onclick=()=>{path=b.dataset.path;render()});$$(host,'[data-cap]').forEach(b=>b.onclick=()=>{selected=b.dataset.cap;render();if(matchMedia('(max-width:760px)').matches)$(host,'.capability-detail').scrollIntoView({block:'nearest',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'})});render();
+}
+function models(host){
+ host.innerHTML=header('Documented open-model paths','Select an example; compute and software describe its linked recipe')+`<div class="widget-body"><div class="path-tabs" role="group" aria-label="Open-model route">${modelRoutes.map((r,i)=>`<button type="button" data-model-route="${i}" aria-pressed="${i===0}">${esc(r.label)}</button>`).join('')}</div><div class="model-route"><div aria-live="polite"><p class="micro" data-method></p><h4 data-title></h4><p class="widget-text" data-body></p><a class="micro" data-link href="#">Open the documented example ↗</a></div><div><dl class="model-spec"><dt>Compute</dt><dd data-compute></dd><dt>Software</dt><dd data-software></dd><dt>Output</dt><dd data-output></dd></dl><pre data-code></pre></div></div></div>`+note('These are documented implementation routes, not measurements from this article. Custom vLLM serving is Public Preview. Follow the selected example’s current hardware, version, and region requirements.');
+ function render(i){const r=modelRoutes[i];for(const k of ['method','title','body','compute','software','output','code'])$(host,`[data-${k}]`).textContent=r[k];$(host,'[data-link]').href=r.href;$$(host,'[data-model-route]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.modelRoute)===i)));}
+ $$(host,'[data-model-route]').forEach(b=>b.onclick=()=>render(Number(b.dataset.modelRoute)));render(0);
+}
+
 if(typeof document!=='undefined'){
- const mounts={loop,traceTable};
+ const mounts={loop,traceTable,stack,models};
  for(const el of document.querySelectorAll('[data-widget]'))mounts[el.dataset.widget]?.(el);
  const article=document.getElementById('agent-article'),progress=document.getElementById('reading-progress');
  const update=()=>{if(!article||!progress)return;const range=article.offsetHeight-innerHeight;progress.style.width=`${Math.max(0,Math.min(100,(scrollY-article.offsetTop)/Math.max(range,1)*100))}%`};
