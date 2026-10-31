@@ -22,9 +22,14 @@ function rack(x,y,c=palette.blue) {
 }
 function fan(x,y,r=9){return `<g class="fan" style="transform-origin:${x}px ${y}px">${circle(x,y,r,'#f4eee0')}${[0,120,240].map(a=>path(`M${x} ${y}q${r} ${-r} ${r-1} 1q-4 7 ${1-r} -1`,`fill="#85969b" transform="rotate(${a} ${x} ${y})"`)).join('')}${circle(x,y,2,ink)}</g>`;}
 const defs = `<defs><pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(-25)"><path d="M0 0V7" stroke="#443f36" stroke-width=".7" opacity=".45"/></pattern><filter id="pencil"><feTurbulence type="fractalNoise" baseFrequency=".065" numOctaves="2" seed="8" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale=".7" xChannelSelector="R" yChannelSelector="G"/></filter><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M1 1L9 5L1 9" fill="none" stroke="#b16a50" stroke-width="1.4"/></marker></defs>`;
-const svg=(content,viewBox,label)=>`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" role="img" aria-label="${label}" class="workshop-svg">${defs}<g stroke="${ink}" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" font-family="Kevin,monospace" fill="${ink}">${content}</g></svg>`;
+const svg=(content,viewBox,label,namespace=label.replace(/[^a-zA-Z]/g,'').slice(0,18))=>{
+  const drawing=content.replaceAll('class="ink-object"','class="ink-object" filter="url(#pencil)"').replaceAll('class="tiny-person"','class="tiny-person" filter="url(#pencil)"');
+  let result=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" role="img" aria-label="${label}" class="workshop-svg">${defs}<g stroke="${ink}" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" font-family="Kevin,monospace" fill="${ink}">${drawing}</g></svg>`;
+  for(const id of ['hatch','pencil','arrow']) result=result.replaceAll(`id="${id}"`,`id="${namespace}-${id}"`).replaceAll(`url(#${id})`,`url(#${namespace}-${id})`);
+  return result;
+};
 function label(x,y,n,title,sub){return `<g class="station-label" stroke="none">${txt(x,y,n,12,'fill="#aa614b"')}${txt(x,y+24,title,21)}${txt(x,y+44,sub,12,'fill="#77776e"')}</g>`;}
-export function workshop() {
+export function workshop(namespace='workshop') {
  let s=`<g fill="none" stroke="#c1b59b" opacity=".3">${[-50,60,170,280,390,500].map(y=>path(`M50 ${y+220}L1000 ${y+620}`)).join('')}${[0,150,300,450,600,750,900].map(x=>path(`M${x+80} 80L${x-380} 550`)).join('')}</g>`;
  const routes=['M240 230C300 270 320 190 385 218','M500 236C550 250 560 310 610 310','M748 288C800 250 810 202 880 220','M970 290C1070 350 1070 406 980 430','M865 475C800 520 775 500 710 500','M574 523C510 550 492 510 435 480'];
  s+=`<g fill="none" stroke="#b16a50" stroke-width="1.5">${routes.map(d=>path(d,'marker-end="url(#arrow)" class="flow-path"')).join('')}</g>`;
@@ -36,7 +41,7 @@ export function workshop() {
  s+=`<a href="#evaluation" class="station" data-stop="5" aria-label="Explore evaluation"><g class="station-art">${box(605,450,112,69,12,'#d7cbb4')}${box(646,384,52,35,60,palette.yellow)}${path('M618 406l39 16v24l-39-16z','fill="#eff0d8"')}${path('M627 424l7 9 12-10','fill="none" stroke="#668b75" stroke-width="3"')}${paper(565,412,-12)}${person(721,466,palette.red,-1)}</g>${label(559,576,'06 / THE CHECKPOINT','Test what changed','held-out tasks · safety · regressions')}</a>`;
  s+=`<a href="#inference" class="station" data-stop="6" aria-label="Explore inference"><g class="station-art">${box(338,411,116,73,13,'#d5c9b4')}${box(380,346,70,33,60,palette.blue)}${path('M352 364l55 23v32l-55-23z','fill="#e7ecd9"')}${txt(360,387,'hello_',16,'stroke="none" fill="#486d60"')}${path('M378 421l36 15-20 13-36-15z','fill="#e9dfc9"')}${person(297,426,palette.violet)}</g>${label(265,527,'07 / YOUR TURN','Generate a continuation','weights fixed · context grows')}</a>`;
  s+=`<g stroke="none">${txt(56,415,'the long way',15,'fill="#b16a50" transform="rotate(-10 56 415)"')}${txt(49,439,'to a short answer.',15,'fill="#b16a50" transform="rotate(-10 49 439)"')}</g>`;
- return svg(s,'0 0 1140 660','An illustrated workshop follows a language model from a curated document archive through tokenization, transformer layers, a GPU cluster, post-training, evaluation, and inference. Select a station to explore.').replace('role="img"','role="group"');
+ return svg(s,'0 0 1140 660','An illustrated workshop follows a language model from a curated document archive through tokenization, transformer layers, a GPU cluster, post-training, evaluation, and inference. Select a station to explore.',namespace).replace('role="img"','role="group"');
 }
 export function engine(){
  let s=box(310,356,230,118,14,'#ded4be');
