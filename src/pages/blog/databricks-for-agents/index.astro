@@ -3,24 +3,22 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import body from '../../../generated/agents/article.html?raw';
 import '../../../styles/agents.css';
 ---
-<BaseLayout title="Your Agent Passed the Test. Then the Business Changed." description="An interactive field guide to Databricks agents, AI Runtime, open-model serving, and the evidence needed to improve a business outcome." article ogImage="/agents/og.png">
+<BaseLayout title="Databricks Is Databricks for Agents" description="Why Databricks is a platform for agents: governed context, agent execution, MLflow, AI Runtime with NVIDIA, and open-model serving. An interactive technical walkthrough." article ogImage="/agents/og.png">
   <article class="ag" id="agent-article">
     <header class="ag-hero">
-      <p class="ag-eyebrow">Systems for agents / An interactive field guide</p>
-      <h1>Your agent passed the test.<br /><em>Then the business changed.</em></h1>
-      <p class="ag-deck">Where Databricks, AI Runtime, and open models meet the reality of a changing business.</p>
-      <div class="ag-byline"><span>Praneeth Paikray</span><time datetime="2026-10-31">31 October 2026</time><span>20 min + six explorations</span></div>
-      <div class="ag-hero-map" aria-label="The learning loop: business context, agent actions, verified outcomes, and model adaptation">
-        <div class="ag-orbit" aria-hidden="true"><span class="orbit-dot od1"></span><span class="orbit-dot od2"></span><span class="orbit-dot od3"></span><div class="orbit-core">The business<br /><strong>keeps moving.</strong></div></div>
-        <div class="orbit-label ol1"><small>01 / KNOW</small><strong>Current context</strong><span>Policies · permissions · state</span></div>
-        <div class="orbit-label ol2"><small>02 / ACT</small><strong>Agent + open model</strong><span>Reason · call tools · verify</span></div>
-        <div class="orbit-label ol3"><small>03 / LEARN</small><strong>Outcomes → adaptation</strong><span>Trace · evaluate · train · serve</span></div>
+      <p class="ag-eyebrow">Databricks / Agents / October 2026</p>
+      <h1>Databricks is<br /><em>Databricks for agents.</em></h1>
+      <p class="ag-deck">The platform story, from governed context and agent execution to GPU training and open-model serving.</p>
+      <div class="ag-byline"><span>Praneeth Paikray</span><time datetime="2026-10-31">31 October 2026</time><span>A technical walkthrough with interactive diagrams</span></div>
+      <div class="hero-platform" aria-label="Databricks supports both agent execution and the data and model development workflow">
+        <div class="hero-lane"><span class="lane-label">RUN AN AGENT</span><div><small>CONTEXT</small><strong>AI Search + Genie</strong></div><span class="lane-arrow" aria-hidden="true">→</span><div><small>APPLICATION</small><strong>Agent Runtime</strong></div><span class="lane-arrow" aria-hidden="true">↔</span><div><small>INFERENCE</small><strong>Model Serving</strong></div></div>
+        <div class="hero-lane"><span class="lane-label">DEVELOP THE SYSTEM</span><div><small>EXECUTION DATA</small><strong>MLflow + SQL</strong></div><span class="lane-arrow" aria-hidden="true">→</span><div><small>MODEL ADAPTATION</small><strong>AIR + NVIDIA</strong></div><span class="lane-arrow" aria-hidden="true">→</span><div><small>DEPLOYABLE ARTIFACT</small><strong>Model + environment</strong></div></div>
+        <div class="hero-foundation">Unity Catalog governs the data, model, and artifact layer.<a href="#platform">Explore the platform ↓</a></div>
       </div>
-      <p class="ag-status"><span class="status-dot"></span>Technical explainer &amp; experiment design. Browser demos are deterministic illustrations, not model runs. No training or benchmark results are claimed.</p>
     </header>
-    <nav class="ag-nav" aria-label="Article sections"><a href="#change">01 Change</a><a href="#trace">02 Observe</a><a href="#architecture">03 Connect</a><a href="#data">04 Adapt</a><a href="#evaluate">05 Prove</a><a href="#economics">06 Serve</a></nav>
+    <nav class="ag-nav" aria-label="Article sections"><a href="#platform">Platform</a><a href="#context">Context</a><a href="#governance">Governance</a><a href="#execution">Execution</a><a href="#agent-data">Agent data</a><a href="#quality">MLflow</a><a href="#air">AIR + NVIDIA</a><a href="#serving">Open models</a><a href="#example">Example</a></nav>
     <div class="ag-body" set:html={body}></div>
-    <footer class="ag-end"><p>Better agents begin with better evidence.</p><a href="/">← All writing</a><a href="#agent-article">Back to top ↑</a></footer>
+    <footer class="ag-end"><a href="/">← All writing</a><a href="#agent-article">Back to top ↑</a></footer>
   </article>
   <script is:inline type="module" src="/agents/explorers.js"></script>
 </BaseLayout>
