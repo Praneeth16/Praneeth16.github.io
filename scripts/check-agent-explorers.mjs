@@ -1,23 +1,23 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {platformData} from '../public/agents/platform-data.js';
-const html=fs.readFileSync(new URL('../src/generated/agents/article.html',import.meta.url),'utf8');
-const page=fs.readFileSync(new URL('../src/pages/blog/databricks-for-agents/index.astro',import.meta.url),'utf8');
-const all=html+page;
+import {stages,traceSpans} from '../public/agents/platform-data.js';
+import {makeTraces} from '../public/agents/explorers.js';
+const read=p=>fs.readFileSync(new URL(p,import.meta.url),'utf8');
+const all=read('../src/generated/agents/article.html')+read('../src/generated/agents/contents.html')+read('../src/pages/blog/databricks-for-agents/index.astro');
 const ids=[...all.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
 assert.equal(new Set(ids).size,ids.length,'Duplicate element IDs');
 for(const [,target] of all.matchAll(/href="#([^"]+)"/g))assert.ok(ids.includes(target),`Missing anchor ${target}`);
-const groups={layer:'layers',context:'context',runtime:'runtime',analysis:'analysis',recipe:'recipes',serving:'serving'};
-let count=0;
-for(const [attribute,key] of Object.entries(groups)){
- const controls=[...html.matchAll(new RegExp(`data-${attribute}="([^"]+)"`,'g'))].map(m=>m[1]);
- assert.equal(controls.length,platformData[key].length,`Incomplete ${key} controls`);
- assert.equal(new Set(controls).size,controls.length,`Duplicate ${key} controls`);
- for(const control of controls){const item=key==='layers'?platformData[key].find(x=>x.id===control):platformData[key][Number(control)];assert.ok(item,`Missing content ${key}/${control}`);assert.ok(item.body.length>30);if(item.href)assert.equal(new URL(item.href).protocol,'https:');count++;}
-}
-for(const field of ['title','body','model','compute','framework','output'])for(const recipe of platformData.recipes)assert.ok(recipe[field],`Incomplete recipe ${field}`);
-assert.ok(platformData.analysis[2].code.includes("'version', '2.1'"),'Classification interface must be explicit');
-assert.ok(platformData.serving[1].code.includes('env_pack="databricks_model_serving"'));
-assert.ok(!all.includes('policy-lab'),'Removed policy simulation still present');
-assert.ok(!all.includes('cost-lab'),'Removed cost simulation still present');
-console.log(`Verified ${count} explorer states, recipe completeness, code contracts, unique IDs, and article anchors.`);
+const refs=[...all.matchAll(/id="ref-(\d+)"/g)].map(m=>m[1]);
+for(const r of refs)assert.ok(all.includes(`href="#ref-${r}"`),`Reference ${r} is never cited`);
+for(const w of ['loop','traceTable'])assert.ok(all.includes(`data-widget="${w}"`),`Missing widget ${w}`);
+assert.equal(stages.length,6);
+for(const s of stages){for(const k of ['verb','glyph','shape','product','title','body','artifact','code','href'])assert.ok(s[k],`Stage ${s.verb} missing ${k}`);assert.equal(new URL(s.href).protocol,'https:')}
+assert.ok(traceSpans.some(s=>s.bad));
+const t=makeTraces(),rate=f=>{const r=t.filter(f);return [r.filter(x=>x.failed).length,r.length]};
+const eq=(f,[b,n],label)=>assert.deepEqual(rate(f),[b,n],`${label} no longer matches the prose`);
+eq(x=>x.harness==='v13'&&x.tool==='exchange_items',[25,55],'v13 exchange');
+eq(x=>x.harness==='v12'&&x.tool==='exchange_items',[1,63],'v12 exchange');
+const [hb,hn]=rate(x=>x.model==='hosted'),[ob,on]=rate(x=>x.model==='open-8b');
+assert.equal((100*hb/hn).toFixed(1),'7.1');assert.equal((100*ob/on).toFixed(1),'7.1');
+const [eb,en]=rate(x=>x.tool==='exchange_items');assert.equal(Math.round(100*eb/en),22);
+console.log(`Verified ${ids.length} unique IDs, ${refs.length} cited references, ${stages.length} loop stages, and the synthetic numbers quoted in the prose.`);

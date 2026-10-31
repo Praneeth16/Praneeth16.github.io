@@ -1,24 +1,20 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import body from '../../../generated/agents/article.html?raw';
+import contents from '../../../generated/agents/contents.html?raw';
 import '../../../styles/agents.css';
+const deck = 'Harrison Chase says agent observability looks more like Databricks than Datadog. I agree, and here is the whole loop on Databricks today: one bad tool call, followed from trace to SQL row to test case to retrained open model.';
 ---
-<BaseLayout title="Databricks Is Databricks for Agents" description="Why Databricks is a platform for agents: governed context, agent execution, MLflow, AI Runtime with NVIDIA, and open-model serving. An interactive technical walkthrough." article ogImage="/agents/og.png">
-  <article class="ag" id="agent-article">
-    <header class="ag-hero">
-      <p class="ag-eyebrow">Databricks / Agents / October 2026</p>
-      <h1>Databricks is<br /><em>Databricks for agents.</em></h1>
-      <p class="ag-deck">The platform story, from governed context and agent execution to GPU training and open-model serving.</p>
-      <div class="ag-byline"><span>Praneeth Paikray</span><time datetime="2026-10-31">31 October 2026</time><span>A technical walkthrough with interactive diagrams</span></div>
-      <div class="hero-platform" aria-label="Databricks supports both agent execution and the data and model development workflow">
-        <div class="hero-lane"><span class="lane-label">RUN AN AGENT</span><div><small>CONTEXT</small><strong>AI Search + Genie</strong></div><span class="lane-arrow" aria-hidden="true">→</span><div><small>APPLICATION</small><strong>Agent Runtime</strong></div><span class="lane-arrow" aria-hidden="true">↔</span><div><small>INFERENCE</small><strong>Model Serving</strong></div></div>
-        <div class="hero-lane"><span class="lane-label">DEVELOP THE SYSTEM</span><div><small>EXECUTION DATA</small><strong>MLflow + SQL</strong></div><span class="lane-arrow" aria-hidden="true">→</span><div><small>MODEL ADAPTATION</small><strong>AIR + NVIDIA</strong></div><span class="lane-arrow" aria-hidden="true">→</span><div><small>DEPLOYABLE ARTIFACT</small><strong>Model + environment</strong></div></div>
-        <div class="hero-foundation">Unity Catalog governs the data, model, and artifact layer.<a href="#platform">Explore the platform ↓</a></div>
-      </div>
+<BaseLayout title="Databricks Is Databricks for Agents" description={deck} article ogImage="/agents/og.png">
+  <article id="agent-article">
+    <header class="article-header container">
+      <h1>Databricks Is Databricks for Agents</h1>
+      <p class="article-deck">{deck}</p>
+      <div class="article-meta"><span>Praneeth Paikray</span><time datetime="2026-10-31">31 October 2026</time><span>11 min read</span></div>
+      <div class="article-links"><a href="#the-loop">Drag a trace around the loop</a><a href="#a-trace-is-a-row">Query 480 traces</a></div>
+      <nav class="contents" aria-labelledby="contents-heading"><p class="contents-label" id="contents-heading">Contents</p><div set:html={contents}/></nav>
     </header>
-    <nav class="ag-nav" aria-label="Article sections"><a href="#platform">Platform</a><a href="#context">Context</a><a href="#governance">Governance</a><a href="#execution">Execution</a><a href="#agent-data">Agent data</a><a href="#quality">MLflow</a><a href="#air">AIR + NVIDIA</a><a href="#serving">Open models</a><a href="#example">Example</a></nav>
-    <div class="ag-body" set:html={body}></div>
-    <footer class="ag-end"><a href="/">← All writing</a><a href="#agent-article">Back to top ↑</a></footer>
+    <div class="prose fit" set:html={body}/>
   </article>
   <script is:inline type="module" src="/agents/explorers.js"></script>
 </BaseLayout>
