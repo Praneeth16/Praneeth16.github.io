@@ -28,3 +28,15 @@ assert.deepEqual(order, [...order].sort((a,b) => a-b));
 assert.ok(file.includes('<dialog class="reader"'));
 assert.ok(!file.includes('id="step-route"'));
 console.log('PASS: the 13-scene reader follows valid model transitions through four ordered chapters.');
+
+// Every story card needs a complete renderer and the same three-phase cue contract.
+const artwork=fs.readFileSync(new URL('../public/llm/card-scenes.js',import.meta.url),'utf8');
+const artworkContext={window:{}};
+vm.runInNewContext(artwork,artworkContext,{timeout:1000});
+const engine=artworkContext.window.LLMScenes;
+assert.deepEqual([...engine.types].sort(),states.map(s=>s.artType).sort());
+for (const state of states) {
+  assert.equal(engine.cues[state.artType].length,3);
+  assert.ok(engine.durations[state.artType]>=8 && engine.durations[state.artType]<=12);
+}
+console.log('PASS: all 16 cards have animation renderers, three phase cues, and bounded loop durations.');

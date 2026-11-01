@@ -428,7 +428,7 @@
   .plate-canvas-wrap {
     position: relative;
     width: 100%;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 480 / 330;
     border-radius: 7px;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.16);
@@ -839,6 +839,9 @@
     .reader-footer { padding: 8px 14px; }
     .reader-hint { display: none; }
   }
+  /* The same motion study scales from an overview card to the reader. */
+  .scope-wobble-tag { display: block; min-height: 30px; font-size: 11px; line-height: 1.6; color: #d3c29f; padding: 3px 0; }
+  @media (max-width: 640px) { .scope-wobble-tag { display: block; font-size: 10px; min-height: 28px; } }
 </style>
 </head>
 <body>
@@ -1268,7 +1271,7 @@ stateDiagram-v2
     <div class="reader-scene">
       <div class="scope-wrap">
         <div class="scope"><canvas id="scope-canvas" width="480" height="330" role="img" aria-label="Animated illustration of the current scene"></canvas></div>
-        <div class="scope-wobble-tag" id="scope-frame-indicator">pencil + pastel</div>
+        <div class="scope-wobble-tag" id="scope-frame-indicator" aria-hidden="true">Gather source documents</div>
       </div>
       <div>
         <p class="stepper-desc" id="stepper-desc"></p>
@@ -1305,6 +1308,7 @@ stateDiagram-v2
   </footer>
 </dialog>
 
+<script is:inline src="/llm/card-scenes.js"></script>
 <script is:inline>
 /* ============================================================================
    1. FORMAL STATECHART MODEL & VIEW (TLA+ States, Transitions, Paper Stocks)
@@ -1728,286 +1732,8 @@ const guards = {
   klLeash: true
 };
 
-function renderStateArtwork(ctx, w, h, state, frameIdx, nowSec) {
-  drawPaperTooth(ctx, w, h, state.paperBg, frameIdx);
-  const seedBase = (parseInt(state.num, 10) * 131) + frameIdx * 37;
-  const cx = w / 2;
-  const cy = h / 2;
-
-  ctx.save();
-  ctx.font = "11px 'IBM Plex Mono', monospace";
-
-  switch (state.artType) {
-    case "crawl": {
-      // Funnel of noisy web documents pouring into filter sieve
-      const docColors = ["#fff7e6", "#f4d393", "#e8998d", "#b5d6d6", "#e0c8f0"];
-      for (let i = 0; i < 7; i++) {
-        const yOff = ((nowSec * 38 + i * 24) % (h * 0.65));
-        const xOff = cx - 68 + ((i * 37) % 136) + Math.sin(nowSec * 2 + i) * 6;
-        handRect(ctx, xOff - 14, 10 + yOff, 28, 20, "#3a3026", docColors[i % docColors.length], 1.4, seedBase + i);
-        handLine(ctx, xOff - 9, 16 + yOff, xOff + 8, 16 + yOff, "#3a3026", 1, seedBase + i + 20);
-      }
-      // Sieve funnel
-      handLine(ctx, cx - 70, h * 0.56, cx - 22, h * 0.85, "#231e18", 2.5, seedBase + 50);
-      handLine(ctx, cx + 70, h * 0.56, cx + 22, h * 0.85, "#231e18", 2.5, seedBase + 51);
-      handLine(ctx, cx - 56, h * 0.66, cx + 56, h * 0.66, "#d9383a", 2.0, seedBase + 52);
-      ctx.fillStyle = "#231e18";
-      ctx.fillText("raw web pages", 12, h - 10);
-      break;
-    }
-
-    case "dedup": {
-      // Two columns of document beads with red X on duplicates and golden keep-threads
-      for (let r = 0; r < 4; r++) {
-        const y = 24 + r * ((h - 44) / 3.3);
-        const isDup = (r === 1 || r === 3);
-        handCircle(ctx, cx - 48, y, 11, "#f3ede0", isDup ? "#8c3b3b" : "#4ca686", 1.6, seedBase + r);
-        handCircle(ctx, cx + 48, y, 11, "#f3ede0", isDup ? "#8c3b3b" : "#f0c86a", 1.6, seedBase + r + 10);
-        handLine(ctx, cx - 34, y, cx + 34, y, isDup ? "#ff6b6b" : "#f0c86a", 1.8, seedBase + r + 20);
-        if (isDup) {
-          handLine(ctx, cx - 8, y - 8, cx + 8, y + 8, "#ff5a64", 2.4, seedBase + r + 30);
-          handLine(ctx, cx + 8, y - 8, cx - 8, y + 8, "#ff5a64", 2.4, seedBase + r + 31);
-        }
-      }
-      ctx.fillStyle = "#f0c86a";
-      ctx.fillText("MinHash LSH", 12, h - 10);
-      break;
-    }
-
-    case "bpe": {
-      // Blueprint grid + BPE merge tree ("t"+"h" -> "th" -> "the")
-      ctx.strokeStyle = "rgba(255,255,255,0.1)";
-      ctx.lineWidth = 1;
-      for (let gx = 0; gx < w; gx += 18) {
-        ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, h); ctx.stroke();
-      }
-      for (let gy = 0; gy < h; gy += 18) {
-        ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(w, gy); ctx.stroke();
-      }
-      const leaves = ["t", "h", "e", "_l", "l", "m"];
-      leaves.forEach((ch, idx) => {
-        const lx = 22 + idx * ((w - 44) / 5);
-        const ly = h - 28;
-        handRect(ctx, lx - 13, ly - 11, 26, 20, "#f0c86a", "#18263a", 1.4, seedBase + idx);
-        ctx.fillStyle = "#fff";
-        ctx.fillText(ch, lx - 6, ly + 3);
-      });
-      // Merge arcs
-      handLine(ctx, 32, h - 40, cx - 30, 48, "#6ee7b7", 2.0, seedBase + 30);
-      handLine(ctx, 64, h - 40, cx - 30, 48, "#6ee7b7", 2.0, seedBase + 31);
-      handLine(ctx, cx + 10, h - 40, cx + 34, 48, "#f0c86a", 2.0, seedBase + 32);
-      handRect(ctx, cx - 54, 24, 52, 24, "#6ee7b7", "#142234", 1.8, seedBase + 40);
-      ctx.fillStyle = "#6ee7b7";
-      ctx.fillText("#1820", cx - 47, 40);
-      handRect(ctx, cx + 10, 24, 52, 24, "#f0c86a", "#142234", 1.8, seedBase + 41);
-      ctx.fillStyle = "#f0c86a";
-      ctx.fillText("#9941", cx + 17, 40);
-      break;
-    }
-
-    case "rope": {
-      // Rotating RoPE frequency dials (m * theta_i)
-      const radii = [22, 42, 62];
-      radii.forEach((rad, i) => {
-        handCircle(ctx, cx, cy, rad, "rgba(246,236,244,0.35)", null, 1.3, seedBase + i);
-        const angle = nowSec * (1.8 - i * 0.45) + i * 1.1;
-        const px = cx + Math.cos(angle) * rad;
-        const py = cy + Math.sin(angle) * rad;
-        handLine(ctx, cx, cy, px, py, i === 0 ? "#f0c86a" : "#7ee0c6", 2.2, seedBase + i + 10);
-        handCircle(ctx, px, py, 5.5, "#fff", i === 0 ? "#f0c86a" : "#e87a90", 1.5, seedBase + i + 20);
-      });
-      ctx.fillStyle = "#f0c86a";
-      ctx.fillText("e^{i(m-n)θ}", 12, h - 10);
-      break;
-    }
-
-    case "attention": {
-      // 5x5 Causal Self-Attention Grid: lower triangle glowing gold/teal, upper triangle masked X
-      const n = 5;
-      const cell = Math.min(w, h) * 0.13;
-      const startX = cx - (n * cell) / 2;
-      const startY = cy - (n * cell) / 2;
-      for (let r = 0; r < n; r++) {
-        for (let c = 0; c < n; c++) {
-          const x = startX + c * cell;
-          const y = startY + r * cell;
-          const masked = (c > r) && guards.causalMask;
-          const pulse = 0.45 + 0.5 * Math.sin(nowSec * 3 + r * 0.9 - c * 0.7);
-          const fill = masked
-            ? "rgba(15, 20, 34, 0.85)"
-            : `rgba(240, 200, 106, ${0.28 + 0.62 * pulse})`;
-          handRect(ctx, x, y, cell - 3, cell - 3, "rgba(255,255,255,0.3)", fill, 1.1, seedBase + r * 7 + c, 0.7);
-          if (masked) {
-            handLine(ctx, x + 4, y + 4, x + cell - 7, y + cell - 7, "#ff6b6b", 1.2, seedBase + r * 11 + c, 0.5);
-          }
-        }
-      }
-      ctx.fillStyle = "#f0c86a";
-      ctx.fillText("j ≤ i causal", 10, h - 9);
-      break;
-    }
-
-    case "mask_bug": {
-      // Broken causal mask: bright red arrows leaking from future column j > i back to token i
-      const n = 4;
-      const cell = Math.min(w, h) * 0.15;
-      const startX = cx - (n * cell) / 2;
-      const startY = cy - (n * cell) / 2;
-      for (let r = 0; r < n; r++) {
-        for (let c = 0; c < n; c++) {
-          const x = startX + c * cell;
-          const y = startY + r * cell;
-          const isLeak = c > r;
-          handRect(ctx, x, y, cell - 3, cell - 3, "#ff99a0", isLeak ? "#e72e3b" : "rgba(255,255,255,0.12)", 1.3, seedBase + r * 5 + c, 0.9);
-        }
-      }
-      handLine(ctx, startX + 3.2 * cell, startY + 0.5 * cell, startX + 0.5 * cell, startY + 0.5 * cell, "#ffeb3b", 2.6, seedBase + 99);
-      ctx.fillStyle = "#ffdce0";
-      ctx.fillText("LEAK: reads t+1!", 10, h - 9);
-      break;
-    }
-
-    case "moe": {
-      // Router dispatching tokens into Top-2 of 6 expert boxes
-      handCircle(ctx, 36, cy, 15, "#f0c86a", "#1f3329", 2.0, seedBase + 1);
-      ctx.fillStyle = "#f0c86a";
-      ctx.fillText("G(x)", 24, cy + 4);
-      const activeA = Math.floor(nowSec * 1.5) % 5;
-      const activeB = (activeA + 2) % 5;
-      for (let e = 0; e < 5; e++) {
-        const ey = 18 + e * ((h - 32) / 4.3);
-        const ex = w - 68;
-        const hot = (e === activeA || e === activeB);
-        handLine(ctx, 52, cy, ex, ey + 8, hot ? "#f0c86a" : "rgba(255,255,255,0.18)", hot ? 2.4 : 1.1, seedBase + e + 10);
-        handRect(ctx, ex, ey, 50, 17, hot ? "#f0c86a" : "rgba(255,255,255,0.35)", hot ? "#d97f38" : "rgba(0,0,0,0.25)", 1.4, seedBase + e + 20);
-      }
-      ctx.fillStyle = "#eff7f2";
-      ctx.fillText("Top-2 Sparse MoE", 10, h - 9);
-      break;
-    }
-
-    case "parallel": {
-      // 8 GPU nodes connected in an NVLink / InfiniBand All-Reduce ring with circulating gradient pulses
-      const rRing = Math.min(w, h) * 0.31;
-      for (let i = 0; i < 6; i++) {
-        const a1 = (i / 6) * Math.PI * 2 + nowSec * 0.4;
-        const a2 = ((i + 1) / 6) * Math.PI * 2 + nowSec * 0.4;
-        const x1 = cx + Math.cos(a1) * rRing, y1 = cy + Math.sin(a1) * rRing;
-        const x2 = cx + Math.cos(a2) * rRing, y2 = cy + Math.sin(a2) * rRing;
-        handLine(ctx, x1, y1, x2, y2, "#6ee7b7", 2.2, seedBase + i);
-        handRect(ctx, x1 - 12, y1 - 9, 24, 18, "#f0c86a", "#2e3440", 1.5, seedBase + i + 20);
-      }
-      ctx.fillStyle = "#6ee7b7";
-      ctx.fillText("Ring All-Reduce", 10, h - 9);
-      break;
-    }
-
-    case "nan_bug": {
-      // Exploding jagged loss curve shooting off top of chart into NaN skulls
-      handLine(ctx, 18, h - 22, cx - 10, h - 38, "#ffdce0", 2.2, seedBase + 1);
-      handLine(ctx, cx - 10, h - 38, cx + 18, 12, "#ffeb3b", 3.0, seedBase + 2);
-      handLine(ctx, cx + 18, 12, w - 18, 28, "#ff4d4d", 2.8, seedBase + 3);
-      handCircle(ctx, cx + 18, 18, 14, "#ffeb3b", "#e72e3b", 2.2, seedBase + 4);
-      ctx.fillStyle = "#fff";
-      ctx.fillText("NaN!", cx + 5, 22);
-      ctx.fillStyle = "#ffdce0";
-      ctx.fillText("non-finite numerical failure", 10, h - 9);
-      break;
-    }
-
-    case "adamw": {
-      // Smoothly descending loss curve with golden clipping ceiling bar
-      handLine(ctx, 14, 34, w - 14, 34, "#f0c86a", 1.6, seedBase + 1);
-      ctx.fillStyle = "#f0c86a";
-      ctx.fillText("clip ceiling ‖g‖≤1.0", 16, 28);
-      let px = 16, py = 46;
-      for (let i = 1; i <= 8; i++) {
-        const nx = 16 + i * ((w - 32) / 8);
-        const ny = 44 + (1 - Math.exp(-i * 0.35)) * (h - 72) + Math.sin(nowSec * 3 + i) * 3;
-        handLine(ctx, px, py, nx, ny, "#fff6f2", 2.4, seedBase + i + 10);
-        px = nx; py = ny;
-      }
-      handCircle(ctx, px, py, 6, "#231e18", "#f0c86a", 1.6, seedBase + 30);
-      break;
-    }
-
-    case "base_ckpt": {
-      // Warm glowing neural crystal / golden monolith on ochre paper
-      handRect(ctx, cx - 36, 22, 72, h - 46, "#231a0d", "#e6b86a", 2.2, seedBase + 1);
-      for (let l = 0; l < 4; l++) {
-        const ly = 36 + l * 18;
-        handLine(ctx, cx - 24, ly, cx + 24, ly, "#231a0d", 1.5, seedBase + l + 10);
-      }
-      ctx.fillStyle = "#231a0d";
-      ctx.fillText("15T Base Weights", 12, h - 8);
-      break;
-    }
-
-    case "sft": {
-      // User prompt bubble (greyed mask) -> Assistant response bubble (bright loss active)
-      handRect(ctx, 16, 20, w * 0.56, 30, "#29181c", "rgba(255,255,255,0.45)", 1.5, seedBase + 1);
-      ctx.fillStyle = "#5c4348";
-      ctx.fillText("User: mask=0", 24, 39);
-      handRect(ctx, w * 0.28, 62, w * 0.62, 36, "#29181c", "#f0c86a", 1.8, seedBase + 2);
-      ctx.fillStyle = "#29181c";
-      ctx.fillText("Assistant: loss ✓", w * 0.32, 84);
-      break;
-    }
-
-    case "reward_bug": {
-      // Policy trajectory snapping its tether and spiraling into reward-hacked stars
-      handCircle(ctx, 36, h - 34, 12, "#fff", "#3c8d6d", 1.6, seedBase + 1);
-      handLine(ctx, 48, h - 38, cx, cy, "#ffeb3b", 2.4, seedBase + 2);
-      handLine(ctx, cx, cy, w - 26, 22, "#ff5a64", 2.8, seedBase + 3);
-      ctx.fillStyle = "#ffeb3b";
-      ctx.fillText("R=+9.9 gibberish!", 12, 24);
-      ctx.fillStyle = "#ffdce0";
-      ctx.fillText("β_KL = 0 drift", 12, h - 9);
-      break;
-    }
-
-    case "grpo": {
-      // Group of G=4 rollout branches scored by verifier + golden KL tether back to pi_ref
-      for (let g = 0; g < 4; g++) {
-        const gy = 22 + g * ((h - 44) / 3.2);
-        const good = (g === 1 || g === 2);
-        handLine(ctx, 26, cy, w - 58, gy, good ? "#f0c86a" : "rgba(255,255,255,0.28)", good ? 2.3 : 1.2, seedBase + g);
-        handCircle(ctx, w - 46, gy, 9, "#fff", good ? "#4ca686" : "#8c3b3b", 1.4, seedBase + g + 10);
-      }
-      handCircle(ctx, 26, cy, 11, "#fff", "#f0c86a", 1.8, seedBase + 30);
-      ctx.fillStyle = "#f1f8f4";
-      ctx.fillText("GRPO + KL β=0.04", 10, h - 9);
-      break;
-    }
-
-    case "kv_cache": {
-      // PagedAttention KV memory blocks filling sequentially + fast single-token query
-      for (let b = 0; b < 6; b++) {
-        const bx = 16 + (b % 3) * 44;
-        const by = 22 + Math.floor(b / 3) * 34;
-        const active = b <= (Math.floor(nowSec * 2) % 6);
-        handRect(ctx, bx, by, 36, 24, "#f0c86a", active ? "#3d7a9e" : "rgba(255,255,255,0.1)", 1.4, seedBase + b);
-      }
-      handCircle(ctx, w - 34, cy, 14, "#f0c86a", "#d97f38", 1.8, seedBase + 20);
-      ctx.fillStyle = "#f0c86a";
-      ctx.fillText("Paged KV cache", 10, h - 9);
-      break;
-    }
-
-    case "healthy_end": {
-      // Radiant connected neural star / two healthy halves in harmony
-      handCircle(ctx, cx, cy - 4, 34, "#1f1b16", "#f0c86a", 2.2, seedBase + 1);
-      for (let r = 0; r < 8; r++) {
-        const a = (r / 8) * Math.PI * 2 + nowSec * 0.5;
-        handLine(ctx, cx + Math.cos(a) * 38, cy - 4 + Math.sin(a) * 38,
-                      cx + Math.cos(a) * 54, cy - 4 + Math.sin(a) * 54, "#2b7a78", 2.2, seedBase + r + 10);
-      }
-      ctx.fillStyle = "#1f1b16";
-      ctx.fillText("✓ Grounded LLM", cx - 44, h - 8);
-      break;
-    }
-  }
-  ctx.restore();
+function renderStateArtwork(ctx, w, h, state, _frameIdx, seconds) {
+  return window.LLMScenes.render(ctx, w, h, state, seconds, reducedMotion.matches);
 }
 
 /* ============================================================================
@@ -2054,7 +1780,7 @@ function buildWallDOM() {
             <span class="plate-id">${state.breaksRule ? 'DETOUR' : 'SCENE ' + String(idx + 1).padStart(2, '0')}</span>
             <span class="plate-tag">${state.breaksRule ? '⚡ Failure path' : state.paperTag}</span>
           </div>
-          <div class="plate-canvas-wrap"><canvas class="plate-canvas" width="240" height="165" aria-hidden="true"></canvas></div>
+          <div class="plate-canvas-wrap"><canvas class="plate-canvas" width="480" height="330" aria-hidden="true"></canvas></div>
           <h3 class="plate-title">${state.title}</h3>
           <p class="plate-caption">${state.subtitle}</p>
         </div>
@@ -2064,6 +1790,7 @@ function buildWallDOM() {
       plateElements[state.id] = card;
       plateCanvases[state.id] = card.querySelector("canvas");
       plateObserver.observe(card);
+      sceneResolutionObserver.observe(plateCanvases[state.id]);
     });
     wallGrid.appendChild(chapter);
   });
@@ -2096,6 +1823,17 @@ const visiblePlates = new Set();
 const plateObserver = new IntersectionObserver(entries => {
   entries.forEach(entry => entry.isIntersecting ? visiblePlates.add(entry.target.id.slice(6)) : visiblePlates.delete(entry.target.id.slice(6)));
 }, {rootMargin: "100px"});
+// Match the drawing buffer to the displayed size, with a cap for phone memory.
+const sceneResolutionObserver = new ResizeObserver(entries => {
+  entries.forEach(({target, contentRect}) => {
+    if (contentRect.width < 1 || contentRect.height < 1) return;
+    const ratio = Math.min(window.devicePixelRatio || 1, 2);
+    const width = Math.min(1200, Math.round(contentRect.width * ratio));
+    const height = Math.round(width * contentRect.height / contentRect.width);
+    if (target.width !== width || target.height !== height) { target.width = width; target.height = height; }
+  });
+});
+let sceneStartedAt = performance.now();
 let currentStateId = "s0";
 let historyStack = [];
 let activeTour = null;
@@ -2175,6 +1913,7 @@ function stepToState(targetId, fromId = currentStateId, pushHistory = true) {
   const state = STATE_MAP[targetId];
   if (!state) return;
   currentStateId = targetId;
+  sceneStartedAt = performance.now();
   if (targetId === "s5") guards.causalMask = false;
   if (targetId === "s8") guards.gradClip = false;
   if (targetId === "s12") guards.klLeash = false;
@@ -2275,7 +2014,8 @@ function stopAutoPlay() {
 function queueAutoStep() {
   // Allow a scene to be read; never move the underlying page during playback.
   const words = STATE_MAP[currentStateId].desc.split(/\s+/).length;
-  const delay = Math.min(12000, Math.max(6500, words * 220));
+  const animationMs = window.LLMScenes.durations[STATE_MAP[currentStateId].artType] * 1000;
+  const delay = Math.max(animationMs * .95, Math.min(12000, Math.max(6500, words * 220)));
   autoPlayTimer = setTimeout(() => {
     const next = nextSceneId();
     if (!next) { stopAutoPlay(); return; }
@@ -2294,6 +2034,7 @@ function toggleAutoPlay() {
   button.classList.add("playing");
   button.setAttribute("aria-pressed", "true");
   button.textContent = "Ⅱ Pause";
+  sceneStartedAt = performance.now();
   queueAutoStep();
 }
 function runGuidedTour(pathIds) {
@@ -2856,7 +2597,7 @@ document.getElementById("calc-n-slider").addEventListener("input", updateScaling
 document.getElementById("calc-d-slider").addEventListener("input", updateScalingCalculator);
 
 /* ============================================================================
-   10. MASTER ANIMATION LOOP (180ms [0,1,2,1] WOBBLE + COSINE ROUTE + SCOPE)
+   10. VISIBLE-CANVAS ANIMATION LOOP (60fps reader, 30fps overview)
    ============================================================================ */
 const WOBBLE_SEQ = [0, 1, 2, 1];
 const scopeCanvas = document.getElementById("scope-canvas");
@@ -2865,19 +2606,23 @@ const scopeCtx = scopeCanvas.getContext("2d");
 let lastPaint = 0;
 function masterTick(now) {
   requestAnimationFrame(masterTick);
-  if (document.hidden || now - lastPaint < (reducedMotion.matches ? 250 : 33)) return;
+  const interval = reducedMotion.matches ? 250 : reader.open ? 16 : 33;
+  if (document.hidden || now - lastPaint < interval) return;
   lastPaint = now;
   const nowSec = reducedMotion.matches ? 0 : now / 1000;
   const seqIdx = reducedMotion.matches ? 0 : Math.floor(now / 180) % 4;
   const frameIdx = WOBBLE_SEQ[seqIdx];
   if (reader.open) {
-    renderStateArtwork(scopeCtx, scopeCanvas.width, scopeCanvas.height, STATE_MAP[currentStateId], frameIdx, nowSec);
+    const frame = renderStateArtwork(scopeCtx, scopeCanvas.width, scopeCanvas.height, STATE_MAP[currentStateId], frameIdx, (now - sceneStartedAt) / 1000);
+    const caption = document.getElementById("scope-frame-indicator");
+    const label = `${String(frame.phase + 1).padStart(2, '0')} / 03 · ${frame.cue}`;
+    if (caption.textContent !== label) caption.textContent = label;
     return;
   }
   if (activeView === "view-chart") {
     visiblePlates.forEach(id => {
       const canvas = plateCanvases[id];
-      if (canvas) renderStateArtwork(canvas.getContext("2d"), canvas.width, canvas.height, STATE_MAP[id], frameIdx, nowSec);
+      if (canvas) renderStateArtwork(canvas.getContext("2d"), canvas.width, canvas.height, STATE_MAP[id], frameIdx, nowSec + Number(STATE_MAP[id].num) * .47);
     });
   } else if (activeView === "view-machine") renderIsoMachine(nowSec, frameIdx);
   else if (activeView === "view-place") renderPlaceCrossSection(nowSec, frameIdx);
@@ -2885,6 +2630,7 @@ function masterTick(now) {
 }
 window.addEventListener("DOMContentLoaded", () => {
   buildWallDOM();
+  sceneResolutionObserver.observe(scopeCanvas);
   updateScalingCalculator();
   syncGuardUI();
   document.querySelectorAll(".part-badge, .place-card, .color-swatch").forEach(button => button.setAttribute("aria-pressed", String(button.classList.contains("active"))));
