@@ -1,5 +1,0 @@
-export const title = 'A language model, from corpus to request';
-export const state = v => ({raw:'Collected text',curated:'Curated text',tokenized:'Token sequences',base:'Base model',assistant:'Assistant model',preferred:'Preference-tuned model',evaluated:'Evaluation complete',serve:'Released checkpoint',prefill:'Prompt processed',decode:'Generating tokens',done:'Request complete'})[v.phase];
-export const step = action => ({Curate:'select and filter',Tokenize:'encode the text',Pretrain:'optimize next-token loss',SFT:'learn from demonstrations',Preference:'learn from comparisons',Evaluate:'check held-out behavior',Revise:'return for revision',Release:'accept the checkpoint',Prefill:'process the prompt',Sample:'process pending token, then sample',End:'stop the request',NewRequest:'start a new request',Done:'remain complete'})[action] ?? action;
-export const group = v => ['serve','prefill','decode','done'].includes(v.phase) ? 'inference' : 'development';
-export const colors = {development:'tan',inference:'teal'};

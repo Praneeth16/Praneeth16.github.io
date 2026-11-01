@@ -58,7 +58,7 @@
     glow.addColorStop(0,color);glow.addColorStop(1,'#0000');ctx.fillStyle=glow;ctx.fillRect(x-r,y-r,r*2,r*2);ctx.restore();
   }
   function text(ctx,str,x,y,color=C.cream,size=13,align='left',font='mono') {
-    ctx.save();ctx.font=`${size}px ${font==='hand'?'"Architects Daughter", cursive':'"IBM Plex Mono", monospace'}`;
+    ctx.save();ctx.font=`${size}px ${font==='hand'?'"KevinSans", "Fraunces", serif':'"DM Mono", ui-monospace, monospace'}`;
     ctx.textAlign=align;ctx.textBaseline='middle';ctx.fillStyle=color;ctx.fillText(str,x,y);ctx.restore();
   }
   function pill(ctx,str,x,y,color=C.gold,fill='#211e19',width=100) {
@@ -91,15 +91,15 @@
   function check(ctx,x,y,color=C.mint,scale=1) {path(ctx,[[x-5*scale,y],[x-1*scale,y+4*scale],[x+7*scale,y-5*scale]],color,2);}
   function paper(ctx,color) {
     if(!themes.has(color)) {
-      const sheet=document.createElement('canvas');sheet.width=W;sheet.height=H;
-      const c=sheet.getContext('2d');c.fillStyle=color;c.fillRect(0,0,W,H);
+      const sheet=document.createElement('canvas');sheet.width=W*2;sheet.height=H*2;
+      const c=sheet.getContext('2d');c.scale(2,2);c.fillStyle=color;c.fillRect(0,0,W,H);
       const wash=c.createLinearGradient(0,0,W,H);wash.addColorStop(0,'#ffffff08');wash.addColorStop(1,'#00000020');c.fillStyle=wash;c.fillRect(0,0,W,H);
       let seed=91;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
       for(let i=0;i<550;i++){c.fillStyle=i%2?'#ffffff0b':'#0000000b';c.fillRect(random()*W,random()*H,.5+random()*1.5,.5+random());}
       for(let i=0;i<45;i++){const x=random()*W,y=random()*H;path(c,[[x,y],[x+4+random()*16,y+random()*2]],i%2?'#ffffff09':'#00000009',.7);}
       themes.set(color,sheet);
     }
-    ctx.drawImage(themes.get(color),0,0);
+    ctx.drawImage(themes.get(color),0,0,W,H);
   }
   function footer(ctx,left,right,ink) {
     path(ctx,[[22,293],[458,293]],ink+'40',.8);
@@ -258,9 +258,9 @@
     footer(ctx,'LEARNED TENSORS','BASE MODEL CHECKPOINT',ink);
   }
   function sftScene(ctx,p,_t,ink) {
-    box(ctx,28,40,300,69,'#f8e9e1b0',ink+'80',12);text(ctx,'USER · context only',45,57,'#72535b',10);text(ctx,'Why does rain fall?',45,83,ink,17,'left','hand');
+    box(ctx,28,40,300,69,'#f8e9e1b0',ink+'80',12);text(ctx,'USER · context only',45,57,'#72535b',10);text(ctx,'Why does rain fall?',45,83,ink,15,'left','hand');
     const reveal=span(p,.26,.72);box(ctx,111,128,341,103,'#f1d78c',ink,12);text(ctx,'ASSISTANT · demonstration',128,146,'#6a4d32',10);
-    const lines=['Water droplets grow,','then fall under gravity.'];lines.forEach((str,i)=>{const n=Math.round(str.length*clamp(reveal*2-i*.65));text(ctx,str.slice(0,n),129,175+i*28,ink,17,'left','hand');});
+    const lines=['Water droplets grow,','then fall under gravity.'];lines.forEach((str,i)=>{const n=Math.round(str.length*clamp(reveal*2-i*.65));text(ctx,str.slice(0,n),129,175+i*28,ink,14,'left','hand');});
     const loss=span(p,.67,.93);text(ctx,'loss mask',29,263,ink,11);
     for(let i=0;i<10;i++){const active=i>=4;box(ctx,118+i*30,252,23,22,active?'#e8c16a':'#b998a1',ink+'60',3);text(ctx,active?'1':'0',130+i*30,263,active?ink:'#71555d',11,'center');if(active)alpha(ctx,loss,()=>path(ctx,[[118+i*30,280],[140+i*30,280]],'#355b49',2));}
     footer(ctx,'PROMPT: NO DIRECT LOSS','ASSISTANT: LOSS ACTIVE',ink);
@@ -309,13 +309,13 @@
     footer(ctx,'REUSE PROJECTIONS; READ THE PREFIX','PAGED K & V',ink);
   }
   function answerScene(ctx,p,t,ink) {
-    box(ctx,30,34,279,53,'#fff9ed',ink+'65',11);text(ctx,'How do LLMs learn?',47,61,ink,19,'left','hand');
+    box(ctx,30,34,279,53,'#fff9ed',ink+'65',11);text(ctx,'How do LLMs learn?',47,61,ink,16,'left','hand');
     const rail=curve(ctx,[178,88],[236,135],ink+'50',1.6,.1);movingDot(ctx,rail,span(p,.02,.2),'#3c8d6d',4);
     for(let i=2;i>=0;i--)box(ctx,207+i*4,113+i*10,62,39,i%2?'#dec68d':'#f0d896',ink+'85',4);
     ['predict','learn','read'].forEach((label,i)=>{text(ctx,label,355,116+i*22,ink,10);box(ctx,404,110+i*22,[43,26,13][i],10,i===0?'#3c8d6d':'#b7a782',null,2);});
     box(ctx,71,198,358,79,'#fff9ed',ink+'80',12);const reveal=span(p,.24,.88);
     const lines=['By predicting, updating,','and learning from feedback.'];
-    lines.forEach((str,i)=>{const n=Math.round(str.length*clamp(reveal*2-i*.8));text(ctx,str.slice(0,n),90,223+i*28,ink,18,'left','hand');});
+    lines.forEach((str,i)=>{const n=Math.round(str.length*clamp(reveal*2-i*.8));text(ctx,str.slice(0,n),90,223+i*28,ink,14.5,'left','hand');});
     const out=curve(ctx,[248,176],[248,198],'#3c8d6d',1.6);movingDot(ctx,out,phase(t,1.2),'#3c8d6d',3);
     footer(ctx,'STREAMED TOKENS','EVALUATION STILL MATTERS',ink);
   }
