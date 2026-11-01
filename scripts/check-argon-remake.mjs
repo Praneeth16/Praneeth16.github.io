@@ -16,3 +16,15 @@ fs.writeFileSync(new URL('view.mjs',folder),'const names = '+JSON.stringify(name
 const ids=[...file.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);const duplicates=ids.filter((x,i)=>ids.indexOf(x)!==i);assert.deepEqual(duplicates,[]);
 assert.ok(!file.includes('74 states'));assert.ok(!file.includes('118 steps'));assert.ok(!file.includes('All 3 TLC invariants hold'));
 console.log('PASS: 16 unique states, 22 valid edges, every state reachable, failure paths 3/6/9, HTML IDs unique, displayed graph matches executable TLA+ transitions.');
+
+// The guided reader must follow real model edges, with chapters in reading order.
+const route = JSON.parse(script.match(/const HEALTHY_ORDER = (\[[^;]+\]);/)[1]);
+assert.equal(route.length, 13); assert.equal(new Set(route).size, 13);
+assert.deepEqual(route.map(id => states.find(s => s.id === id)).filter(s => s.breaksRule), []);
+for (let i = 1; i < route.length; i++) assert.ok(edges.some(e => e.from === route[i-1] && e.to === route[i]), `Invalid story edge: ${route[i-1]} to ${route[i]}`);
+const chapters = ['phase-data', 'phase-arch', 'phase-train', 'phase-align'];
+const order = route.map(id => chapters.indexOf(states.find(s => s.id === id).phase));
+assert.deepEqual(order, [...order].sort((a,b) => a-b));
+assert.ok(file.includes('<dialog class="reader"'));
+assert.ok(!file.includes('id="step-route"'));
+console.log('PASS: the 13-scene reader follows valid model transitions through four ordered chapters.');

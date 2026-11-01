@@ -50,7 +50,7 @@
     font-family: var(--font-serif);
     font-size: 17px;
     line-height: 1.55;
-    overflow-x: hidden;
+    overflow-x: clip;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -253,7 +253,7 @@
     display: none;
     max-width: 1320px;
     margin: 0 auto;
-    padding: 24px 20px 160px;
+    padding: 24px 20px 64px;
   }
   .view-section.active {
     display: block;
@@ -346,21 +346,8 @@
   .wall-grid {
     position: relative;
     z-index: 2;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(230px, 1fr));
-    gap: 28px 24px;
+    display: block;
   }
-  @media (max-width: 1100px) {
-    .wall-grid {
-      grid-template-columns: repeat(2, minmax(240px, 1fr));
-    }
-  }
-  @media (max-width: 640px) {
-    .wall-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
   /* Individual Paper Plate on the Wall */
   .plate {
     position: relative;
@@ -374,6 +361,8 @@
     justify-content: space-between;
     user-select: none;
   }
+  .plate { appearance: none; border: 0; width: 100%; text-align: left; font: inherit; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .plate:hover {
     transform: translateY(-3px) rotate(-0.3deg);
   }
@@ -465,301 +454,103 @@
     opacity: 0.9;
     margin: 0 0 8px;
   }
-  .plate-steps-out {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin-top: auto;
-    padding-top: 6px;
-    border-top: 1px dotted rgba(255,255,255,0.22);
+  /* A single reader: persistent controls, one scrolling content area. */
+  html { scrollbar-gutter: stable; overflow-anchor: none; }
+  body.reader-open { position: fixed; width: 100%; overflow: hidden; }
+  button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; }
+  button:focus-visible, summary:focus-visible, a:focus-visible, [tabindex]:focus-visible {
+    outline: 3px solid var(--gel-cobalt); outline-offset: 4px;
   }
-  .step-chip {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    background: rgba(0, 0, 0, 0.25);
-    color: #f8f1df;
-    border: 1px solid rgba(255,255,255,0.14);
-    cursor: pointer;
-    transition: background 0.15s;
+  .chapter { margin-bottom: 36px; scroll-margin-top: 92px; }
+  .chapter:last-child { margin-bottom: 0; }
+  .chapter-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; margin-top: 24px; }
+  .chapter-links { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 18px; }
+  .chapter-links a { color: var(--ink); background: var(--bg-card); border: 1px solid var(--rule-line); border-radius: 99px; padding: 8px 14px; font: 12px var(--font-mono); text-decoration: none; }
+  .chapter-links a:hover { background: var(--gel-gold); }
+  .failure-notes { margin-top: 20px; border: 1px dashed #ab5b61; border-radius: 10px; padding: 12px; color: #ffdce0; }
+  .failure-notes summary { cursor: pointer; font: 13px var(--font-mono); min-height: 24px; }
+  .failure-notes .chapter-cards { max-width: 320px; grid-template-columns: 1fr; }
+  .plate-open { font: 11px var(--font-mono); margin-top: 8px; border-top: 1px solid currentColor; padding-top: 8px; opacity: .8; }
+  .story-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .tour-options { width: 100%; font: 12px var(--font-mono); color: var(--ink-soft); }
+  .tour-options summary { cursor: pointer; padding: 8px 0; }
+  .quick-actions { padding-top: 8px; }
+  .view-return { margin-bottom: 16px; }
+  .reader { width: min(1000px, calc(100vw - 48px)); max-width: none; height: min(790px, calc(100dvh - 48px)); max-height: none; padding: 0; border: 1px solid #655842; border-radius: 18px; background: #211e19; color: #f6efe0; box-shadow: 0 24px 80px #0008; overflow: hidden; }
+  .reader::backdrop { background: #17130fc9; backdrop-filter: blur(5px); }
+  .reader[open] { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+  .reader-header { padding: 14px 22px; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #211e19; border-bottom: 1px solid #ffffff20; }
+  .reader-position { font: 12px var(--font-mono); color: #d8c9ac; text-align: right; }
+  .reader-body { overflow-y: auto; overscroll-behavior: contain; padding: 24px; min-height: 0; }
+  .reader-kicker { font: 11px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--gel-gold); margin: 0 0 8px; }
+  .stepper-state-title { font: 400 clamp(1.5rem, 3vw, 2.2rem)/1.15 var(--font-hand); margin: 0 0 8px; color: var(--gel-gold); }
+  .stepper-state-title.bug-title { color: #ff9b9e; }
+  .reader-subtitle { margin: 0 0 20px; color: #d8c9ac; font: 12px/1.6 var(--font-mono); }
+  .reader-scene { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: start; gap: 24px; }
+  .scope-wrap { min-width: 0; }
+  .scope { aspect-ratio: 240/165; border-radius: 12px; border: 1px solid #ffffff35; overflow: hidden; background: #141210; }
+  .scope canvas { width: 100%; height: 100%; display: block; }
+  .scope-wobble-tag { font: 10px var(--font-mono); color: #b8ad98; margin-top: 8px; }
+  .stepper-desc { font: 1.08rem/1.6 var(--font-serif); margin: 0 0 20px; color: #eee3ce; }
+  .reader-details { border-top: 1px solid #ffffff25; padding: 12px 0; }
+  .reader-details summary { cursor: pointer; font: 12px var(--font-mono); color: #ead4a0; min-height: 28px; }
+  .scope-probe-bar { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 8px; font: 11px/1.6 var(--font-mono); }
+  .probe-toggle { background: #302a23; color: #f6efe0; border: 1px solid #76654f; border-radius: 6px; padding: 10px; font: inherit; cursor: pointer; text-align: left; }
+  .probe-toggle.broken { border-color: #e97d85; color: #ffbdc2; }
+  #tlc-status-badge { display: block; width: 100%; padding: 6px 0; }
+  .stepper-choices { display: grid; gap: 8px; margin-top: 8px; }
+  .choice-btn { display: grid; gap: 4px; text-align: left; background: #2c352e; border: 1px solid #66876b; border-radius: 8px; color: #ecf3e9; padding: 12px; cursor: pointer; font: 12px/1.5 var(--font-mono); }
+  .choice-btn strong { font: 16px var(--font-hand); }
+  .choice-btn.bug-choice { background: #3b2527; border-color: #aa6268; color: #ffccd0; }
+  .path-trail { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .path-crumb { background: #ffffff12; border: 1px solid #ffffff35; border-radius: 6px; color: #f6efe0; padding: 8px; font: 11px var(--font-mono); cursor: pointer; }
+  .reader-footer { padding: 12px 22px; border-top: 1px solid #ffffff25; background: #211e19; }
+  .reader-controls { display: grid; grid-template-columns: 1fr 90px 1fr; gap: 10px; }
+  .step-ctrl-btn { appearance: none; border: 1px solid #8a785d; border-radius: 8px; background: #302a23; color: #f6efe0; padding: 11px 14px; min-height: 44px; cursor: pointer; font: 12px var(--font-mono); }
+  .step-ctrl-btn:disabled { opacity: .4; cursor: default; }
+  .step-ctrl-btn:hover:not(:disabled) { border-color: var(--gel-gold); }
+  .step-ctrl-btn.primary, .step-ctrl-btn.playing { background: var(--gel-gold); color: #211e19; border-color: var(--gel-gold); }
+  .reader-progress { height: 3px; background: #ffffff1a; margin-top: 12px; border-radius: 4px; overflow: hidden; }
+  .reader-progress span { display: block; background: var(--gel-gold); height: 100%; transition: width .25s ease; }
+  .reader-hint { font: 10px/1.5 var(--font-mono); color: #baad95; text-align: center; margin: 8px 0 0; }
+  @media (max-width: 1100px) { .chapter-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) {
+    .chapter-cards { grid-template-columns: 1fr; gap: 22px; }
+    .wall-stage { padding: 16px 14px 24px; }
+    .phase-banner { padding: 8px 0; }
+    .phase-title { font-size: 1.25rem; }
+    .phase-meta { font-size: 11px; overflow-wrap: anywhere; }
+    .view-section { padding: 18px 14px 48px; }
+    .hero { padding: 26px 18px 18px; }
+    .hero-sub { font-size: 1rem; }
+    .topbar-badges { display: none; }
+    .hero-credits { text-align: left; margin-bottom: 0; }
+    .mode-nav-wrap { padding: 8px 12px; }
+    .mode-tabs { flex-wrap: nowrap; overflow-x: auto; width: 100%; padding: 2px 2px 6px; }
+    .mode-tab { flex: 0 0 auto; font-size: 14px; padding: 9px 12px; min-height: 44px; }
+    .tab-sub { display: none; }
+    .wall-intro { padding: 14px; }
+    .reader { margin: 0; inset: 0; width: 100%; height: 100dvh; border: 0; border-radius: 0; }
+    .reader-header { padding: max(10px, env(safe-area-inset-top)) 16px 10px; }
+    .reader-position { font-size: 11px; }
+    .reader-body { padding: 20px 18px; }
+    .reader-scene { grid-template-columns: 1fr; gap: 18px; }
+    .scope { max-height: 32dvh; aspect-ratio: 240/165; margin: auto; }
+    .scope canvas { object-fit: contain; }
+    .scope-wobble-tag { display: none; }
+    .reader-subtitle { margin-bottom: 14px; }
+    .stepper-desc { font-size: 1rem; }
+    .reader-footer { padding: 10px 16px max(12px, env(safe-area-inset-bottom)); }
+    .reader-hint { display: none; }
+    .reader-controls { grid-template-columns: 1fr 76px 1fr; }
+    .step-ctrl-btn { padding: 10px 8px; font-size: 11px; white-space: nowrap; }
+    .colorfig-shell, .place-shell, .time-shell { padding: 14px; }
+    .iso-overlay-hint { font-size: 9px; max-width: calc(100% - 20px); top: 8px; left: 8px; border-radius: 6px; }
+    .place-canvas-wrap { min-height: 0; }
+    .place-cards { grid-template-columns: 1fr; }
   }
-  .step-chip:hover {
-    background: rgba(240, 200, 106, 0.35);
-    border-color: var(--gel-gold);
-  }
-  .step-chip.bug-chip {
-    background: rgba(231, 46, 59, 0.35);
-    border-color: #ff8088;
-    color: #ffe5e7;
-  }
-
-  /* SVG Route Overlay for Pele Edges & Cosine-Eased Token Traversal */
-  .step-marks {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 4;
-  }
-  /* Spotlight box that glides smoothly over active state */
-  .step-spot {
-    position: absolute;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    border-radius: 12px;
-    box-shadow: 0 0 0 3.5px rgba(240, 200, 106, 0.96), 0 0 28px rgba(240, 200, 106, 0.72);
-    transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1),
-                width 0.42s cubic-bezier(0.22, 1, 0.36, 1),
-                height 0.42s cubic-bezier(0.22, 1, 0.36, 1),
-                opacity 0.25s ease;
-    z-index: 5;
-    opacity: 0;
-  }
-  .step-spot.visible {
-    opacity: 1;
-  }
-  .step-spot.bug-spot {
-    box-shadow: 0 0 0 3.5px rgba(231, 46, 59, 0.96), 0 0 30px rgba(231, 46, 59, 0.8);
-  }
-
-  /* ==========================================================================
-     FIXED BOTTOM STEPPER PANEL (One Becomes Two .stepper + Circular .scope)
-     ========================================================================== */
-  .stepper {
-    position: fixed;
-    left: 50%;
-    bottom: 14px;
-    transform: translateX(-50%);
-    width: min(1140px, calc(100vw - 24px));
-    background: #1d1a16;
-    color: #f6efe0;
-    border: 2px solid #4a4237;
-    border-radius: 18px;
-    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(240, 200, 106, 0.22);
-    z-index: 120;
-    padding: 14px 18px;
-    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
-  }
-  .stepper { max-height: calc(100dvh - 28px); overflow-y: auto; }
-  @media(max-width:720px) { .stepper { max-height:68dvh; } }
-  .stepper.minimized { transform: translateX(-50%); padding: 10px 14px; }
-  .stepper.minimized .scope-wrap, .stepper.minimized .stepper-main > :not(.stepper-header-row) { display: none; }
-  .stepper.minimized .stepper-top { grid-template-columns: 1fr; }
-  .stepper.perspective-hidden { display: none; }
-  .stepper-top {
-    display: grid;
-    grid-template-columns: 168px 1fr;
-    gap: 18px;
-    align-items: center;
-  }
-  @media (max-width: 720px) {
-    .stepper-top {
-      grid-template-columns: 110px 1fr;
-      gap: 12px;
-    }
-  }
-
-  /* Circular Hand-Drawn Scope Canvas */
-  .scope-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-  }
-  .scope {
-    position: relative;
-    width: 156px;
-    height: 156px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 3px solid var(--gel-gold);
-    box-shadow: 0 0 22px rgba(240, 200, 106, 0.35), inset 0 0 18px rgba(0,0,0,0.45);
-    background: #141210;
-  }
-  @media (max-width: 720px) {
-    .scope {
-      width: 104px;
-      height: 104px;
-    }
-  }
-  .scope canvas {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
-  .scope-wobble-tag {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    color: rgba(246, 239, 224, 0.65);
-  }
-
-  .stepper-main {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .stepper-header-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-  }
-  .stepper-state-title {
-    font-family: var(--font-hand);
-    font-size: 1.45rem;
-    color: var(--gel-gold);
-    margin: 0;
-  }
-  .stepper-state-title.bug-title {
-    color: #ff7b82;
-  }
-  .stepper-controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-  .step-ctrl-btn {
-    appearance: none;
-    background: #2c2721;
-    color: #f6efe0;
-    border: 1px solid #574e42;
-    border-radius: 7px;
-    padding: 5px 11px;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
-  }
-  .step-ctrl-btn:hover:not(:disabled) {
-    background: #3d362d;
-    border-color: var(--gel-gold);
-  }
-  .step-ctrl-btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
-  .step-ctrl-btn.playing {
-    background: var(--gel-gold);
-    color: #181512;
-    border-color: var(--gel-gold);
-    font-weight: 600;
-  }
-
-  .stepper-desc {
-    font-size: 0.96rem;
-    line-height: 1.45;
-    color: #e6decb;
-    margin: 0;
-  }
-
-  /* Live Parameter Probe inside Stepper */
-  .scope-probe-bar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
-    padding: 6px 10px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    font-family: var(--font-mono);
-    font-size: 11.5px;
-  }
-  .probe-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    cursor: pointer;
-    padding: 2px 8px;
-    border-radius: 5px;
-    background: rgba(0, 0, 0, 0.35);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    color: #f6efe0;
-  }
-  .probe-toggle.broken {
-    background: rgba(231, 46, 59, 0.32);
-    border-color: #ff6b6b;
-    color: #ffd6d9;
-  }
-
-  /* Branching Next Step Choices */
-  .stepper-choices-label {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: rgba(246, 239, 224, 0.6);
-  }
-  .stepper-choices {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 7px;
-  }
-  .choice-btn {
-    appearance: none;
-    background: #2d3830;
-    color: #e9f5ec;
-    border: 1.5px solid #598c68;
-    border-radius: 8px;
-    padding: 6px 12px;
-    font-family: var(--font-hand);
-    font-size: 14.5px;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: transform 0.12s ease, background 0.15s ease;
-  }
-  .choice-btn:hover {
-    transform: translateY(-1px);
-    background: #394a3e;
-    border-color: var(--gel-gold);
-  }
-  .choice-btn.bug-choice {
-    background: #3d2023;
-    color: #ffdce0;
-    border-color: #d9383a;
-  }
-  .choice-btn.bug-choice:hover {
-    background: #54272b;
-  }
-
-  /* Collapsible "The path so far" drawer */
-  .path-drawer {
-    margin-top: 8px;
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
-    padding-top: 6px;
-    font-family: var(--font-mono);
-    font-size: 12px;
-  }
-  .path-drawer summary {
-    cursor: pointer;
-    color: var(--gel-gold);
-    user-select: none;
-  }
-  .path-trail {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 6px;
-    margin-top: 6px;
-    max-height: 76px;
-    overflow-y: auto;
-  }
-  .path-crumb {
-    padding: 2px 7px;
-    border-radius: 4px;
-    background: rgba(255,255,255,0.09);
-    color: #f6efe0;
-    cursor: pointer;
-  }
-  .path-crumb.bug-crumb {
-    background: rgba(231, 46, 59, 0.35);
-    color: #ffd2d6;
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
   }
 
   /* ==========================================================================
@@ -1021,6 +812,33 @@
     color: var(--gel-red);
     font-weight: 600;
   }
+  .part-badge, .place-card { color: var(--ink); text-align: left; font: inherit; min-width: 0; }
+  .part-badge { font: 12px/1.5 var(--font-mono); min-height: 44px; }
+  .probe-toggle, .btn-hand, .place-card { min-height: 44px; }
+  .iso-canvas-box { touch-action: pan-y; }
+  .diagram-scroll-hint { display: none; }
+  @media (max-width: 960px) {
+    .mode-tabs { display: grid; width: 100%; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; overflow: visible; padding: 2px 2px 6px; }
+    .mode-tab { justify-content: center; padding: 9px 2px; min-height: 44px; font-size: 14px; white-space: nowrap; }
+    .mode-tab .tab-sub { display: none; }
+  }
+  @media (max-width: 640px) {
+    .colorfig-shell, .place-shell, .time-shell { padding: 14px; }
+    .place-cards { grid-template-columns: 1fr; }
+    .place-canvas-wrap { aspect-ratio: auto; height: 350px; min-height: 0; overflow: auto; }
+    .place-canvas-wrap canvas { width: 655px; height: 350px; max-width: none; }
+    .time-tape-canvas-wrap { overflow-x: auto; height: 240px; }
+    .time-tape-canvas-wrap canvas { width: 900px; height: 236px; max-width: none; }
+    .diagram-scroll-hint { display: block; font: 11px var(--font-mono); color: var(--ink-soft); }
+    .color-swatch { width: 38px; height: 38px; }
+  }
+  @media (max-height: 500px) {
+    .reader { margin: 0; inset: 0; width: 100%; height: 100dvh; border-radius: 0; }
+    .reader-header { padding: 8px 14px; }
+    .reader-body { padding: 16px; }
+    .reader-footer { padding: 8px 14px; }
+    .reader-hint { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -1042,10 +860,10 @@
   <div class="hero-eyebrow">A statechart, field guide &amp; see-through machine</div>
   <h1>From Bytes to Thought: How LLMs Are Built</h1>
   <p class="hero-sub">
-    An illustrative LLM build recipe, drawn across sixteen hand-inked paper plates.
-    Explore the steps, look inside the machine, and follow deliberately modelled failure paths. Sizes, timings and hyperparameters are teaching examples, not a benchmark.
+    Follow data into a trained assistant. Thirteen illustrated scenes, three failure detours, and a machine you can turn inside out.
   </p>
-  <div class="hero-credits">
+  <details class="hero-credits"><summary>About the drawings &amp; model</summary>
+    Sizes, timings and hyperparameters are teaching examples, not benchmarks.
     The abstract transition graph is modelled in <strong>TLA+</strong> and checked by <strong>TLC</strong> using the
     <a href="https://github.com/cursor/plugins/tree/main/pstack" target="_blank" rel="noopener">/statechart skill in pstack</a> by @poteto.
     Drawn in JavaScript with simulated pencil, pastel and gel pen. Inspired by
@@ -1053,7 +871,7 @@
     with multi-angle perspectives inspired by April Zhu's
     <a href="https://april-zhu.com/fieldnotes" target="_blank" rel="noopener">Fieldnotes</a> and
     <a href="https://april-zhu.com/colorfigures" target="_blank" rel="noopener">Colorfigures</a>.
-  </div>
+  </details>
 </section>
 
 <!-- Sticky Perspective Switcher & Tour Controls -->
@@ -1061,28 +879,23 @@
   <div class="mode-nav">
     <div class="mode-tabs" role="tablist">
       <button class="mode-tab active" data-view="view-chart" role="tab" aria-selected="true">
-        <span>1. Chart</span> <span class="tab-sub">(every step · 16 plates)</span>
+        <span>Story</span> <span class="tab-sub">(the build, scene by scene)</span>
       </button>
       <button class="mode-tab" data-view="view-machine" role="tab" aria-selected="false">
-        <span>2. Machine</span> <span class="tab-sub">(360° see-through transformer)</span>
+        <span>Machine</span> <span class="tab-sub">(360° see-through transformer)</span>
       </button>
       <button class="mode-tab" data-view="view-place" role="tab" aria-selected="false">
-        <span>3. Place</span> <span class="tab-sub">(where it happens)</span>
+        <span>Places</span> <span class="tab-sub">(where it happens)</span>
       </button>
       <button class="mode-tab" data-view="view-time" role="tab" aria-selected="false">
-        <span>4. Time &amp; Scale</span> <span class="tab-sub">(12 ns to 90 days)</span>
+        <span>Scale</span> <span class="tab-sub">(12 ns to 90 days)</span>
       </button>
       <button class="mode-tab" data-view="view-spec" role="tab" aria-selected="false">
-        <span>5. TLA+ &amp; Text</span> <span class="tab-sub">(model &amp; limits)</span>
+        <span>Model</span> <span class="tab-sub">(model &amp; limits)</span>
       </button>
     </div>
 
-    <div class="quick-actions">
-      <button class="btn-hand" id="btn-start-stepper">▶ Step through the chart</button>
-      <button class="btn-hand bug-btn" id="btn-tour-mask">⚡ TLC Bug 1: Mask Leak</button>
-      <button class="btn-hand bug-btn" id="btn-tour-nan">⚡ TLC Bug 2: FP16 NaN Spike</button>
-      <button class="btn-hand bug-btn" id="btn-tour-reward">⚡ TLC Bug 3: Reward Hack</button>
-    </div>
+
   </div>
 </nav>
 
@@ -1091,36 +904,23 @@
      ========================================================================== -->
 <main id="view-chart" class="view-section active">
   <div class="wall-intro">
-    <div>
-      <strong>Click any plate on the wall</strong> to inspect its animated microscope scope, tweak live hyperparameters, and follow arrows step by step.
+    <div class="story-actions">
+      <button class="btn-hand" id="btn-start-stepper">▶ Start the story</button>
+      <span>Four chapters. Thirteen scenes. Open a card to explore at your own pace.</span>
     </div>
-    <div class="wall-legend">
-      <span class="legend-item"><span class="legend-swatch" style="background:#f0c86a;"></span> Active state spotlight</span>
-      <span class="legend-item"><span class="legend-swatch" style="background:#598c68;"></span> Healthy transition path</span>
-      <span class="legend-item"><span class="legend-swatch" style="background:#e72e3b;"></span> Breaks invariant (TLC counterexample path)</span>
-    </div>
+    <details class="tour-options">
+      <summary>Explore three failure paths</summary>
+      <div class="quick-actions">
+        <button class="btn-hand bug-btn" id="btn-tour-mask">Missing causal mask</button>
+        <button class="btn-hand bug-btn" id="btn-tour-nan">Numerical instability</button>
+        <button class="btn-hand bug-btn" id="btn-tour-reward">Reward hacking</button>
+      </div>
+    </details>
   </div>
-
+  <nav class="chapter-links" aria-label="Story chapters">
+    <a href="#phase-data">01 Data</a><a href="#phase-arch">02 Transformer</a><a href="#phase-train">03 Training</a><a href="#phase-align">04 Assistant</a>
+  </nav>
   <div class="wall-stage" id="wall-stage">
-    <!-- SVG Route Overlay for Pele Edges & Moving Token -->
-    <svg class="step-marks" id="step-marks" aria-hidden="true">
-      <defs>
-        <marker id="arrow-gold" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-          <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#f0c86a" />
-        </marker>
-        <marker id="arrow-red" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-          <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#ff5a64" />
-        </marker>
-      </defs>
-      <g id="static-edges-group"></g>
-      <path id="step-route-bg" fill="none" stroke="rgba(240,200,106,0.22)" stroke-width="4" stroke-linecap="round" />
-      <path id="step-route" fill="none" stroke="#f0c86a" stroke-width="3.5" stroke-linecap="round" marker-end="url(#arrow-gold)" />
-      <circle id="step-token" r="6.5" fill="#f0c86a" stroke="#181512" stroke-width="2" opacity="0" />
-    </svg>
-
-    <!-- Glowing Active State Spotlight -->
-    <div class="step-spot" id="step-spot"></div>
-
     <!-- Wall Grid Populated by JS from Formal Statechart Model -->
     <div class="wall-grid" id="wall-grid"></div>
   </div>
@@ -1130,6 +930,7 @@
      PERSPECTIVE 2: COLORFIGURES 360° ISOMETRIC SEE-THROUGH TRANSFORMER & POD
      ========================================================================== -->
 <section id="view-machine" class="view-section">
+  <button class="btn-hand secondary view-return" data-return-story>← Back to story</button>
   <div class="colorfig-shell">
     <div class="colorfig-top">
       <div>
@@ -1188,12 +989,12 @@
         <div>
           <div style="font-family:var(--font-mono);font-size:12px;margin-bottom:6px;">Labelled internal parts (click to highlight)</div>
           <div class="part-badge-list" id="iso-part-list">
-            <div class="part-badge active" data-part="1"><strong>1</strong> BPE Tokenizer &amp; Embedding Table (V=128,256)</div>
-            <div class="part-badge" data-part="2"><strong>2</strong> RoPE Rotary Phase Gears &amp; Causal Mask Gate</div>
-            <div class="part-badge" data-part="3"><strong>3</strong> Grouped-Query Attention (Q·Kᵀ/√dₖ Softmax Drum)</div>
-            <div class="part-badge" data-part="4"><strong>4</strong> SwiGLU / Top-2 MoE Sparse Expert Router</div>
-            <div class="part-badge" data-part="5"><strong>5</strong> NVLink 900 GB/s All-Reduce Ring &amp; Grad Clipper</div>
-            <div class="part-badge" data-part="6"><strong>6</strong> PagedAttention KV-Cache Memory Bank</div>
+            <button type="button" class="part-badge active" data-part="1"><strong>1</strong> BPE Tokenizer &amp; Embedding Table (V=128,256)</button>
+            <button type="button" class="part-badge" data-part="2"><strong>2</strong> RoPE Rotary Phase Gears &amp; Causal Mask Gate</button>
+            <button type="button" class="part-badge" data-part="3"><strong>3</strong> Grouped-Query Attention (Q·Kᵀ/√dₖ Softmax Drum)</button>
+            <button type="button" class="part-badge" data-part="4"><strong>4</strong> SwiGLU / Top-2 MoE Sparse Expert Router</button>
+            <button type="button" class="part-badge" data-part="5"><strong>5</strong> NVLink 900 GB/s All-Reduce Ring &amp; Grad Clipper</button>
+            <button type="button" class="part-badge" data-part="6"><strong>6</strong> PagedAttention KV-Cache Memory Bank</button>
           </div>
         </div>
 
@@ -1209,6 +1010,7 @@
      PERSPECTIVE 3: FIELDNOTES PLACE (WHERE IT HAPPENS — 4 PHYSICAL WORLDS)
      ========================================================================== -->
 <section id="view-place" class="view-section">
+  <button class="btn-hand secondary view-return" data-return-story>← Back to story</button>
   <div class="place-shell">
     <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:14px;">
       <div>
@@ -1222,39 +1024,40 @@
       </div>
     </div>
 
+    <p class="diagram-scroll-hint">Swipe the drawing to explore all four rooms →</p>
     <div class="place-canvas-wrap">
       <canvas id="place-canvas" width="1160" height="620"></canvas>
     </div>
 
     <div class="place-cards" id="place-cards">
-      <div class="place-card active" data-zone="0">
+      <button type="button" class="place-card active" data-zone="0">
         <div style="font-family:var(--font-mono);font-size:11px;color:var(--gel-red);">WORLD I · PETABYTES</div>
         <strong style="font-family:var(--font-hand);font-size:1.2rem;">The Corpus Foundry</strong>
         <p style="margin:6px 0 0;font-size:0.88rem;color:var(--ink-soft);">
           300B+ raw web pages pass through URL blocklists, MinHash LSH deduplication, language and quality classifiers, and BPE tokenization into 15T clean tokens.
         </p>
-      </div>
-      <div class="place-card" data-zone="1">
+      </button>
+      <button type="button" class="place-card" data-zone="1">
         <div style="font-family:var(--font-mono);font-size:11px;color:var(--gel-cobalt);">WORLD II · EXAMPLE CLUSTER</div>
         <strong style="font-family:var(--font-hand);font-size:1.2rem;">The 16,384-GPU Cluster</strong>
         <p style="margin:6px 0 0;font-size:0.88rem;color:var(--ink-soft);">
           Illustrative H100-class racks connected via NVLink inside nodes and 400 Gb/s InfiniBand across pods, running 3D parallelism (TP×PP×FSDP).
         </p>
-      </div>
-      <div class="place-card" data-zone="2">
+      </button>
+      <button type="button" class="place-card" data-zone="2">
         <div style="font-family:var(--font-mono);font-size:11px;color:var(--gel-mint);">WORLD III · HUMAN + RL</div>
         <strong style="font-family:var(--font-hand);font-size:1.2rem;">The Alignment Studio</strong>
         <p style="margin:6px 0 0;font-size:0.88rem;color:var(--ink-soft);">
           Researchers &amp; domain experts craft SFT conversations, score preference pairs, and run GRPO verifier rollouts with a KL-divergence leash (β=0.04).
         </p>
-      </div>
-      <div class="place-card" data-zone="3">
+      </button>
+      <button type="button" class="place-card" data-zone="3">
         <div style="font-family:var(--font-mono);font-size:11px;color:var(--ink);">WORLD IV · EXAMPLE SERVING</div>
         <strong style="font-family:var(--font-hand);font-size:1.2rem;">The Serving Engine</strong>
         <p style="margin:6px 0 0;font-size:0.88rem;color:var(--ink-soft);">
           Prefill computes prompt KV blocks in parallel; decode streams tokens one by one using PagedAttention and speculative draft-and-verify.
         </p>
-      </div>
+      </button>
     </div>
   </div>
 </section>
@@ -1263,6 +1066,7 @@
      PERSPECTIVE 4: FIELDNOTES TIME & SCALE (LOGARITHMIC TAPE + CHINCHILLA LAB)
      ========================================================================== -->
 <section id="view-time" class="view-section">
+  <button class="btn-hand secondary view-return" data-return-story>← Back to story</button>
   <div class="time-shell">
     <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;">
       <div>
@@ -1280,6 +1084,7 @@
       <input type="range" id="time-log-slider" aria-label="Illustrative time scale" min="0" max="100" step="1" value="52" style="width:100%;accent-color:var(--ink);" />
     </div>
 
+    <p class="diagram-scroll-hint">Swipe the timeline to see every timescale →</p>
     <div class="time-tape-canvas-wrap">
       <canvas id="time-canvas" width="1160" height="290"></canvas>
     </div>
@@ -1326,6 +1131,7 @@
      PERSPECTIVE 5: READ THE CHART AS TEXT + TLA+ MODEL & TLC INVARIANTS
      ========================================================================== -->
 <section id="view-spec" class="view-section">
+  <button class="btn-hand secondary view-return" data-return-story>← Back to story</button>
   <div class="text-spec-grid">
     <div class="spec-box">
       <h3>What TLC Checked &amp; Found (16 abstract states, 22 transitions)</h3>
@@ -1449,60 +1255,55 @@ stateDiagram-v2
   </div>
 </section>
 
-<!-- ==========================================================================
-     FIXED BOTTOM STEPPER PANEL (One Becomes Two .stepper + Circular .scope)
-     ========================================================================== -->
-<aside class="stepper" id="stepper" aria-label="Interactive statechart stepper">
-  <div class="stepper-top">
-    <div class="scope-wrap">
-      <div class="scope" title="Live hand-drawn microscope scope (4-frame wobble at 180ms)">
-        <canvas id="scope-canvas" width="240" height="240"></canvas>
+<!-- A modal reader keeps the current scene and navigation together on every screen. -->
+<dialog class="reader" id="stepper" aria-labelledby="stepper-title">
+  <header class="reader-header">
+    <button class="step-ctrl-btn" id="ctrl-close" autofocus>← Back to story</button>
+    <span class="reader-position" id="reader-position">Scene 1 of 13</span>
+  </header>
+  <div class="reader-body" id="reader-body">
+    <p class="reader-kicker" id="reader-chapter">Chapter 1 · Data</p>
+    <h2 class="stepper-state-title" id="stepper-title" tabindex="-1">Raw Web Crawl</h2>
+    <p class="reader-subtitle" id="reader-subtitle"></p>
+    <div class="reader-scene">
+      <div class="scope-wrap">
+        <div class="scope"><canvas id="scope-canvas" width="480" height="330" role="img" aria-label="Animated illustration of the current scene"></canvas></div>
+        <div class="scope-wobble-tag" id="scope-frame-indicator">pencil + pastel</div>
       </div>
-      <div class="scope-wobble-tag" id="scope-frame-indicator">pencil+pastel · frame 1/4</div>
-    </div>
-
-    <div class="stepper-main">
-      <div class="stepper-header-row">
-        <h2 class="stepper-state-title" id="stepper-title">01 · Raw Web Crawl (CommonCrawl)</h2>
-        <div class="stepper-controls">
-          <button class="step-ctrl-btn" id="ctrl-back" title="Step back">← Back</button>
-          <button class="step-ctrl-btn" id="ctrl-play" title="Auto-play through the statechart">▶ Play</button>
-          <button class="step-ctrl-btn" id="ctrl-reset" title="Reset to initial state">↺ Start again</button>
-          <button class="step-ctrl-btn" id="ctrl-minimize" title="Minimize or expand panel">▾ Minimize</button>
-        </div>
-      </div>
-
-      <p class="stepper-desc" id="stepper-desc">
-        Petabytes of raw HTML, code, math papers, and books arrive from the open web—full of boilerplate, duplicate paragraphs, and garbled encodings waiting to be cleaned.
-      </p>
-
-      <!-- Interactive Live Probe Toggles ( directly affects TLA+ guards & canvas drawing! ) -->
-      <div class="scope-probe-bar">
-        <span style="color:var(--gel-gold);">Live Invariant Guards:</span>
-        <button class="probe-toggle" id="guard-mask" title="Toggle causal upper-triangular attention mask">
-          Causal Mask: <strong>ON (Lower-Tri)</strong>
-        </button>
-        <button class="probe-toggle" id="guard-clip" title="Toggle global gradient norm clipping ||g|| <= 1.0">
-          Grad Clip (‖g‖≤1.0): <strong>ON</strong>
-        </button>
-        <button class="probe-toggle" id="guard-kl" title="Toggle KL divergence penalty beta during RLHF/GRPO">
-          KL Leash (β=0.04): <strong>ON</strong>
-        </button>
-        <span id="tlc-status-badge" style="margin-left:auto;color:#8ce09a;">✓ All 3 demonstration guards enabled</span>
-      </div>
-
       <div>
-        <div class="stepper-choices-label">Choose the next step leaving this state (words in [brackets] show guard conditions):</div>
-        <div class="stepper-choices" id="stepper-choices"></div>
+        <p class="stepper-desc" id="stepper-desc"></p>
+        <details class="reader-details" id="branch-details">
+          <summary>Explore branches &amp; transitions</summary>
+          <div class="stepper-choices" id="stepper-choices"></div>
+        </details>
+        <details class="reader-details" id="guard-details">
+          <summary>Experiment with model guards</summary>
+          <div class="scope-probe-bar">
+            <button class="probe-toggle" id="guard-mask">Causal mask</button>
+            <button class="probe-toggle" id="guard-clip">Gradient clipping</button>
+            <button class="probe-toggle" id="guard-kl">KL regularization</button>
+            <span id="tlc-status-badge">✓ All 3 demonstration guards enabled</span>
+          </div>
+        </details>
+        <details class="reader-details" id="path-details">
+          <summary>Your path · <span id="path-count">1</span> visited</summary>
+          <div class="path-trail" id="path-trail"></div>
+          <button class="step-ctrl-btn" id="ctrl-reset" style="margin-top:12px">↺ Restart story</button>
+        </details>
       </div>
-
-      <details class="path-drawer" open>
-        <summary>The path so far (<span id="path-count">1</span> state visited)</summary>
-        <div class="path-trail" id="path-trail"></div>
-      </details>
     </div>
   </div>
-</aside>
+  <footer class="reader-footer">
+    <div class="reader-controls">
+      <button class="step-ctrl-btn" id="ctrl-back">← Previous</button>
+      <button class="step-ctrl-btn" id="ctrl-play" aria-pressed="false">▶ Play</button>
+      <button class="step-ctrl-btn primary" id="ctrl-next">Next →</button>
+    </div>
+    <div class="reader-progress" role="progressbar" aria-label="Story progress" aria-valuemin="1" aria-valuemax="13" aria-valuenow="1" id="reader-progress"><span id="reader-progress-fill"></span></div>
+    <p class="reader-hint" id="reader-hint">← → to navigate · Space to play or pause · Esc to return</p>
+    <span class="sr-only" id="reader-announcement" role="status" aria-live="polite"></span>
+  </footer>
+</dialog>
 
 <script is:inline>
 /* ============================================================================
@@ -1511,23 +1312,23 @@ stateDiagram-v2
 const PHASES = [
   {
     id: "phase-data",
-    title: "I. Raw Bytes to Token Stream (Data & Tokenization)",
-    meta: "300B web pages → 15T subword tokens · Invariant: Clean deduplicated distribution"
+    title: "01 · Data becomes tokens",
+    meta: "Collect, filter, deduplicate, tokenize"
   },
   {
     id: "phase-arch",
-    title: "II. Inside the Transformer Forward Pass (Architecture)",
-    meta: "x_{l+1} = x_l + Attn(RMSNorm(x_l)) + SwiGLU(RMSNorm(h_l)) · Invariant: NoFutureTokenLeakage"
+    title: "02 · Inside the transformer",
+    meta: "Vectors, positions, attention, experts"
   },
   {
     id: "phase-train",
-    title: "III. Distributed Pre-Training at Cluster Scale (Optimization)",
-    meta: "16,384 GPUs · 3D Parallelism (TP×PP×FSDP) · Invariant: FiniteWeightsAndLoss"
+    title: "03 · Learning at cluster scale",
+    meta: "Distribute, backpropagate, update, repeat"
   },
   {
     id: "phase-align",
-    title: "IV. Post-Training, Alignment & Live Serving (SFT, RLHF/GRPO & KV-Cache)",
-    meta: "SFT + GRPO Verifiers + PagedAttention · Invariant: NoRewardExploit"
+    title: "04 · From model to assistant",
+    meta: "Demonstrations, feedback, serving, answers"
   }
 ];
 
@@ -1585,7 +1386,7 @@ const STATES = [
   {
     id: "s3",
     num: "04",
-    phase: "phase-data",
+    phase: "phase-arch",
     title: "Embeddings + RoPE",
     subtitle: "Vectors spun by position angle",
     paperBg: "#4a2744",
@@ -1654,7 +1455,7 @@ const STATES = [
   {
     id: "s7",
     num: "08",
-    phase: "phase-arch",
+    phase: "phase-train",
     title: "3D Parallel All-Reduce",
     subtitle: "TP × PP × FSDP across 16,384 GPUs",
     paperBg: "#222428",
@@ -1723,7 +1524,7 @@ const STATES = [
   {
     id: "s11",
     num: "12",
-    phase: "phase-train",
+    phase: "phase-align",
     title: "Supervised Fine-Tuning",
     subtitle: "Loss masked strictly to assistant turns",
     paperBg: "#d8b4bc",
@@ -1793,7 +1594,7 @@ const STATES = [
     num: "16",
     phase: "phase-align",
     title: "Grounded Assistant",
-    subtitle: "Healthy end state · All invariants hold",
+    subtitle: "A streamed answer · Evaluation still matters",
     paperBg: "#e9dec3",
     paperText: "#1f1b16",
     paperTag: "archival cream paper",
@@ -1951,7 +1752,7 @@ function renderStateArtwork(ctx, w, h, state, frameIdx, nowSec) {
       handLine(ctx, cx + 70, h * 0.56, cx + 22, h * 0.85, "#231e18", 2.5, seedBase + 51);
       handLine(ctx, cx - 56, h * 0.66, cx + 56, h * 0.66, "#d9383a", 2.0, seedBase + 52);
       ctx.fillStyle = "#231e18";
-      ctx.fillText("<html/> spam 85%", 12, h - 10);
+      ctx.fillText("raw web pages", 12, h - 10);
       break;
     }
 
@@ -2219,56 +2020,52 @@ const plateCanvases = {};
 function buildWallDOM() {
   wallGrid.innerHTML = "";
   PHASES.forEach(phase => {
-    const banner = document.createElement("div");
-    banner.className = "phase-banner";
-    banner.innerHTML = `<span class="phase-title">${phase.title}</span><span class="phase-meta">${phase.meta}</span>`;
-    wallGrid.appendChild(banner);
-
+    const chapter = document.createElement("section");
+    chapter.className = "chapter";
+    chapter.id = phase.id;
+    chapter.setAttribute("aria-labelledby", `${phase.id}-title`);
+    chapter.innerHTML = `<header class="phase-banner"><h2 class="phase-title" id="${phase.id}-title" style="margin:0;font-weight:400">${phase.title}</h2><span class="phase-meta">${phase.meta}</span></header>`;
+    const grid = document.createElement("div");
+    grid.className = "chapter-cards";
+    chapter.appendChild(grid);
+    const failures = STATES.filter(s => s.phase === phase.id && s.breaksRule);
+    let failureGrid;
+    if (failures.length) {
+      const notes = document.createElement("details");
+      notes.className = "failure-notes";
+      notes.innerHTML = `<summary>What can go wrong? · ${failures[0].title}</summary><div class="chapter-cards"></div>`;
+      failureGrid = notes.querySelector(".chapter-cards");
+      chapter.appendChild(notes);
+    }
     STATES.filter(s => s.phase === phase.id).forEach(state => {
-      const card = document.createElement("article");
+      const card = document.createElement("button");
+      card.type = "button";
       card.className = "plate" + (state.breaksRule ? " breaks-rule" : "");
       card.id = `plate-${state.id}`;
       card.style.backgroundColor = state.paperBg;
       card.style.color = state.paperText;
-      card.setAttribute("role", "button");
-      card.setAttribute("tabindex", "0");
-
-      const stepsHtml = state.steps.map((st, idx) => {
-        const target = STATE_MAP[st.to];
-        return `<span class="step-chip ${st.bug ? 'bug-chip' : ''}" data-from="${state.id}" data-to="${st.to}" data-idx="${idx}" title="${st.label}">→ ${target.num} ${st.bug ? '⚡' : ''}</span>`;
-      }).join("");
-
+      card.setAttribute("aria-label", `Open ${state.title}`);
+      card.setAttribute("aria-haspopup", "dialog");
+      const idx = HEALTHY_ORDER.indexOf(state.id);
       card.innerHTML = `
         <div class="plate-pin"></div>
         <div>
           <div class="plate-header">
-            <span class="plate-id">STATE ${state.num}</span>
-            <span class="plate-tag">${state.breaksRule ? '⚡ Breaks ' + state.ruleName : state.paperTag}</span>
+            <span class="plate-id">${state.breaksRule ? 'DETOUR' : 'SCENE ' + String(idx + 1).padStart(2, '0')}</span>
+            <span class="plate-tag">${state.breaksRule ? '⚡ Failure path' : state.paperTag}</span>
           </div>
-          <div class="plate-canvas-wrap">
-            <canvas class="plate-canvas" width="240" height="165"></canvas>
-          </div>
+          <div class="plate-canvas-wrap"><canvas class="plate-canvas" width="240" height="165" aria-hidden="true"></canvas></div>
           <h3 class="plate-title">${state.title}</h3>
-          <p class="plate-caption">${state.desc}</p>
+          <p class="plate-caption">${state.subtitle}</p>
         </div>
-        <div class="plate-steps-out">${stepsHtml}</div>
-      `;
-
-      card.addEventListener("click", (e) => {
-        const chip = e.target.closest(".step-chip");
-        if (chip) {
-          e.stopPropagation();
-          const toId = chip.getAttribute("data-to");
-          stepToState(toId, state.id);
-          return;
-        }
-        stepToState(state.id, currentStateId);
-      });
-
-      wallGrid.appendChild(card);
+        <div class="plate-open">Open scene ＋</div>`;
+      card.addEventListener("click", () => openReader(state.id, card));
+      (state.breaksRule ? failureGrid : grid).appendChild(card);
       plateElements[state.id] = card;
       plateCanvases[state.id] = card.querySelector("canvas");
+      plateObserver.observe(card);
     });
+    wallGrid.appendChild(chapter);
   });
 
   // Also populate "Read the Chart as Text" list in View 5
@@ -2288,365 +2085,299 @@ function buildWallDOM() {
 }
 
 /* ============================================================================
-   5. STEP-THROUGH CONTROLLER, COSINE-EASED SVG PATH ANIMATION & GLIDE SCROLL
+   5. FOCUSED SCENE READER — one route, optional branches, persistent navigation
    ============================================================================ */
+const HEALTHY_ORDER = ["s0", "s1", "s2", "s3", "s4", "s6", "s7", "s9", "s10", "s11", "s13", "s14", "s15"];
+const CHAPTER_NAMES = ["Data", "Transformer", "Training", "Assistant"];
+const reader = document.getElementById("stepper");
+const readerBody = document.getElementById("reader-body");
+const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+const visiblePlates = new Set();
+const plateObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => entry.isIntersecting ? visiblePlates.add(entry.target.id.slice(6)) : visiblePlates.delete(entry.target.id.slice(6)));
+}, {rootMargin: "100px"});
 let currentStateId = "s0";
-let prevStateId = "s0";
-let historyStack = [{ stateId: "s0", via: "initial state" }];
+let historyStack = [];
+let activeTour = null;
 let autoPlayTimer = null;
+let returnFocus = null;
+let returnScroll = 0;
+let savedBodyTop = "";
+let pendingReturn = false;
 
-// Route animation state
-let routeAnim = {
-  active: false,
-  t0: 0,
-  dur: 950,
-  isBug: false
-};
-
-function getPlateCenter(stateId) {
-  const stage = document.getElementById("wall-stage");
-  const el = plateElements[stateId];
-  if (!stage || !el) return { x: 0, y: 0, w: 0, h: 0, left: 0, top: 0 };
-  const sRect = stage.getBoundingClientRect();
-  const eRect = el.getBoundingClientRect();
-  const left = eRect.left - sRect.left;
-  const top = eRect.top - sRect.top;
-  return {
-    left,
-    top,
-    w: eRect.width,
-    h: eRect.height,
-    x: left + eRect.width / 2,
-    y: top + eRect.height / 2
-  };
+function primaryNext(id) {
+  if (id === "s15") return null;
+  const index = HEALTHY_ORDER.indexOf(id);
+  return index >= 0 ? HEALTHY_ORDER[index + 1] : STATE_MAP[id].steps.find(step => !step.bug)?.to;
 }
-
-function drawStaticWallEdges() {
-  const g = document.getElementById("static-edges-group");
-  if (!g) return;
-  g.innerHTML = "";
-  STATES.forEach(s => {
-    const a = getPlateCenter(s.id);
-    if (a.w === 0) return;
-    s.steps.forEach(st => {
-      const b = getPlateCenter(st.to);
-      if (b.w === 0) return;
-      const dx = b.x - a.x;
-      const dy = b.y - a.y;
-      const cx = (a.x + b.x) / 2 - dy * 0.12;
-      const cy = (a.y + b.y) / 2 + dx * 0.08;
-      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      path.setAttribute("d", `M ${a.x.toFixed(1)} ${a.y.toFixed(1)} Q ${cx.toFixed(1)} ${cy.toFixed(1)} ${b.x.toFixed(1)} ${b.y.toFixed(1)}`);
-      path.setAttribute("fill", "none");
-      path.setAttribute("stroke", st.bug ? "rgba(231, 46, 59, 0.34)" : "rgba(240, 200, 106, 0.2)");
-      path.setAttribute("stroke-width", st.bug ? "2" : "1.6");
-      if (st.bug) path.setAttribute("stroke-dasharray", "5 5");
-      g.appendChild(path);
-    });
-  });
+function nextSceneId() {
+  if (activeTour) return activeTour[activeTour.indexOf(currentStateId) + 1] || null;
+  return primaryNext(currentStateId);
 }
+function previousSceneId() {
+  if (historyStack.length > 1) return historyStack[historyStack.length - 2].stateId;
+  if (activeTour) return activeTour[activeTour.indexOf(currentStateId) - 1] || null;
+  const index = HEALTHY_ORDER.indexOf(currentStateId);
+  if (index >= 0) return HEALTHY_ORDER[index - 1] || null;
+  return {s5: "s4", s8: "s7", s12: "s11"}[currentStateId] || null;
+}
+function setReaderLocation() {
+  if (reader.open) history.replaceState({...history.state, llmReader: true}, "", `#scene-${currentStateId}`);
+}
+function openReader(id, trigger = document.activeElement, tour = null, updateHistory = true) {
+  stopAutoPlay();
+  activeTour = tour;
+  guards.causalMask = guards.gradClip = guards.klLeash = true;
+  historyStack = [{stateId: id, via: "Opened scene"}];
+  if (!reader.open) {
+    returnFocus = trigger;
+    returnScroll = window.scrollY;
+    if (updateHistory) history.pushState({llmReader: true, returnScroll}, "", `#scene-${id}`);
+    savedBodyTop = document.body.style.top;
+    document.body.style.top = `-${returnScroll}px`;
+    document.body.classList.add("reader-open");
+    reader.showModal();
 
-function updateSpotlightAndRoute(fromId, toId, isBugStep) {
-  const spot = document.getElementById("step-spot");
-  const targetBox = getPlateCenter(toId);
-  if (spot && targetBox.w > 0) {
-    spot.classList.add("visible");
-    spot.classList.toggle("bug-spot", !!isBugStep || STATE_MAP[toId].breaksRule);
-    spot.style.width = `${targetBox.w + 8}px`;
-    spot.style.height = `${targetBox.h + 8}px`;
-    spot.style.transform = `translate(${targetBox.left - 4}px, ${targetBox.top - 4}px)`;
   }
-
-  const route = document.getElementById("step-route");
-  const routeBg = document.getElementById("step-route-bg");
-  const token = document.getElementById("step-token");
-  if (!route || !fromId || fromId === toId) {
-    if (token) token.setAttribute("opacity", "0");
-    return;
-  }
-
-  const a = getPlateCenter(fromId);
-  const b = getPlateCenter(toId);
-  if (a.w === 0 || b.w === 0) return;
-
-  const dx = b.x - a.x;
-  const dy = b.y - a.y;
-  const cx = (a.x + b.x) / 2 - dy * 0.14;
-  const cy = (a.y + b.y) / 2 + dx * 0.1;
-  const dStr = `M ${a.x.toFixed(1)} ${a.y.toFixed(1)} Q ${cx.toFixed(1)} ${cy.toFixed(1)} ${b.x.toFixed(1)} ${b.y.toFixed(1)}`;
-  route.setAttribute("d", dStr);
-  routeBg.setAttribute("d", dStr);
-
-  const strokeCol = (isBugStep || STATE_MAP[toId].breaksRule) ? "#ff5a64" : "#f0c86a";
-  route.setAttribute("stroke", strokeCol);
-  route.setAttribute("marker-end", (isBugStep || STATE_MAP[toId].breaksRule) ? "url(#arrow-red)" : "url(#arrow-gold)");
-  token.setAttribute("fill", strokeCol);
-
-  const L = route.getTotalLength();
-  route.style.strokeDasharray = `${L}`;
-  route.style.strokeDashoffset = `${L}`;
-  routeAnim = {
-    active: true,
-    t0: performance.now(),
-    dur: Math.max(650, Math.min(1600, 420 + L * 1.8)),
-    isBug: isBugStep
-  };
+  stepToState(id, null, false);
 }
-
-function glideScrollToPlate(stateId) {
-  const el = plateElements[stateId];
-  if (!el) return;
-  const rect = el.getBoundingClientRect();
-  const targetY = window.scrollY + rect.top - (window.innerHeight * 0.28);
-  const startY = window.scrollY;
-  const diff = targetY - startY;
-  if (Math.abs(diff) < 40) return;
-  const t0 = performance.now();
-  const dur = 450;
-  function stepScroll(now) {
-    const u = Math.min(1, (now - t0) / dur);
-    const e = 0.5 - Math.cos(Math.PI * u) / 2;
-    window.scrollTo(0, startY + diff * e);
-    if (u < 1) requestAnimationFrame(stepScroll);
-  }
-  requestAnimationFrame(stepScroll);
+function cleanupReader() {
+  stopAutoPlay();
+  document.body.classList.remove("reader-open");
+  document.body.style.top = savedBodyTop;
+  window.scrollTo(0, returnScroll);
+  returnFocus?.focus({preventScroll: true});
 }
+function closeReader() {
+  if (!reader.open) return;
+  reader.close();
+  cleanupReader();
+  if (history.state?.llmReader) { pendingReturn = true; history.back(); }
+}
+reader.addEventListener("cancel", e => { e.preventDefault(); closeReader(); });
+reader.addEventListener("click", e => { if (e.target === reader) { const rect = reader.getBoundingClientRect(); if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) closeReader(); } });
+window.addEventListener("popstate", event => {
+  const id = location.hash.replace("#scene-", "");
+  if (event.state?.llmReader && STATE_MAP[id]) {
+    if (!reader.open) {
+      window.scrollTo(0, event.state.returnScroll || 0);
+      openReader(id, returnFocus, null, false);
+    } else stepToState(id);
+  } else if (reader.open || pendingReturn) {
+    if (reader.open) { reader.close(); cleanupReader(); }
+    pendingReturn = false;
+    requestAnimationFrame(() => window.scrollTo(0, returnScroll));
+  }
+});
+document.getElementById("ctrl-close").addEventListener("click", closeReader);
 
-function stepToState(targetId, fromId = null, pushHistory = true) {
-  const prev = fromId || currentStateId;
-  prevStateId = prev;
-  currentStateId = targetId;
+function stepToState(targetId, fromId = currentStateId, pushHistory = true) {
   const state = STATE_MAP[targetId];
-
-  // Sync guard badges if landing on a bug state
+  if (!state) return;
+  currentStateId = targetId;
   if (targetId === "s5") guards.causalMask = false;
   if (targetId === "s8") guards.gradClip = false;
   if (targetId === "s12") guards.klLeash = false;
   if (targetId === "s4") guards.causalMask = true;
   if (targetId === "s9") guards.gradClip = true;
-  if (targetId === "s13") guards.klLeash = true;
+  if (targetId === "s13" || (fromId === "s12" && targetId === "s11")) guards.klLeash = true;
+  if (fromId === "s8" && targetId === "s7") guards.gradClip = true;
   syncGuardUI();
-
-  if (pushHistory && historyStack[historyStack.length - 1]?.stateId !== targetId) {
-    const prevStateObj = STATE_MAP[prev];
-    const transitionObj = prevStateObj?.steps.find(st => st.to === targetId);
-    historyStack.push({
-      stateId: targetId,
-      via: transitionObj ? transitionObj.label : `jumped to ${state.num}`
-    });
+  if (pushHistory && historyStack.at(-1)?.stateId !== targetId) {
+    const transition = STATE_MAP[fromId]?.steps.find(st => st.to === targetId);
+    historyStack.push({stateId: targetId, via: transition?.label || "Explore scene"});
   }
-
-  // Highlight active & visited plates
   const visitedSet = new Set(historyStack.map(h => h.stateId));
   STATES.forEach(s => {
-    const el = plateElements[s.id];
-    if (!el) return;
-    el.classList.toggle("active-state", s.id === targetId);
-    el.classList.toggle("visited-state", visitedSet.has(s.id) && s.id !== targetId);
+    plateElements[s.id]?.classList.toggle("active-state", s.id === targetId);
+    plateElements[s.id]?.classList.toggle("visited-state", visitedSet.has(s.id) && s.id !== targetId);
   });
-
-  // Update Stepper UI
-  const titleEl = document.getElementById("stepper-title");
-  titleEl.textContent = `${state.num} · ${state.title} (${state.subtitle})`;
-  titleEl.classList.toggle("bug-title", !!state.breaksRule);
+  const title = document.getElementById("stepper-title");
+  title.textContent = state.title;
+  title.classList.toggle("bug-title", state.breaksRule);
+  const chapterIndex = PHASES.findIndex(p => p.id === state.phase);
+  document.getElementById("reader-chapter").textContent = `Chapter ${chapterIndex + 1} · ${CHAPTER_NAMES[chapterIndex]}`;
+  document.getElementById("reader-subtitle").textContent = state.subtitle;
   document.getElementById("stepper-desc").textContent = state.desc;
-
-  // Populate next step choice buttons
+  document.getElementById("scope-canvas").setAttribute("aria-label", `Animated illustration: ${state.title}`);
+  const detourAnchor = {s5: "s4", s8: "s7", s12: "s11"}[targetId];
+  const position = activeTour ? activeTour.indexOf(targetId) + 1 : HEALTHY_ORDER.indexOf(detourAnchor || targetId) + 1;
+  const total = activeTour?.length || HEALTHY_ORDER.length;
+  const isFailureTour = activeTour?.some(id => STATE_MAP[id].breaksRule);
+  const progressLabel = `${state.breaksRule && !activeTour ? 'Detour · scene' : isFailureTour ? 'Failure path' : 'Scene'} ${position} of ${total}`;
+  document.getElementById("reader-position").textContent = progressLabel;
+  document.getElementById("reader-announcement").textContent = `${progressLabel}. ${state.title}`;
+  const progress = document.getElementById("reader-progress");
+  progress.setAttribute("aria-valuemax", total);
+  progress.setAttribute("aria-valuenow", Math.max(1, position));
+  progress.setAttribute("aria-valuetext", progressLabel);
+  document.getElementById("reader-progress-fill").style.width = `${Math.max(1, position) / total * 100}%`;
+  const nextId = nextSceneId();
+  document.getElementById("ctrl-next").textContent = nextId ? (state.breaksRule ? 'Repair →' : 'Next →') : 'Finish ✓';
+  document.getElementById("ctrl-back").disabled = !previousSceneId();
+  if (!autoPlayTimer) document.getElementById("ctrl-play").textContent = nextId ? "▶ Play" : "↻ Replay";
+  document.getElementById("reader-hint").textContent = nextId ? '← → to navigate · Space to play or pause · Esc to return' : 'You reached the end of this path. Finish to return to the story.';
   const choicesEl = document.getElementById("stepper-choices");
   choicesEl.innerHTML = "";
   state.steps.forEach(st => {
     const dst = STATE_MAP[st.to];
     const btn = document.createElement("button");
     btn.className = "choice-btn" + (st.bug ? " bug-choice" : "");
-    btn.innerHTML = `<span>${st.label}</span> <strong>→ ${dst.num} ${dst.title}</strong>`;
-    btn.addEventListener("click", () => {
-      stopAutoPlay();
-      stepToState(st.to, state.id, true);
-      glideScrollToPlate(st.to);
-    });
+    btn.innerHTML = `<strong>${st.bug ? '⚡ ' : ''}${dst.title}</strong><span>${st.label}</span>`;
+    btn.addEventListener("click", () => { stopAutoPlay(); activeTour = null; stepToState(st.to); });
     choicesEl.appendChild(btn);
   });
-
-  // Update history breadcrumbs
-  document.getElementById("ctrl-back").disabled = historyStack.length <= 1;
-  document.getElementById("path-count").textContent = String(historyStack.length);
-  const trailEl = document.getElementById("path-trail");
-  trailEl.innerHTML = historyStack.map((item, idx) => {
-    const stObj = STATE_MAP[item.stateId];
-    return `<span class="path-crumb ${stObj.breaksRule ? 'bug-crumb' : ''}" data-hist-idx="${idx}" title="${item.via}">
-      ${idx === 0 ? '' : '→ '}${stObj.num} ${stObj.title}
-    </span>`;
-  }).join("");
-  trailEl.querySelectorAll(".path-crumb").forEach(crumb => {
+  document.getElementById("path-count").textContent = historyStack.length;
+  const trail = document.getElementById("path-trail");
+  trail.innerHTML = "";
+  historyStack.forEach((item, idx) => {
+    const crumb = document.createElement("button");
+    crumb.className = "path-crumb";
+    crumb.textContent = STATE_MAP[item.stateId].title;
+    crumb.title = item.via;
     crumb.addEventListener("click", () => {
-      const idx = parseInt(crumb.getAttribute("data-hist-idx"), 10);
-      historyStack = historyStack.slice(0, idx + 1);
-      stepToState(historyStack[idx].stateId, currentStateId, false);
+      stopAutoPlay(); historyStack = historyStack.slice(0, idx + 1);
+      if (activeTour && !activeTour.includes(item.stateId)) activeTour = null;
+      stepToState(item.stateId, currentStateId, false);
     });
+    trail.appendChild(crumb);
   });
-
-  // Expand stepper if minimized
-  document.getElementById("stepper").classList.remove("minimized");
-  document.getElementById("ctrl-minimize").textContent = "▾ Minimize";
-  updateSpotlightAndRoute(prev, targetId, state.breaksRule);
+  document.querySelectorAll(".reader-details").forEach(details => { details.open = false; });
+  readerBody.scrollTop = 0;
+  setReaderLocation();
 }
-
 function syncGuardUI() {
-  const gm = document.getElementById("guard-mask");
-  gm.classList.toggle("broken", !guards.causalMask);
-  gm.innerHTML = `Causal Mask: <strong>${guards.causalMask ? 'ON (Lower-Tri)' : 'BROKEN (Leaking!)'}</strong>`;
-
-  const gc = document.getElementById("guard-clip");
-  gc.classList.toggle("broken", !guards.gradClip);
-  gc.innerHTML = `Grad Clip (‖g‖≤1.0): <strong>${guards.gradClip ? 'ON' : 'OFF (Spike Risk!)'}</strong>`;
-
-  const gk = document.getElementById("guard-kl");
-  gk.classList.toggle("broken", !guards.klLeash);
-  gk.innerHTML = `KL Leash (β=0.04): <strong>${guards.klLeash ? 'ON' : 'OFF (β=0 Drift!)'}</strong>`;
-
+  [["guard-mask", guards.causalMask, "Causal mask"], ["guard-clip", guards.gradClip, "Gradient clipping"], ["guard-kl", guards.klLeash, "KL penalty"]].forEach(([id, enabled, label]) => {
+    const button = document.getElementById(id);
+    button.classList.toggle("broken", !enabled);
+    button.setAttribute("aria-pressed", String(enabled));
+    button.innerHTML = `${label}: <strong>${enabled ? 'ON' : 'OFF'}</strong>`;
+  });
   const badge = document.getElementById("tlc-status-badge");
   const allOk = guards.causalMask && guards.gradClip && guards.klLeash;
-  badge.style.color = allOk ? "#8ce09a" : "#ff7b82";
-  badge.textContent = allOk
-    ? "✓ All 3 demonstration guards enabled"
-    : "⚡ Modelled failure path active";
+  badge.style.color = allOk ? "#8ce09a" : "#ff9b9e";
+  badge.textContent = allOk ? "✓ All 3 demonstration guards enabled" : "⚡ Modelled failure path active";
 }
-
-// Guard button handlers
-document.getElementById("guard-mask").addEventListener("click", () => {
-  guards.causalMask = !guards.causalMask;
-  syncGuardUI();
-  stepToState(guards.causalMask ? "s4" : "s5", currentStateId, true);
+[["guard-mask", "causalMask", "s4", "s5"], ["guard-clip", "gradClip", "s9", "s8"], ["guard-kl", "klLeash", "s13", "s12"]].forEach(([id, key, healthy, failure]) => {
+  document.getElementById(id).addEventListener("click", () => {
+    stopAutoPlay(); activeTour = null; guards[key] = !guards[key];
+    stepToState(guards[key] ? healthy : failure);
+  });
 });
-document.getElementById("guard-clip").addEventListener("click", () => {
-  guards.gradClip = !guards.gradClip;
-  syncGuardUI();
-  stepToState(guards.gradClip ? "s9" : "s8", currentStateId, true);
-});
-document.getElementById("guard-kl").addEventListener("click", () => {
-  guards.klLeash = !guards.klLeash;
-  syncGuardUI();
-  stepToState(guards.klLeash ? "s13" : "s12", currentStateId, true);
-});
-
-// Stepper control buttons & guided tours
 function stopAutoPlay() {
-  if (autoPlayTimer) {
-    clearInterval(autoPlayTimer);
-    autoPlayTimer = null;
-  }
-  const playBtn = document.getElementById("ctrl-play");
-  playBtn.classList.remove("playing");
-  playBtn.textContent = "▶ Play";
+  clearTimeout(autoPlayTimer);
+  autoPlayTimer = null;
+  const button = document.getElementById("ctrl-play");
+  button.classList.remove("playing");
+  button.setAttribute("aria-pressed", "false");
+  button.textContent = nextSceneId() ? "▶ Play" : "↻ Replay";
 }
-
+function queueAutoStep() {
+  // Allow a scene to be read; never move the underlying page during playback.
+  const words = STATE_MAP[currentStateId].desc.split(/\s+/).length;
+  const delay = Math.min(12000, Math.max(6500, words * 220));
+  autoPlayTimer = setTimeout(() => {
+    const next = nextSceneId();
+    if (!next) { stopAutoPlay(); return; }
+    stepToState(next);
+    if (!nextSceneId()) stopAutoPlay(); else queueAutoStep();
+  }, delay);
+}
+function toggleAutoPlay() {
+  if (autoPlayTimer) { stopAutoPlay(); return; }
+  if (!nextSceneId()) {
+    const route = activeTour || HEALTHY_ORDER;
+    historyStack = [{stateId: route[0], via: "Replay"}];
+    stepToState(route[0], null, false);
+  }
+  const button = document.getElementById("ctrl-play");
+  button.classList.add("playing");
+  button.setAttribute("aria-pressed", "true");
+  button.textContent = "Ⅱ Pause";
+  queueAutoStep();
+}
 function runGuidedTour(pathIds) {
-  stopAutoPlay();
-  switchPerspective("view-chart");
-  historyStack = [{ stateId: pathIds[0], via: "tour start" }];
-  stepToState(pathIds[0], pathIds[0], false);
-  glideScrollToPlate(pathIds[0]);
-
-  let i = 1;
-  const playBtn = document.getElementById("ctrl-play");
-  playBtn.classList.add("playing");
-  playBtn.textContent = "⏸ Playing...";
-
-  autoPlayTimer = setInterval(() => {
-    if (i >= pathIds.length) {
-      stopAutoPlay();
-      return;
-    }
-    const nextId = pathIds[i];
-    stepToState(nextId, currentStateId, true);
-    glideScrollToPlate(nextId);
-    i++;
-  }, 1500);
+  guards.causalMask = guards.gradClip = guards.klLeash = true;
+  openReader(pathIds[0], document.activeElement, pathIds);
 }
-
-document.getElementById("ctrl-back").addEventListener("click", () => {
+function goPrevious() {
   stopAutoPlay();
-  if (historyStack.length > 1) {
-    const popped = historyStack.pop();
-    const target = historyStack[historyStack.length - 1];
-    stepToState(target.stateId, popped.stateId, false);
-    glideScrollToPlate(target.stateId);
-  }
-});
-
-document.getElementById("ctrl-reset").addEventListener("click", () => {
+  const previous = previousSceneId();
+  if (!previous) return;
+  if (historyStack.length > 1) { historyStack.pop(); stepToState(previous, currentStateId, false); }
+  else { historyStack = [{stateId: previous, via: "Previous scene"}]; stepToState(previous, currentStateId, false); }
+}
+function goNext() {
   stopAutoPlay();
-  guards.causalMask = true;
-  guards.gradClip = true;
-  guards.klLeash = true;
-  historyStack = [{ stateId: "s0", via: "reset" }];
-  stepToState("s0", currentStateId, false);
-  glideScrollToPlate("s0");
+  const next = nextSceneId();
+  if (next) stepToState(next); else closeReader();
+}
+document.getElementById("ctrl-back").addEventListener("click", goPrevious);
+document.getElementById("ctrl-next").addEventListener("click", goNext);
+document.getElementById("ctrl-play").addEventListener("click", toggleAutoPlay);
+document.getElementById("ctrl-reset").addEventListener("click", () => runGuidedTour(HEALTHY_ORDER));
+document.getElementById("btn-start-stepper").addEventListener("click", () => runGuidedTour(HEALTHY_ORDER));
+document.getElementById("btn-tour-mask").addEventListener("click", () => runGuidedTour(["s0", "s2", "s3", "s5"]));
+document.getElementById("btn-tour-nan").addEventListener("click", () => runGuidedTour(["s0", "s2", "s3", "s4", "s6", "s7", "s8"]));
+document.getElementById("btn-tour-reward").addEventListener("click", () => runGuidedTour(["s0", "s2", "s3", "s4", "s6", "s7", "s9", "s10", "s11", "s12"]));
+reader.addEventListener("keydown", e => {
+  if (e.target.closest("input, textarea, select")) return;
+  if (e.key === "ArrowRight") { e.preventDefault(); goNext(); }
+  if (e.key === "ArrowLeft") { e.preventDefault(); goPrevious(); }
+  if (e.code === "Space" && !e.target.closest("button, summary, a")) { e.preventDefault(); toggleAutoPlay(); }
 });
-
-document.getElementById("ctrl-play").addEventListener("click", () => {
-  if (autoPlayTimer) {
-    stopAutoPlay();
-  } else {
-    // Healthy path tour from current state or full lifecycle
-    const healthyOrder = ["s0", "s1", "s2", "s3", "s4", "s6", "s7", "s9", "s10", "s11", "s13", "s14", "s15"];
-    const startIdx = Math.max(0, healthyOrder.indexOf(currentStateId));
-    const slice = healthyOrder.slice(startIdx);
-    runGuidedTour(slice.length > 1 ? slice : healthyOrder);
-  }
-});
-
-document.getElementById("ctrl-minimize").addEventListener("click", () => {
-  const stepper = document.getElementById("stepper");
-  const minimized = stepper.classList.toggle("minimized");
-  document.getElementById("ctrl-minimize").textContent = minimized ? "▴ Expand" : "▾ Minimize";
-});
-
-document.getElementById("btn-start-stepper").addEventListener("click", () => {
-  runGuidedTour(["s0", "s1", "s2", "s3", "s4", "s6", "s7", "s9", "s10", "s11", "s13", "s14", "s15"]);
-});
-document.getElementById("btn-tour-mask").addEventListener("click", () => {
-  runGuidedTour(["s0", "s2", "s3", "s5"]);
-});
-document.getElementById("btn-tour-nan").addEventListener("click", () => {
-  runGuidedTour(["s0", "s2", "s3", "s4", "s6", "s7", "s8"]);
-});
-document.getElementById("btn-tour-reward").addEventListener("click", () => {
-  runGuidedTour(["s0", "s2", "s3", "s4", "s6", "s7", "s9", "s10", "s11", "s12"]);
-});
-document.getElementById("reset-home-link").addEventListener("click", (e) => {
-  e.preventDefault();
-  switchPerspective("view-chart");
-  window.scrollTo({ top: 0, behavior: "smooth" });
-});
+// Expanding technical detail is deliberate exploration, so pause the tour.
+document.querySelectorAll(".reader-details").forEach(details => details.addEventListener("toggle", () => { if (details.open) stopAutoPlay(); }));
+document.addEventListener("visibilitychange", () => { if (document.hidden) stopAutoPlay(); });
+readerBody.addEventListener("wheel", stopAutoPlay, {passive: true});
+readerBody.addEventListener("touchstart", stopAutoPlay, {passive: true});
 
 /* ============================================================================
-   6. PERSPECTIVE TAB SWITCHING
+   6. PERSPECTIVES — retain each view's place; tab keys follow one convention
    ============================================================================ */
+let activeView = "view-chart";
+const viewScroll = {};
 function switchPerspective(viewId) {
-  if (viewId !== "view-chart") stopAutoPlay();
-  document.getElementById("stepper").classList.toggle("perspective-hidden", viewId !== "view-chart");
+  if (viewId === activeView) return;
+  stopAutoPlay();
+  viewScroll[activeView] = window.scrollY;
+  activeView = viewId;
   document.querySelectorAll(".mode-tab").forEach(tab => {
-    const active = tab.getAttribute("data-view") === viewId;
+    const active = tab.dataset.view === viewId;
     tab.classList.toggle("active", active);
-    tab.setAttribute("aria-selected", active ? "true" : "false");
+    tab.setAttribute("aria-selected", String(active));
+    tab.tabIndex = active ? 0 : -1;
   });
-  document.querySelectorAll(".view-section").forEach(sec => {
-    sec.classList.toggle("active", sec.id === viewId);
+  document.querySelectorAll(".view-section").forEach(section => {
+    section.classList.toggle("active", section.id === viewId);
   });
-  if (viewId === "view-chart") {
-    setTimeout(() => {
-      drawStaticWallEdges();
-      updateSpotlightAndRoute(prevStateId, currentStateId, STATE_MAP[currentStateId].breaksRule);
-    }, 50);
-  }
+  const nav = document.querySelector(".mode-nav-wrap");
+  const panelTop = document.getElementById(viewId).offsetTop;
+  const targetScroll = viewScroll[viewId] ?? (panelTop - nav.offsetHeight);
+  document.getElementById(`tab-${viewId}`).focus({preventScroll: true});
+  // Restore after the new panel has laid out; a shorter old view can clamp a synchronous scroll.
+  requestAnimationFrame(() => window.scrollTo({top: targetScroll, behavior: "auto"}));
 }
-
-document.querySelectorAll(".mode-tab").forEach(tab => {
-  tab.addEventListener("click", () => {
-    switchPerspective(tab.getAttribute("data-view"));
+const tabs = [...document.querySelectorAll(".mode-tab")];
+tabs.forEach((tab, index) => {
+  tab.id = `tab-${tab.dataset.view}`;
+  tab.setAttribute("aria-controls", tab.dataset.view);
+  tab.tabIndex = index === 0 ? 0 : -1;
+  const panel = document.getElementById(tab.dataset.view);
+  panel.setAttribute("role", "tabpanel");
+  panel.setAttribute("aria-labelledby", tab.id);
+  tab.addEventListener("click", () => switchPerspective(tab.dataset.view));
+  tab.addEventListener("keydown", e => {
+    let next;
+    if (e.key === "ArrowRight") next = (index + 1) % tabs.length;
+    if (e.key === "ArrowLeft") next = (index + tabs.length - 1) % tabs.length;
+    if (e.key === "Home") next = 0;
+    if (e.key === "End") next = tabs.length - 1;
+    if (next !== undefined) { e.preventDefault(); tabs[next].focus(); switchPerspective(tabs[next].dataset.view); }
   });
 });
+document.querySelectorAll("[data-return-story]").forEach(button => button.addEventListener("click", () => switchPerspective("view-chart")));
+document.getElementById("reset-home-link").addEventListener("click", e => { e.preventDefault(); switchPerspective("view-chart"); window.scrollTo({top: 0, behavior: reducedMotion.matches ? "auto" : "smooth"}); });
 
 /* ============================================================================
    7. VIEW 2: COLORFIGURES 360° ISOMETRIC SEE-THROUGH TRANSFORMER ENGINE
@@ -2721,6 +2452,7 @@ document.querySelectorAll("#iso-swatches .color-swatch").forEach(btn => {
   btn.addEventListener("click", () => {
     document.querySelectorAll("#iso-swatches .color-swatch").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
+    document.querySelectorAll("#iso-swatches .color-swatch").forEach(b => b.setAttribute("aria-pressed", String(b === btn)));
     isoState.swatch = btn.getAttribute("data-swatch");
   });
 });
@@ -2729,6 +2461,7 @@ document.querySelectorAll("#iso-part-list .part-badge").forEach(badge => {
   badge.addEventListener("click", () => {
     document.querySelectorAll("#iso-part-list .part-badge").forEach(b => b.classList.remove("active"));
     badge.classList.add("active");
+    document.querySelectorAll("#iso-part-list .part-badge").forEach(b => b.setAttribute("aria-pressed", String(b === badge)));
     const p = parseInt(badge.getAttribute("data-part"), 10);
     isoState.selectedPart = p;
     document.getElementById("iso-part-explain").innerHTML = PART_DESCRIPTIONS[p];
@@ -2741,7 +2474,9 @@ function setMachineAction(name, partNum, spike = false) {
   isoState.spikeAlert = spike;
   document.getElementById("iso-mode-readout").textContent = name;
   document.querySelectorAll("#iso-part-list .part-badge").forEach(b => {
-    b.classList.toggle("active", parseInt(b.getAttribute("data-part"), 10) === partNum);
+    const selected = parseInt(b.getAttribute("data-part"), 10) === partNum;
+    b.classList.toggle("active", selected);
+    b.setAttribute("aria-pressed", String(selected));
   });
   document.getElementById("iso-part-explain").innerHTML = PART_DESCRIPTIONS[partNum];
 }
@@ -2934,8 +2669,12 @@ function selectPlaceZone(zone) {
   ];
   document.getElementById("place-zone-label").textContent = titles[zone];
   placeBubbleText = bubbles[zone];
+  const map = document.querySelector(".place-canvas-wrap");
+  if (map.scrollWidth > map.clientWidth) map.scrollTo({left: zone * map.scrollWidth / 4, behavior: reducedMotion.matches ? "auto" : "smooth"});
   document.querySelectorAll("#place-cards .place-card").forEach(c => {
-    c.classList.toggle("active", parseInt(c.getAttribute("data-zone"), 10) === zone);
+    const selected = parseInt(c.getAttribute("data-zone"), 10) === zone;
+    c.classList.toggle("active", selected);
+    c.setAttribute("aria-pressed", String(selected));
   });
 }
 
@@ -3123,74 +2862,38 @@ const WOBBLE_SEQ = [0, 1, 2, 1];
 const scopeCanvas = document.getElementById("scope-canvas");
 const scopeCtx = scopeCanvas.getContext("2d");
 
+let lastPaint = 0;
 function masterTick(now) {
-  const nowSec = now / 1000;
-  const seqIdx = Math.floor(now / 180) % 4;
-  const frameIdx = WOBBLE_SEQ[seqIdx];
-
-  document.getElementById("scope-frame-indicator").textContent =
-    `pencil+pastel · wobble frame ${seqIdx + 1}/4`;
-
-  // 1. Render Circular Scope Canvas for Active State
-  const activeState = STATE_MAP[currentStateId];
-  if (activeState) {
-    renderStateArtwork(scopeCtx, scopeCanvas.width, scopeCanvas.height, activeState, frameIdx, nowSec);
-  }
-
-  // 2. Render Active View Canvases
-  const chartActive = document.getElementById("view-chart").classList.contains("active");
-  if (chartActive) {
-    STATES.forEach(st => {
-      const c = plateCanvases[st.id];
-      if (c) renderStateArtwork(c.getContext("2d"), c.width, c.height, st, frameIdx, nowSec);
-    });
-
-    // Update cosine-eased SVG route animation (#step-route & #step-token)
-    if (routeAnim.active) {
-      const route = document.getElementById("step-route");
-      const token = document.getElementById("step-token");
-      const L = route.getTotalLength();
-      if (L > 0) {
-        const u = Math.min(1, (now - routeAnim.t0) / routeAnim.dur);
-        const e = 0.5 - Math.cos(Math.PI * u) / 2;
-        route.style.strokeDashoffset = `${L * (1 - e)}`;
-        const pt = route.getPointAtLength(e * L);
-        token.setAttribute("cx", pt.x.toFixed(1));
-        token.setAttribute("cy", pt.y.toFixed(1));
-        token.setAttribute("opacity", "1");
-        if (u >= 1) routeAnim.active = false;
-      }
-    }
-  } else if (document.getElementById("view-machine").classList.contains("active")) {
-    renderIsoMachine(nowSec, frameIdx);
-  } else if (document.getElementById("view-place").classList.contains("active")) {
-    renderPlaceCrossSection(nowSec, frameIdx);
-  } else if (document.getElementById("view-time").classList.contains("active")) {
-    renderTimeTape(nowSec, frameIdx);
-  }
-
   requestAnimationFrame(masterTick);
+  if (document.hidden || now - lastPaint < (reducedMotion.matches ? 250 : 33)) return;
+  lastPaint = now;
+  const nowSec = reducedMotion.matches ? 0 : now / 1000;
+  const seqIdx = reducedMotion.matches ? 0 : Math.floor(now / 180) % 4;
+  const frameIdx = WOBBLE_SEQ[seqIdx];
+  if (reader.open) {
+    renderStateArtwork(scopeCtx, scopeCanvas.width, scopeCanvas.height, STATE_MAP[currentStateId], frameIdx, nowSec);
+    return;
+  }
+  if (activeView === "view-chart") {
+    visiblePlates.forEach(id => {
+      const canvas = plateCanvases[id];
+      if (canvas) renderStateArtwork(canvas.getContext("2d"), canvas.width, canvas.height, STATE_MAP[id], frameIdx, nowSec);
+    });
+  } else if (activeView === "view-machine") renderIsoMachine(nowSec, frameIdx);
+  else if (activeView === "view-place") renderPlaceCrossSection(nowSec, frameIdx);
+  else if (activeView === "view-time") renderTimeTape(nowSec, frameIdx);
 }
-
-window.addEventListener("resize", () => {
-  drawStaticWallEdges();
-  updateSpotlightAndRoute(prevStateId, currentStateId, STATE_MAP[currentStateId].breaksRule);
-});
-
-// Initialize everything on load
 window.addEventListener("DOMContentLoaded", () => {
   buildWallDOM();
   updateScalingCalculator();
-  setTimeout(() => {
-    drawStaticWallEdges();
-    stepToState("s0", "s0", false);
-    if (matchMedia("(max-width: 720px)").matches) {
-      document.getElementById("stepper").classList.add("minimized");
-      document.getElementById("ctrl-minimize").textContent = "▴ Expand";
-    }
-  }, 60);
+  syncGuardUI();
+  document.querySelectorAll(".part-badge, .place-card, .color-swatch").forEach(button => button.setAttribute("aria-pressed", String(button.classList.contains("active"))));
+  const linkedScene = location.hash.replace("#scene-", "");
+  if (STATE_MAP[linkedScene]) {
+    history.replaceState(null, "", location.pathname + location.search);
+    openReader(linkedScene, document.getElementById("btn-start-stepper"));
+  }
   requestAnimationFrame(masterTick);
-  document.fonts?.ready.then(() => { drawStaticWallEdges(); updateSpotlightAndRoute(prevStateId, currentStateId, STATE_MAP[currentStateId].breaksRule); });
 });
 </script>
 </body>
