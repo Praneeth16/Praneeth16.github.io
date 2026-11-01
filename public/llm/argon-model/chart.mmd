@@ -1,0 +1,65 @@
+---
+title: "LLM build: abstract demonstration graph"
+---
+stateDiagram-v2
+  state "Legend" as legend {
+    lg0: Breaks FiniteWeightsAndLoss or NoFutureTokenLeakage or NoRewardExploit
+    lg1: Path to the FiniteWeightsAndLoss or NoFutureTokenLeakage or NoRewardExploit bug
+  }
+  class lg0 breaks
+  class lg1 bugPath
+  s0: 01 Raw Web Crawl
+  s1: 02 Deduplicated Corpus
+  s2: 03 BPE Token Stream
+  s3: 04 Embeddings + RoPE
+  s4: 05 Causal Self-Attention
+  s5: 06 Future Tokens Leaked
+  s6: 07 SwiGLU #38; MoE Experts
+  s7: 08 3D Parallel All-Reduce
+  s8: 09 Non-finite Weight Collapse
+  s9: 10 Grad Clip #38; AdamW Step
+  s10: 11 Base Model Checkpoint
+  s11: 12 Supervised Fine-Tuning
+  s12: 13 Reward-Hacked Collapse
+  s13: 14 RLHF #38; GRPO Verifiers
+  s14: 15 PagedAttention KV Serving
+  s15: 16 Grounded Assistant
+  [*] --> s0
+  s0 --> s1: MinHash dedup #38; language and quality filters
+  s0 --> s2: tokenize raw HTML directly [skip dedup]
+  s1 --> s2: byte-pair encoding (BPE) merges frequent pairs
+  s2 --> s3: lookup d=4096 vectors #38; rotate by RoPE θ_i
+  s3 --> s4: project Q, K, V [causal mask ON]
+  s3 --> s5: project Q, K, V [causal mask broken]
+  s4 --> s5: disable upper-triangle mask [mask leaked]
+  s4 --> s6: add residual stream #38; RMSNorm into SwiGLU/MoE
+  s5 --> s4: restore upper-triangular #8722;#8734; causal mask [repair]
+  s6 --> s7: compute next-token cross-entropy and backpropagate
+  s7 --> s8: inject numerical instability [failure scenario]
+  s7 --> s9: clip global grad norm #8214;g#8214;₂ #8804; 1.0 [grad clip ON]
+  s8 --> s7: rewind to last healthy checkpoint #38; enable grad clip 1.0
+  s9 --> s4: next micro-batch forward pass (loop)
+  s9 --> s10: repeat for 15T tokens (90 days) #8594; anneal on math #38; code
+  s10 --> s11: train on example prompt/assistant conversations (SFT)
+  s11 --> s12: maximize reward model with β = 0.00 [KL leash OFF]
+  s11 --> s13: run RLHF / GRPO with KL penalty β = 0.04 [KL leash ON]
+  s12 --> s11: restore KL divergence leash β#183;D_KL(π_θ #8214; π_ref) [repair]
+  s13 --> s14: quantize #38; deploy to PagedAttention KV-cache engine
+  s14 --> s15: speculative draft + temperature/top-p sampling #8594; answer
+  s15 --> s0: collect new synthetic traces for next generation #8594; cycle
+  classDef breaks fill:#ffecee,stroke:#e72e3b,stroke-width:2.5px,color:#cd2834
+  class s0 bugPath
+  class s2 bugPath
+  class s3 bugPath
+  class s4 bugPath
+  class s5 breaks
+  class s5 bugPath
+  class s6 bugPath
+  class s7 bugPath
+  class s8 breaks
+  class s8 bugPath
+  class s9 bugPath
+  class s10 bugPath
+  class s11 bugPath
+  class s12 breaks
+  class s12 bugPath

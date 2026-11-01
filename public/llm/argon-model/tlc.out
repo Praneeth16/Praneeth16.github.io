@@ -1,0 +1,30 @@
+TLC2 Version 2026.10.30.154139 (rev: 090e85c)
+Warning: Please run the Java VM, which executes TLC with a throughput optimized garbage collector, by passing the "-XX:+UseParallelGC" property.
+(Use the -nowarning option to disable this warning.)
+Running breadth-first search Model-Checking with fp 0 and seed 4271357137293598293 with 1 worker on 8 cores with 2048MB heap and 64MB offheap memory [pid: 58] (Linux 6.18.57 amd64, Ubuntu 17.0.20 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /workspace/scratch/0be1d0623917/site/public/llm/argon-model/LLMBuild.tla
+Parsing file /tmp/statechart-rBWqdN/statechart-WHF7vn/tmp-verdict-1/tlc-17526233017363001900/Naturals.tla (jar:file:/workspace/scratch/0be1d0623917/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Semantic processing of module Naturals
+Semantic processing of module LLMBuild
+Linting of module LLMBuild
+Starting... (2026-11-01 08:29:52)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-11-01 08:29:52.
+Error: Invariant NoFutureTokenLeakage is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+phase = "s0"
+
+State 2: <Moves0Tos2 line 7, col 15 to line 7, col 46 of module LLMBuild>
+phase = "s2"
+
+State 3: <Moves2Tos3 line 9, col 15 to line 9, col 46 of module LLMBuild>
+phase = "s3"
+
+State 4: <Moves3Tos5 line 11, col 15 to line 11, col 46 of module LLMBuild>
+phase = "s5"
+
+7 states generated, 6 distinct states found, 1 states left on queue.
+The depth of the complete state graph search is 4.
+Finished in 00s at (2026-11-01 08:29:52)
+

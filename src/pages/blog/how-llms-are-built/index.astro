@@ -1,54 +1,3197 @@
 ---
-import {opening,corpus,attentionPlate,transformerPlate,trainingPlate,scalePlate,posttrainingPlate,evaluationPlate,inferencePlate} from '../../../lib/llm-plates.mjs';
-import '../../../styles/llm-visual.css';
-const frames=[
- {id:'material',title:'Start with text.',caption:'Choose the material. Remove copies. Keep the test apart.',art:corpus(),part:'01 / MATERIAL',file:'corpus'},
- {id:'attention',title:'Let the pieces meet.',caption:'Attention mixes information from the prefix. Future positions stay masked.',art:attentionPlate(),part:'02 / CONTEXT',file:'attentionPlate'},
- {id:'network',title:'Stack the transformations.',caption:'Attention mixes positions. The MLP transforms each position. Repeat the block.',art:transformerPlate(),part:'03 / ARCHITECTURE',file:'transformerPlate'},
- {id:'training',title:'Learn from the miss.',caption:'A target supplies the loss. Gradients tell the optimizer what to change.',art:trainingPlate(),part:'04 / PRETRAINING',file:'trainingPlate'},
- {id:'cluster',title:'Do this together.',caption:'Different batches. Shared gradients. A coordinated update.',art:scalePlate(),part:'05 / SCALE',file:'scalePlate',dark:true},
- {id:'behavior',title:'Practise being helpful.',caption:'Demonstrations teach responses. Preferences or rewards refine behavior.',art:posttrainingPlate(),part:'06 / POST-TRAINING',file:'posttrainingPlate'},
- {id:'checkpoint',title:'Earn the release.',caption:'Test a saved model. Failures send it back for more work.',art:evaluationPlate(),part:'07 / EVALUATION',file:'evaluationPlate'},
- {id:'answer',title:'One token becomes the next.',caption:'The context grows. The cache grows. The weights stay fixed.',art:inferencePlate(),part:'08 / INFERENCE',file:'inferencePlate'}
-];
+// Interactive Statechart Art & Fieldnotes: How LLMs Are Built
 ---
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
- <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
- <title>Before the answer · How a language model is made</title>
- <meta name="description" content="A visual journey through how LLMs are built. Follow text into tokens, attention, training, post-training, and the first answer."/>
- <link rel="canonical" href="https://praneeth16.github.io/blog/how-llms-are-built/"/>
- <link rel="icon" href="/favicon.svg"/><meta name="theme-color" content="#f7f5ed"/>
- <meta property="og:title" content="Before the answer"/><meta property="og:description" content="How a language model is made, told in moving drawings."/><meta property="og:type" content="article"/>
- <meta property="og:url" content="https://praneeth16.github.io/blog/how-llms-are-built/"/><meta property="og:image" content="https://praneeth16.github.io/llm/visual-og.png"/><meta name="twitter:card" content="summary_large_image"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="An interactive visual story of LLM construction: a branching statechart, a rotating transformer cutaway, and place, time and scale views." />
+<link rel="canonical" href="https://praneeth16.github.io/blog/how-llms-are-built/" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="From Bytes to Thought: How LLMs Are Built" />
+<meta property="og:description" content="Explore a branching statechart, a rotating transformer cutaway, and place, time and scale views." />
+<meta property="og:url" content="https://praneeth16.github.io/blog/how-llms-are-built/" />
+<link rel="icon" href="/favicon.svg" />
+<title>From Bytes to Thought · How LLMs Are Built (Statechart Art &amp; Fieldnotes)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+<style is:inline>
+  :root {
+    --bg-paper: #efe6d1;
+    --bg-paper-deep: #e4d6b8;
+    --bg-card: #f7f1e3;
+    --ink: #221f1b;
+    --ink-soft: #575046;
+    --ink-faint: #857b6c;
+    --pencil: #3a352f;
+    --gel-gold: #f0c86a;
+    --gel-red: #d9383a;
+    --gel-teal: #2b7a78;
+    --gel-cobalt: #2e5eaa;
+    --gel-mint: #3c8d6d;
+    --rule-line: rgba(58, 53, 47, 0.16);
+    --spot-glow: rgba(240, 200, 106, 0.95);
+    --font-hand: 'Architects Daughter', 'Comic Sans MS', cursive, sans-serif;
+    --font-serif: 'Newsreader', Georgia, serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-paper);
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 17px;
+    line-height: 1.55;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Subtle SVG paper grain overlay across entire page */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.22;
+    background-image: radial-gradient(rgba(34,31,27,0.09) 1px, transparent 0),
+                      radial-gradient(rgba(120,95,55,0.07) 1px, transparent 0);
+    background-size: 18px 18px, 29px 29px;
+    background-position: 0 0, 9px 11px;
+  }
+
+  /* Top breadcrumb & attribution bar */
+  .topbar {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 18px 24px 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 1.5px solid var(--rule-line);
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+  .topbar a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  .topbar a:hover {
+    color: var(--gel-red);
+  }
+  .topbar-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  .badge-pill {
+    background: rgba(34, 31, 27, 0.06);
+    border: 1px solid rgba(34, 31, 27, 0.18);
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-size: 11.5px;
+    font-family: var(--font-mono);
+  }
+
+  /* Header section */
+  .hero {
+    max-width: 1060px;
+    margin: 0 auto;
+    padding: 36px 24px 22px;
+    text-align: center;
+  }
+  .hero-eyebrow {
+    font-family: var(--font-hand);
+    font-size: 18px;
+    letter-spacing: 0.04em;
+    color: var(--gel-red);
+    margin-bottom: 6px;
+  }
+  .hero h1 {
+    font-family: var(--font-hand);
+    font-size: clamp(2.3rem, 5vw, 3.8rem);
+    font-weight: 400;
+    line-height: 1.08;
+    margin: 0 0 14px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .hero-sub {
+    max-width: 740px;
+    margin: 0 auto 18px;
+    font-size: 1.14rem;
+    color: var(--ink-soft);
+  }
+  .hero-credits {
+    max-width: 780px;
+    margin: 0 auto 24px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 1.65;
+    color: var(--ink-faint);
+    background: rgba(255, 252, 244, 0.65);
+    border: 1px dashed rgba(58, 53, 47, 0.25);
+    border-radius: 10px;
+    padding: 10px 16px;
+  }
+  .hero-credits a {
+    color: var(--ink-soft);
+  }
+
+  /* Primary Perspective Switcher (Fieldnotes + Statechart-Art + Colorfigures) */
+  .mode-nav-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 90;
+    background: rgba(239, 230, 209, 0.93);
+    backdrop-filter: blur(8px);
+    border-top: 1.5px solid var(--rule-line);
+    border-bottom: 1.5px solid var(--rule-line);
+    padding: 10px 16px;
+  }
+  .mode-nav {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .mode-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .mode-tab {
+    appearance: none;
+    border: 1.5px solid rgba(34, 31, 27, 0.25);
+    background: var(--bg-card);
+    color: var(--ink);
+    font-family: var(--font-hand);
+    font-size: 15px;
+    padding: 7px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    transition: transform 0.12s ease, background 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 2px 2px 0 rgba(34, 31, 27, 0.12);
+  }
+  .mode-tab:hover {
+    transform: translateY(-1px);
+    background: #fffdf7;
+  }
+  .mode-tab.active {
+    background: var(--ink);
+    color: #fbf7ec;
+    border-color: var(--ink);
+    box-shadow: 2px 2px 0 var(--gel-gold);
+  }
+  .mode-tab .tab-sub {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    opacity: 0.78;
+  }
+
+  /* Quick Stepper Launch Bar */
+  .quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-hand {
+    appearance: none;
+    border: 1.5px solid var(--ink);
+    background: var(--gel-gold);
+    color: var(--ink);
+    font-family: var(--font-hand);
+    font-size: 15px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 2px 2px 0 var(--ink);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+  .btn-hand:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .btn-hand:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 var(--ink);
+  }
+  .btn-hand.secondary {
+    background: var(--bg-card);
+  }
+  .btn-hand.bug-btn {
+    background: #ffecee;
+    border-color: var(--gel-red);
+    color: #9e1c20;
+    box-shadow: 2px 2px 0 var(--gel-red);
+    font-size: 13.5px;
+  }
+
+  /* Main View Containers */
+  .view-section {
+    display: none;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 24px 20px 160px;
+  }
+  .view-section.active {
+    display: block;
+  }
+
+  /* ==========================================================================
+     VIEW 1: THE STATECHART WALL ("One becomes two" / Pele + oav Paper Tiles)
+     ========================================================================== */
+  .wall-intro {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 18px;
+    padding: 12px 18px;
+    background: rgba(255, 252, 244, 0.72);
+    border: 1.5px solid rgba(34, 31, 27, 0.18);
+    border-radius: 12px;
+  }
+  .wall-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .legend-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    border: 1.5px solid var(--ink);
+  }
+
+  /* The Wall container with SVG route overlay */
+  .wall-stage {
+    position: relative;
+    background: #23201c;
+    border: 3px solid #181512;
+    border-radius: 18px;
+    padding: 28px 22px 36px;
+    box-shadow: 0 18px 44px rgba(24, 21, 18, 0.25);
+    overflow: hidden;
+  }
+  /* Cork / dark studio board texture */
+  .wall-stage::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255,245,220,0.06) 1px, transparent 0);
+    background-size: 14px 14px;
+    pointer-events: none;
+  }
+
+  .phase-banner {
+    position: relative;
+    z-index: 3;
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 12px;
+    margin-top: 10px;
+    border-bottom: 1px dashed rgba(240, 200, 106, 0.35);
+    color: #f5ebd6;
+  }
+  .phase-banner:first-of-type {
+    margin-top: 0;
+  }
+  .phase-title {
+    font-family: var(--font-hand);
+    font-size: 1.35rem;
+    color: var(--gel-gold);
+    letter-spacing: 0.02em;
+  }
+  .phase-meta {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: rgba(245, 235, 214, 0.72);
+  }
+
+  .wall-grid {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(230px, 1fr));
+    gap: 28px 24px;
+  }
+  @media (max-width: 1100px) {
+    .wall-grid {
+      grid-template-columns: repeat(2, minmax(240px, 1fr));
+    }
+  }
+  @media (max-width: 640px) {
+    .wall-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Individual Paper Plate on the Wall */
+  .plate {
+    position: relative;
+    border-radius: 10px;
+    padding: 12px 12px 14px;
+    cursor: pointer;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.38), inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    user-select: none;
+  }
+  .plate:hover {
+    transform: translateY(-3px) rotate(-0.3deg);
+  }
+  .plate.active-state {
+    box-shadow: 0 0 0 3.5px var(--spot-glow), 0 0 28px rgba(240, 200, 106, 0.75), 0 10px 26px rgba(0,0,0,0.5);
+    z-index: 6;
+  }
+  .plate.visited-state {
+    box-shadow: 0 0 0 2px rgba(240, 200, 106, 0.55), 0 8px 20px rgba(0,0,0,0.38);
+  }
+  .plate.breaks-rule {
+    border: 2px dashed #ff6b6b;
+  }
+  .plate.breaks-rule.active-state {
+    box-shadow: 0 0 0 4px #ff4d4d, 0 0 32px rgba(255, 77, 77, 0.85);
+  }
+
+  /* Masking tape pin at top of each paper tile */
+  .plate-pin {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-1.5deg);
+    width: 58px;
+    height: 15px;
+    background: rgba(245, 232, 199, 0.72);
+    border: 1px solid rgba(120, 100, 65, 0.3);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    border-radius: 2px;
+    pointer-events: none;
+  }
+
+  .plate-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .plate-id {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.28);
+    color: #fff8ea;
+  }
+  .plate-tag {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    padding: 2px 7px;
+    border-radius: 99px;
+    background: rgba(255, 255, 255, 0.18);
+    color: inherit;
+  }
+  .plate.breaks-rule .plate-tag {
+    background: #e72e3b;
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .plate-canvas-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: 7px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    margin-bottom: 9px;
+    background: rgba(0, 0, 0, 0.12);
+  }
+  .plate-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .plate-title {
+    font-family: var(--font-hand);
+    font-size: 1.15rem;
+    line-height: 1.22;
+    margin: 0 0 4px;
+    font-weight: 400;
+  }
+  .plate-caption {
+    font-size: 0.84rem;
+    line-height: 1.38;
+    opacity: 0.9;
+    margin: 0 0 8px;
+  }
+  .plate-steps-out {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: auto;
+    padding-top: 6px;
+    border-top: 1px dotted rgba(255,255,255,0.22);
+  }
+  .step-chip {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.25);
+    color: #f8f1df;
+    border: 1px solid rgba(255,255,255,0.14);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .step-chip:hover {
+    background: rgba(240, 200, 106, 0.35);
+    border-color: var(--gel-gold);
+  }
+  .step-chip.bug-chip {
+    background: rgba(231, 46, 59, 0.35);
+    border-color: #ff8088;
+    color: #ffe5e7;
+  }
+
+  /* SVG Route Overlay for Pele Edges & Cosine-Eased Token Traversal */
+  .step-marks {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 4;
+  }
+  /* Spotlight box that glides smoothly over active state */
+  .step-spot {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    border-radius: 12px;
+    box-shadow: 0 0 0 3.5px rgba(240, 200, 106, 0.96), 0 0 28px rgba(240, 200, 106, 0.72);
+    transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+                width 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+                height 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 0.25s ease;
+    z-index: 5;
+    opacity: 0;
+  }
+  .step-spot.visible {
+    opacity: 1;
+  }
+  .step-spot.bug-spot {
+    box-shadow: 0 0 0 3.5px rgba(231, 46, 59, 0.96), 0 0 30px rgba(231, 46, 59, 0.8);
+  }
+
+  /* ==========================================================================
+     FIXED BOTTOM STEPPER PANEL (One Becomes Two .stepper + Circular .scope)
+     ========================================================================== */
+  .stepper {
+    position: fixed;
+    left: 50%;
+    bottom: 14px;
+    transform: translateX(-50%);
+    width: min(1140px, calc(100vw - 24px));
+    background: #1d1a16;
+    color: #f6efe0;
+    border: 2px solid #4a4237;
+    border-radius: 18px;
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(240, 200, 106, 0.22);
+    z-index: 120;
+    padding: 14px 18px;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+  }
+  .stepper { max-height: calc(100dvh - 28px); overflow-y: auto; }
+  @media(max-width:720px) { .stepper { max-height:68dvh; } }
+  .stepper.minimized { transform: translateX(-50%); padding: 10px 14px; }
+  .stepper.minimized .scope-wrap, .stepper.minimized .stepper-main > :not(.stepper-header-row) { display: none; }
+  .stepper.minimized .stepper-top { grid-template-columns: 1fr; }
+  .stepper.perspective-hidden { display: none; }
+  .stepper-top {
+    display: grid;
+    grid-template-columns: 168px 1fr;
+    gap: 18px;
+    align-items: center;
+  }
+  @media (max-width: 720px) {
+    .stepper-top {
+      grid-template-columns: 110px 1fr;
+      gap: 12px;
+    }
+  }
+
+  /* Circular Hand-Drawn Scope Canvas */
+  .scope-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .scope {
+    position: relative;
+    width: 156px;
+    height: 156px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--gel-gold);
+    box-shadow: 0 0 22px rgba(240, 200, 106, 0.35), inset 0 0 18px rgba(0,0,0,0.45);
+    background: #141210;
+  }
+  @media (max-width: 720px) {
+    .scope {
+      width: 104px;
+      height: 104px;
+    }
+  }
+  .scope canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .scope-wobble-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: rgba(246, 239, 224, 0.65);
+  }
+
+  .stepper-main {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .stepper-header-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .stepper-state-title {
+    font-family: var(--font-hand);
+    font-size: 1.45rem;
+    color: var(--gel-gold);
+    margin: 0;
+  }
+  .stepper-state-title.bug-title {
+    color: #ff7b82;
+  }
+  .stepper-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .step-ctrl-btn {
+    appearance: none;
+    background: #2c2721;
+    color: #f6efe0;
+    border: 1px solid #574e42;
+    border-radius: 7px;
+    padding: 5px 11px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .step-ctrl-btn:hover:not(:disabled) {
+    background: #3d362d;
+    border-color: var(--gel-gold);
+  }
+  .step-ctrl-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .step-ctrl-btn.playing {
+    background: var(--gel-gold);
+    color: #181512;
+    border-color: var(--gel-gold);
+    font-weight: 600;
+  }
+
+  .stepper-desc {
+    font-size: 0.96rem;
+    line-height: 1.45;
+    color: #e6decb;
+    margin: 0;
+  }
+
+  /* Live Parameter Probe inside Stepper */
+  .scope-probe-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+  }
+  .probe-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    padding: 2px 8px;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #f6efe0;
+  }
+  .probe-toggle.broken {
+    background: rgba(231, 46, 59, 0.32);
+    border-color: #ff6b6b;
+    color: #ffd6d9;
+  }
+
+  /* Branching Next Step Choices */
+  .stepper-choices-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: rgba(246, 239, 224, 0.6);
+  }
+  .stepper-choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+  .choice-btn {
+    appearance: none;
+    background: #2d3830;
+    color: #e9f5ec;
+    border: 1.5px solid #598c68;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-family: var(--font-hand);
+    font-size: 14.5px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.12s ease, background 0.15s ease;
+  }
+  .choice-btn:hover {
+    transform: translateY(-1px);
+    background: #394a3e;
+    border-color: var(--gel-gold);
+  }
+  .choice-btn.bug-choice {
+    background: #3d2023;
+    color: #ffdce0;
+    border-color: #d9383a;
+  }
+  .choice-btn.bug-choice:hover {
+    background: #54272b;
+  }
+
+  /* Collapsible "The path so far" drawer */
+  .path-drawer {
+    margin-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    padding-top: 6px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  .path-drawer summary {
+    cursor: pointer;
+    color: var(--gel-gold);
+    user-select: none;
+  }
+  .path-trail {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    max-height: 76px;
+    overflow-y: auto;
+  }
+  .path-crumb {
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.09);
+    color: #f6efe0;
+    cursor: pointer;
+  }
+  .path-crumb.bug-crumb {
+    background: rgba(231, 46, 59, 0.35);
+    color: #ffd2d6;
+  }
+
+  /* ==========================================================================
+     VIEW 2: COLORFIGURES 3D ISOMETRIC SEE-THROUGH TRANSFORMER & GPU POD
+     ========================================================================== */
+  .colorfig-shell {
+    background: #f6efe0;
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 6px 6px 0 rgba(34, 31, 27, 0.16);
+  }
+  .colorfig-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1.5px dashed var(--rule-line);
+  }
+  .colorfig-stage-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 20px;
+    align-items: start;
+  }
+  @media (max-width: 960px) {
+    .colorfig-stage-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .iso-canvas-box {
+    position: relative;
+    background: #efe5ce;
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+    cursor: grab;
+  }
+  .iso-canvas-box:active {
+    cursor: grabbing;
+  }
+  .iso-canvas-box canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .iso-overlay-hint {
+    position: absolute;
+    top: 12px;
+    left: 14px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    background: rgba(255, 252, 245, 0.86);
+    border: 1px solid rgba(34,31,27,0.25);
+    padding: 4px 10px;
+    border-radius: 99px;
+    pointer-events: none;
+  }
+  .colorfig-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background: var(--bg-card);
+    border: 1.5px solid rgba(34,31,27,0.25);
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .swatch-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .color-swatch {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--ink);
+    cursor: pointer;
+    transition: transform 0.12s;
+  }
+  .color-swatch.active {
+    transform: scale(1.18);
+    box-shadow: 0 0 0 3px var(--gel-gold);
+  }
+  .part-badge-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .part-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 7px;
+    background: rgba(34,31,27,0.05);
+    border: 1px solid rgba(34,31,27,0.14);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .part-badge.active {
+    background: var(--gel-gold);
+    border-color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* ==========================================================================
+     VIEW 3: FIELDNOTES PLACE (SPATIAL CROSS-SECTION OF THE 4 WORLDS)
+     ========================================================================== */
+  .place-shell {
+    background: #f4ead2;
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 6px 6px 0 rgba(34, 31, 27, 0.15);
+  }
+  .place-canvas-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    min-height: 420px;
+    background: #e9dbb9;
+    border: 2px solid var(--ink);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .place-canvas-wrap canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    cursor: pointer;
+  }
+  .place-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 900px) {
+    .place-cards {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  .place-card {
+    background: var(--bg-card);
+    border: 1.5px solid rgba(34,31,27,0.22);
+    border-radius: 10px;
+    padding: 12px;
+    cursor: pointer;
+    transition: transform 0.15s, border-color 0.15s;
+  }
+  .place-card.active {
+    border-color: var(--ink);
+    background: #fffdf7;
+    box-shadow: 3px 3px 0 var(--gel-gold);
+  }
+
+  /* ==========================================================================
+     VIEW 4: FIELDNOTES TIME & SCALE (13 ORDERS OF MAGNITUDE + CHINCHILLA SLIDER)
+     ========================================================================== */
+  .time-shell {
+    background: #f6efe0;
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 6px 6px 0 rgba(34, 31, 27, 0.15);
+  }
+  .time-tape-canvas-wrap {
+    width: 100%;
+    height: 290px;
+    background: #ede1c5;
+    border: 2px solid var(--ink);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 14px 0 20px;
+  }
+  .time-tape-canvas-wrap canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .scaling-calc-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 16px;
+  }
+  @media (max-width: 820px) {
+    .scaling-calc-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .calc-card {
+    background: var(--bg-card);
+    border: 1.5px solid rgba(34,31,27,0.24);
+    border-radius: 10px;
+    padding: 14px;
+  }
+
+  /* ==========================================================================
+     VIEW 5: READ THE CHART AS TEXT + TLA+ SPEC & TLC COUNTEREXAMPLES
+     ========================================================================== */
+  .text-spec-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 960px) {
+    .text-spec-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .spec-box {
+    background: var(--bg-card);
+    border: 1.5px solid rgba(34,31,27,0.25);
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+  .spec-box h3 {
+    font-family: var(--font-hand);
+    font-size: 1.4rem;
+    margin: 0 0 10px;
+  }
+  pre.code-block {
+    background: #1d1a16;
+    color: #f4ead2;
+    padding: 14px;
+    border-radius: 10px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.5;
+    overflow-x: auto;
+    margin: 0;
+  }
+  .state-text-list {
+    font-size: 0.95rem;
+  }
+  .state-text-item {
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed var(--rule-line);
+  }
+  .state-text-item strong {
+    font-family: var(--font-hand);
+    font-size: 1.1rem;
+  }
+  .transition-line {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-left: 12px;
+  }
+  .transition-line.bug {
+    color: var(--gel-red);
+    font-weight: 600;
+  }
+</style>
 </head>
 <body>
- <a class="skip" href="#material">Skip to the drawings</a>
- <header class="visual-mast"><a href="/">Praneeth Paikray <span>/ visual stories</span></a><div><a href="/blog/how-llms-are-built/notebook/">The working notebook ↗</a><button type="button" id="visual-motion" aria-pressed="false">Pause motion</button></div></header>
- <main>
-  <section class="visual-cover" id="beginning" data-scene="0" aria-labelledby="visual-title">
-   <div class="cover-type"><p class="kicker">HOW A LANGUAGE MODEL IS MADE</p><h1 id="visual-title">Before the <em>answer.</em></h1><p class="cover-deck">Text goes in. A long apprenticeship follows.</p><a class="start-story" href="#material">Follow the sentence <span>↓</span></a></div>
-   <div class="opening-art" set:html={opening()}></div>
-   <div class="visual-legend"><span><i class="blue-dot"></i> Information flows</span><span><i class="orange-dot"></i> Feedback & control</span><span>8 scenes · Scroll or step through</span></div>
-  </section>
-  <div class="frames">
-   {frames.map((frame,i)=><section class:list={['visual-frame',frame.dark&&'dark-frame']} id={frame.id} data-scene={i+1} aria-labelledby={'title-'+frame.id}>
-    <header class="frame-title"><p class="kicker">{frame.part}</p><h2 id={'title-'+frame.id}>{frame.title}</h2></header>
-    <figure><div class="drawing"><div set:html={frame.art}></div><button type="button" class="art-enlarge" data-enlarge={frame.file} data-label={frame.title} aria-label={'Enlarge drawing: '+frame.title}>↗</button></div><figcaption>{frame.caption}</figcaption></figure>
-    {frame.id==='attention'&&<div class="scene-control attention-control"><span>Choose a query</span><div class="word-controls" aria-label="Attention query">{['The','small','bird','can','fly'].map((word,j)=><button type="button" data-visual-query={j} aria-pressed={j===4?'true':'false'}>{word}</button>)}</div><output id="visual-attention-status" aria-live="polite">“fly” can attend to all five positions.</output></div>}
-    {frame.id==='training'&&<div class="scene-control training-control"><button type="button" id="visual-train">Train one step →</button><button type="button" id="visual-train-reset" class="quiet">Reset ↺</button><output id="visual-train-status" aria-live="polite">Update 0 · Live three-logit toy</output></div>}
-    {frame.id==='checkpoint'&&<div class="scene-control gate-control"><button type="button" id="visual-gate" aria-pressed="false">Fail a required check ↺</button><output id="visual-gate-status" aria-live="polite">Illustrative gate: required checks pass.</output></div>}
-    {frame.id==='answer'&&<div class="scene-control inference-control"><div class="generated-ribbon" id="visual-context" aria-live="polite">The sky is</div><div class="decode-controls"><button type="button" id="visual-decode">Process the prompt →</button><button type="button" id="visual-decode-reset" class="quiet">Reset ↺</button><label for="visual-temperature">Temperature <output id="visual-temperature-value">0.8</output><input id="visual-temperature" type="range" min="0" max="2" step="0.1" value="0.8"/></label></div><output id="visual-decode-status" aria-live="polite">0 cached positions · 0 weight updates</output></div>}
-   </section>)}
+
+<!-- Top Attribution & Navigation Bar -->
+<header class="topbar">
+  <div>
+    <strong><a href="/">praneeth16.github.io</a></strong> / <a href="#top" id="reset-home-link">blog / how-llms-are-built</a>
   </div>
-  <section class="visual-end"><p class="kicker">THE END OF THE APPRENTICESHIP. THE START OF A REQUEST.</p><h2>Now you see<br/><em>what came before.</em></h2><a href="/blog/how-llms-are-built/notebook/">Open the working notebook <span>↗</span></a><p>Equations, experiments, sources, and the checked lifecycle.</p></section>
-  <details id="visual-notes" class="visual-notes"><summary>Notes, sources & credits</summary><div><p>A common text-only, dense decoder recipe. Real pipelines vary. The drawings simplify dimensions and sequence boundaries. Interactive values are computed teaching examples, not measurements of a real LLM.</p><p>The attention panel uses invented Q, K, V vectors. The training panel updates three logits directly. The decoding panel uses scripted logits with real softmax sampling. The cluster depicts data parallelism. Pre-normalized blocks also have final normalization and a vocabulary projection.</p><p><a href="/blog/how-llms-are-built/notebook/#sources">Research sources</a> · <a href="/llm/Lifecycle.tla">TLA+ lifecycle</a> · <a href="/llm/lifecycle-report.md">TLC report</a> · <a href="https://github.com/Praneeth16/Praneeth16.github.io/blob/main/src/lib/llm-plates.mjs">Drawing source</a></p><p>Original drawings and visual design by Praneeth Paikray. Inspired by the visual storytelling of Kevin T. Ngo’s <a href="https://kevintngo.github.io/statechart-art/one-becomes-two/">One becomes two</a>. Built with <a href="https://github.com/cursor/plugins/tree/main/pstack">Poteto’s pstack</a> guidance. The 36-state abstract lifecycle was checked with TLC; this does not prove an LLM correct or safe.</p></div></details>
- </main>
- <dialog id="drawing-detail" aria-labelledby="drawing-detail-title"><div class="dialog-head"><h2 id="drawing-detail-title">Inspect the drawing</h2><button type="button" id="drawing-close">Close ×</button></div><p>Scroll across the base illustration to inspect its labels.</p><div class="dialog-drawing"><img id="drawing-large" src="/llm/plates/corpus.svg" alt="Enlarged base illustration" width="1000" height="690"/></div></dialog>
- <nav class="story-player" aria-label="Step through the visual story"><button type="button" id="visual-prev" aria-label="Previous scene" disabled>←</button><div class="player-track"><span id="visual-scene-number">00 / 08</span><span id="visual-scene-name">Before the answer</span><div class="player-line"><i id="visual-progress"></i></div></div><button type="button" id="visual-play" aria-pressed="false">Play</button><button type="button" id="visual-next" aria-label="Next scene">→</button></nav>
- <footer class="visual-footer"><a href="/">← More from Praneeth</a><span>1 November 2026</span><a href="#beginning">Back to the start ↑</a></footer>
- <noscript><p class="no-script">Scroll to read the drawings. JavaScript adds motion controls and numerical experiments.</p></noscript>
- <script is:inline type="module" src="/llm/visual-story.mjs"></script>
+  <div class="topbar-badges">
+    <span class="badge-pill">Charted with <strong>/statechart</strong> (@poteto / pstack)</span>
+    <span class="badge-pill">TLC-checked abstract graph · 16 states, 22 steps</span>
+    <span class="badge-pill">Simulated Pencil, Pastel &amp; Gel Pen + Isometric See-Through</span>
+  </div>
+</header>
+
+<!-- Hero Title & Story Framing -->
+<section class="hero" id="top">
+  <div class="hero-eyebrow">A statechart, field guide &amp; see-through machine</div>
+  <h1>From Bytes to Thought: How LLMs Are Built</h1>
+  <p class="hero-sub">
+    An illustrative LLM build recipe, drawn across sixteen hand-inked paper plates.
+    Explore the steps, look inside the machine, and follow deliberately modelled failure paths. Sizes, timings and hyperparameters are teaching examples, not a benchmark.
+  </p>
+  <div class="hero-credits">
+    The abstract transition graph is modelled in <strong>TLA+</strong> and checked by <strong>TLC</strong> using the
+    <a href="https://github.com/cursor/plugins/tree/main/pstack" target="_blank" rel="noopener">/statechart skill in pstack</a> by @poteto.
+    Drawn in JavaScript with simulated pencil, pastel and gel pen. Inspired by
+    <a href="https://kevintngo.github.io/statechart-art/one-becomes-two/" target="_blank" rel="noopener">One becomes two</a> (<a href="https://github.com/kevintngo/statechart-art" target="_blank" rel="noopener">statechart-art</a>),
+    with multi-angle perspectives inspired by April Zhu's
+    <a href="https://april-zhu.com/fieldnotes" target="_blank" rel="noopener">Fieldnotes</a> and
+    <a href="https://april-zhu.com/colorfigures" target="_blank" rel="noopener">Colorfigures</a>.
+  </div>
+</section>
+
+<!-- Sticky Perspective Switcher & Tour Controls -->
+<nav class="mode-nav-wrap" aria-label="Story perspectives and guided tours">
+  <div class="mode-nav">
+    <div class="mode-tabs" role="tablist">
+      <button class="mode-tab active" data-view="view-chart" role="tab" aria-selected="true">
+        <span>1. Chart</span> <span class="tab-sub">(every step · 16 plates)</span>
+      </button>
+      <button class="mode-tab" data-view="view-machine" role="tab" aria-selected="false">
+        <span>2. Machine</span> <span class="tab-sub">(360° see-through transformer)</span>
+      </button>
+      <button class="mode-tab" data-view="view-place" role="tab" aria-selected="false">
+        <span>3. Place</span> <span class="tab-sub">(where it happens)</span>
+      </button>
+      <button class="mode-tab" data-view="view-time" role="tab" aria-selected="false">
+        <span>4. Time &amp; Scale</span> <span class="tab-sub">(12 ns to 90 days)</span>
+      </button>
+      <button class="mode-tab" data-view="view-spec" role="tab" aria-selected="false">
+        <span>5. TLA+ &amp; Text</span> <span class="tab-sub">(model &amp; limits)</span>
+      </button>
+    </div>
+
+    <div class="quick-actions">
+      <button class="btn-hand" id="btn-start-stepper">▶ Step through the chart</button>
+      <button class="btn-hand bug-btn" id="btn-tour-mask">⚡ TLC Bug 1: Mask Leak</button>
+      <button class="btn-hand bug-btn" id="btn-tour-nan">⚡ TLC Bug 2: FP16 NaN Spike</button>
+      <button class="btn-hand bug-btn" id="btn-tour-reward">⚡ TLC Bug 3: Reward Hack</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ==========================================================================
+     PERSPECTIVE 1: THE INTERACTIVE STATECHART WALL (16 HAND-DRAWN PLATES)
+     ========================================================================== -->
+<main id="view-chart" class="view-section active">
+  <div class="wall-intro">
+    <div>
+      <strong>Click any plate on the wall</strong> to inspect its animated microscope scope, tweak live hyperparameters, and follow arrows step by step.
+    </div>
+    <div class="wall-legend">
+      <span class="legend-item"><span class="legend-swatch" style="background:#f0c86a;"></span> Active state spotlight</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:#598c68;"></span> Healthy transition path</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:#e72e3b;"></span> Breaks invariant (TLC counterexample path)</span>
+    </div>
+  </div>
+
+  <div class="wall-stage" id="wall-stage">
+    <!-- SVG Route Overlay for Pele Edges & Moving Token -->
+    <svg class="step-marks" id="step-marks" aria-hidden="true">
+      <defs>
+        <marker id="arrow-gold" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#f0c86a" />
+        </marker>
+        <marker id="arrow-red" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#ff5a64" />
+        </marker>
+      </defs>
+      <g id="static-edges-group"></g>
+      <path id="step-route-bg" fill="none" stroke="rgba(240,200,106,0.22)" stroke-width="4" stroke-linecap="round" />
+      <path id="step-route" fill="none" stroke="#f0c86a" stroke-width="3.5" stroke-linecap="round" marker-end="url(#arrow-gold)" />
+      <circle id="step-token" r="6.5" fill="#f0c86a" stroke="#181512" stroke-width="2" opacity="0" />
+    </svg>
+
+    <!-- Glowing Active State Spotlight -->
+    <div class="step-spot" id="step-spot"></div>
+
+    <!-- Wall Grid Populated by JS from Formal Statechart Model -->
+    <div class="wall-grid" id="wall-grid"></div>
+  </div>
+</main>
+
+<!-- ==========================================================================
+     PERSPECTIVE 2: COLORFIGURES 360° ISOMETRIC SEE-THROUGH TRANSFORMER & POD
+     ========================================================================== -->
+<section id="view-machine" class="view-section">
+  <div class="colorfig-shell">
+    <div class="colorfig-top">
+      <div>
+        <h2 style="font-family:var(--font-hand);font-size:1.85rem;margin:0;">Fig. 01 — The Transformer Block &amp; Example H100 Pod</h2>
+        <p style="margin:4px 0 0;color:var(--ink-soft);font-size:0.95rem;">
+          Drag anywhere on the drawing to turn it 360°. Flip <strong>See-through</strong> to watch tokens, Q·K·V attention heads, MoE experts, and NVLink gradients move inside.
+        </p>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <button class="btn-hand" id="iso-btn-seethrough">See-through: ON</button>
+        <button class="btn-hand secondary" id="iso-btn-labels">Labels: ON</button>
+        <button class="btn-hand secondary" id="iso-btn-turntable">Turntable: Auto-spin</button>
+      </div>
+    </div>
+
+    <div class="colorfig-stage-grid">
+      <div class="iso-canvas-box" id="iso-canvas-box">
+        <canvas id="iso-canvas" width="920" height="575"></canvas>
+        <div class="iso-overlay-hint" id="iso-status-pill">
+          Drag to rotate · Angle: <span id="iso-angle-readout">34°</span> · Mode: <span id="iso-mode-readout">Forward Pass</span>
+        </div>
+      </div>
+
+      <div class="colorfig-panel">
+        <div>
+          <strong style="font-family:var(--font-hand);font-size:1.2rem;">Press things on the machine</strong>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
+            <button class="btn-hand" id="mach-act-prompt">1. Feed Prompt</button>
+            <button class="btn-hand secondary" id="mach-act-attn">2. Score Q·Kᵀ/√d</button>
+            <button class="btn-hand secondary" id="mach-act-moe">3. Route MoE Top-2</button>
+            <button class="btn-hand secondary" id="mach-act-grad">4. All-Reduce Grads</button>
+            <button class="btn-hand bug-btn" id="mach-act-spike">5. Inject FP16 Spike</button>
+            <button class="btn-hand secondary" id="mach-act-kv">6. Stream KV Cache</button>
+          </div>
+        </div>
+
+        <div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:12px;margin-bottom:6px;">
+            <span>Hand-drawn wobble</span>
+            <span id="wobble-val-label">1.0×</span>
+          </div>
+          <input type="range" id="iso-wobble-slider" aria-label="Drawing wobble" min="0" max="2.5" step="0.1" value="1.0" style="width:100%;accent-color:var(--ink);" />
+        </div>
+
+        <div>
+          <div style="font-family:var(--font-mono);font-size:12px;margin-bottom:6px;">Body colour swatch</div>
+          <div class="swatch-row" id="iso-swatches">
+            <button class="color-swatch active" data-swatch="terracotta" style="background:#c85a42;" title="Terracotta"></button>
+            <button class="color-swatch" data-swatch="mustard" style="background:#dca244;" title="Mustard"></button>
+            <button class="color-swatch" data-swatch="mint" style="background:#4c9a78;" title="Mint"></button>
+            <button class="color-swatch" data-swatch="cobalt" style="background:#3b66b0;" title="Cobalt"></button>
+            <button class="color-swatch" data-swatch="plum" style="background:#7a4972;" title="Plum"></button>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-family:var(--font-mono);font-size:12px;margin-bottom:6px;">Labelled internal parts (click to highlight)</div>
+          <div class="part-badge-list" id="iso-part-list">
+            <div class="part-badge active" data-part="1"><strong>1</strong> BPE Tokenizer &amp; Embedding Table (V=128,256)</div>
+            <div class="part-badge" data-part="2"><strong>2</strong> RoPE Rotary Phase Gears &amp; Causal Mask Gate</div>
+            <div class="part-badge" data-part="3"><strong>3</strong> Grouped-Query Attention (Q·Kᵀ/√dₖ Softmax Drum)</div>
+            <div class="part-badge" data-part="4"><strong>4</strong> SwiGLU / Top-2 MoE Sparse Expert Router</div>
+            <div class="part-badge" data-part="5"><strong>5</strong> NVLink 900 GB/s All-Reduce Ring &amp; Grad Clipper</div>
+            <div class="part-badge" data-part="6"><strong>6</strong> PagedAttention KV-Cache Memory Bank</div>
+          </div>
+        </div>
+
+        <div id="iso-part-explain" style="font-size:0.9rem;background:rgba(34,31,27,0.06);padding:10px 12px;border-radius:8px;border-left:3px solid var(--ink);">
+          <strong>Inside Part 1:</strong> Raw UTF-8 text is merged byte-by-byte into subword token IDs, then looked up as 4,096-dimensional vectors in the embedding matrix.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     PERSPECTIVE 3: FIELDNOTES PLACE (WHERE IT HAPPENS — 4 PHYSICAL WORLDS)
+     ========================================================================== -->
+<section id="view-place" class="view-section">
+  <div class="place-shell">
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:14px;">
+      <div>
+        <h2 style="font-family:var(--font-hand);font-size:1.85rem;margin:0;">Where an LLM Happens · Cross-Section of the Four Worlds</h2>
+        <p style="margin:4px 0 0;color:var(--ink-soft);font-size:0.95rem;">
+          Click any room or tap the engineers &amp; servers inside the drawing to inspect what happens at each physical site.
+        </p>
+      </div>
+      <div style="font-family:var(--font-mono);font-size:12px;color:var(--ink-soft);">
+        Active zone: <strong id="place-zone-label">I. The Web &amp; Corpus Foundry</strong>
+      </div>
+    </div>
+
+    <div class="place-canvas-wrap">
+      <canvas id="place-canvas" width="1160" height="620"></canvas>
+    </div>
+
+    <div class="place-cards" id="place-cards">
+      <div class="place-card active" data-zone="0">
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--gel-red);">WORLD I · PETABYTES</div>
+        <strong style="font-family:var(--font-hand);font-size:1.2rem;">The Corpus Foundry</strong>
+        <p style="margin:6px 0 0;font-size:0.88rem;color:var(--ink-soft);">
+          300B+ raw web pages pass through URL blocklists, MinHash LSH deduplication, language and quality classifiers, and BPE tokenization into 15T clean tokens.
+        </p>
+      </div>
+      <div class="place-card" data-zone="1">
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--gel-cobalt);">WORLD II · EXAMPLE CLUSTER</div>
+        <strong style="font-family:var(--font-hand);font-size:1.2rem;">The 16,384-GPU Cluster</strong>
+        <p style="margin:6px 0 0;font-size:0.88rem;color:var(--ink-soft);">
+          Illustrative H100-class racks connected via NVLink inside nodes and 400 Gb/s InfiniBand across pods, running 3D parallelism (TP×PP×FSDP).
+        </p>
+      </div>
+      <div class="place-card" data-zone="2">
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--gel-mint);">WORLD III · HUMAN + RL</div>
+        <strong style="font-family:var(--font-hand);font-size:1.2rem;">The Alignment Studio</strong>
+        <p style="margin:6px 0 0;font-size:0.88rem;color:var(--ink-soft);">
+          Researchers &amp; domain experts craft SFT conversations, score preference pairs, and run GRPO verifier rollouts with a KL-divergence leash (β=0.04).
+        </p>
+      </div>
+      <div class="place-card" data-zone="3">
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--ink);">WORLD IV · EXAMPLE SERVING</div>
+        <strong style="font-family:var(--font-hand);font-size:1.2rem;">The Serving Engine</strong>
+        <p style="margin:6px 0 0;font-size:0.88rem;color:var(--ink-soft);">
+          Prefill computes prompt KV blocks in parallel; decode streams tokens one by one using PagedAttention and speculative draft-and-verify.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     PERSPECTIVE 4: FIELDNOTES TIME & SCALE (LOGARITHMIC TAPE + CHINCHILLA LAB)
+     ========================================================================== -->
+<section id="view-time" class="view-section">
+  <div class="time-shell">
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;">
+      <div>
+        <h2 style="font-family:var(--font-hand);font-size:1.85rem;margin:0;">Illustrative Time &amp; Scale</h2>
+        <p style="margin:4px 0 0;color:var(--ink-soft);font-size:0.95rem;">
+          Drag the logarithmic time-scale scrubber from <strong>10 nanoseconds</strong> (a schematic hardware operation) to <strong>90 days</strong> (15 trillion tokens pre-trained).
+        </p>
+      </div>
+      <div style="font-family:var(--font-mono);font-size:13px;background:var(--bg-card);padding:6px 12px;border-radius:8px;border:1px solid rgba(34,31,27,0.2);">
+        Time cursor: <strong id="time-cursor-readout">420 ms (1 Global Batch Step)</strong>
+      </div>
+    </div>
+
+    <div style="margin-top:14px;">
+      <input type="range" id="time-log-slider" aria-label="Illustrative time scale" min="0" max="100" step="1" value="52" style="width:100%;accent-color:var(--ink);" />
+    </div>
+
+    <div class="time-tape-canvas-wrap">
+      <canvas id="time-canvas" width="1160" height="290"></canvas>
+    </div>
+
+    <h3 style="font-family:var(--font-hand);font-size:1.45rem;margin:18px 0 8px;">Interactive Chinchilla Compute-Optimal Scaling &amp; Memory Lab</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;background:var(--bg-card);padding:16px;border-radius:12px;border:1.5px solid rgba(34,31,27,0.2);">
+      <div>
+        <label style="font-family:var(--font-mono);font-size:12px;display:flex;justify-content:space-between;">
+          <span>Model Parameters (N):</span>
+          <strong id="calc-n-label">70 Billion</strong>
+        </label>
+        <input type="range" id="calc-n-slider" aria-label="Model parameters in billions" min="7" max="405" step="1" value="70" style="width:100%;margin-top:6px;accent-color:var(--ink);" />
+      </div>
+      <div>
+        <label style="font-family:var(--font-mono);font-size:12px;display:flex;justify-content:space-between;">
+          <span>Training Tokens (D):</span>
+          <strong id="calc-d-label">15.0 Trillion</strong>
+        </label>
+        <input type="range" id="calc-d-slider" aria-label="Training tokens in trillions" min="1" max="30" step="0.5" value="15" style="width:100%;margin-top:6px;accent-color:var(--ink);" />
+      </div>
+    </div>
+
+    <div class="scaling-calc-grid">
+      <div class="calc-card">
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--ink-faint);">PRE-TRAINING FLOPs (C ≈ 6·N·D)</div>
+        <div id="calc-flops-out" style="font-family:var(--font-hand);font-size:1.7rem;color:var(--ink);margin:4px 0;">6.30 × 10²⁴ FLOPs</div>
+        <div id="calc-days-out" style="font-family:var(--font-mono);font-size:12px;color:var(--ink-soft);">~20 days on 8,192 × H100 GPUs (45% MFU)</div>
+      </div>
+      <div class="calc-card">
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--ink-faint);">OPTIMIZER + WEIGHT MEMORY (BF16 + FP32 AdamW)</div>
+        <div id="calc-mem-out" style="font-family:var(--font-hand);font-size:1.7rem;color:var(--gel-cobalt);margin:4px 0;">1,120 GB VRAM</div>
+        <div id="calc-sharding-out" style="font-family:var(--font-mono);font-size:12px;color:var(--ink-soft);">16 B/param (2B weights + 2B grads + 12B Adam m,v,master)</div>
+      </div>
+      <div class="calc-card">
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--ink-faint);">HISTORICAL SCALING-FIT ILLUSTRATION L(N, D)</div>
+        <div id="calc-loss-out" style="font-family:var(--font-hand);font-size:1.7rem;color:var(--gel-mint);margin:4px 0;">1.912 nats / token</div>
+        <div id="calc-ratio-out" style="font-family:var(--font-mono);font-size:12px;color:var(--ink-soft);">Token/Param Ratio: 214× (Inference-optimal over-training)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     PERSPECTIVE 5: READ THE CHART AS TEXT + TLA+ MODEL & TLC INVARIANTS
+     ========================================================================== -->
+<section id="view-spec" class="view-section">
+  <div class="text-spec-grid">
+    <div class="spec-box">
+      <h3>What TLC Checked &amp; Found (16 abstract states, 22 transitions)</h3>
+      <p style="font-size:0.94rem;color:var(--ink-soft);margin-top:0;">TLC enumerated the declared graph. The three deliberately reachable failure states violate the predicates below; no deadlocks were found. This is a phase-only teaching abstraction. It does not model real tensors, numerical precision, rewards, synchronization protocols, or trained-model behavior. The toggles select scenarios; their labels do not prove real-world guarantees.</p>
+      <ul style="font-size:0.92rem;line-height:1.55;padding-left:20px;">
+        <li><strong>NoFutureTokenLeakage:</strong> The model reaches the missing-mask failure in 3 transitions. Causal masking prevents future target leakage in the illustrated next-token training setup.</li>
+        <li><strong>FiniteWeightsAndLoss:</strong> The injected non-finite failure is reachable in 6 transitions. Clipping finite gradients is useful, but does not repair NaN/Inf values or guarantee numerical stability.</li>
+        <li><strong>NoRewardExploit:</strong> The reward-exploitation failure is reachable in 9 transitions. KL regularization discourages drift; it does not guarantee grounding, calibration or alignment.</li>
+      </ul>
+      <p style="font-size:0.88rem;"><a href="/llm/argon-model/report.md">TLC report</a> · <a href="/llm/argon-model/LLMBuild.tla">Executable model</a> · <a href="/llm/argon-model/LLMBuild.cfg">TLC configuration</a> · <a href="/llm/argon-model/chart.svg">Pele-rendered graph</a></p>
+      <p style="font-size:0.88rem;color:var(--ink-soft);">Technical references: <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.utils.clip_grad_norm_.html">PyTorch gradient clipping</a> · <a href="https://arxiv.org/abs/2501.12948">DeepSeek-R1</a> · <a href="https://arxiv.org/abs/2309.06180">PagedAttention</a> · <a href="/blog/how-llms-are-built/notebook/#sources">Further research sources</a>. Hardware sizes and timings are illustrative assumptions; the Chinchilla fit is not a forecast of a modern model's measured loss.</p>
+
+      <h3>Read the Chart as Text (Every State &amp; Outgoing Step)</h3>
+      <div class="state-text-list" id="state-text-list"></div>
+    </div>
+
+    <div class="spec-box">
+      <h3>1. The Formal Model in TLA+ (<code>LLMBuild.tla</code>)</h3>
+      <pre class="code-block" is:raw>---- MODULE LLMBuild ----
+EXTENDS Naturals
+VARIABLE phase
+vars == &lt;&lt;phase&gt;&gt;
+Init == phase = &quot;s0&quot;
+Moves0Tos1 == /\ phase = &quot;s0&quot; /\ phase&#x27; = &quot;s1&quot;
+Moves0Tos2 == /\ phase = &quot;s0&quot; /\ phase&#x27; = &quot;s2&quot;
+Moves1Tos2 == /\ phase = &quot;s1&quot; /\ phase&#x27; = &quot;s2&quot;
+Moves2Tos3 == /\ phase = &quot;s2&quot; /\ phase&#x27; = &quot;s3&quot;
+Moves3Tos4 == /\ phase = &quot;s3&quot; /\ phase&#x27; = &quot;s4&quot;
+Moves3Tos5 == /\ phase = &quot;s3&quot; /\ phase&#x27; = &quot;s5&quot;
+Moves4Tos6 == /\ phase = &quot;s4&quot; /\ phase&#x27; = &quot;s6&quot;
+Moves4Tos5 == /\ phase = &quot;s4&quot; /\ phase&#x27; = &quot;s5&quot;
+Moves5Tos4 == /\ phase = &quot;s5&quot; /\ phase&#x27; = &quot;s4&quot;
+Moves6Tos7 == /\ phase = &quot;s6&quot; /\ phase&#x27; = &quot;s7&quot;
+Moves7Tos9 == /\ phase = &quot;s7&quot; /\ phase&#x27; = &quot;s9&quot;
+Moves7Tos8 == /\ phase = &quot;s7&quot; /\ phase&#x27; = &quot;s8&quot;
+Moves8Tos7 == /\ phase = &quot;s8&quot; /\ phase&#x27; = &quot;s7&quot;
+Moves9Tos10 == /\ phase = &quot;s9&quot; /\ phase&#x27; = &quot;s10&quot;
+Moves9Tos4 == /\ phase = &quot;s9&quot; /\ phase&#x27; = &quot;s4&quot;
+Moves10Tos11 == /\ phase = &quot;s10&quot; /\ phase&#x27; = &quot;s11&quot;
+Moves11Tos13 == /\ phase = &quot;s11&quot; /\ phase&#x27; = &quot;s13&quot;
+Moves11Tos12 == /\ phase = &quot;s11&quot; /\ phase&#x27; = &quot;s12&quot;
+Moves12Tos11 == /\ phase = &quot;s12&quot; /\ phase&#x27; = &quot;s11&quot;
+Moves13Tos14 == /\ phase = &quot;s13&quot; /\ phase&#x27; = &quot;s14&quot;
+Moves14Tos15 == /\ phase = &quot;s14&quot; /\ phase&#x27; = &quot;s15&quot;
+Moves15Tos0 == /\ phase = &quot;s15&quot; /\ phase&#x27; = &quot;s0&quot;
+Next == Moves0Tos1 \/ Moves0Tos2 \/ Moves1Tos2 \/ Moves2Tos3 \/ Moves3Tos4 \/ Moves3Tos5 \/ Moves4Tos6 \/ Moves4Tos5 \/ Moves5Tos4 \/ Moves6Tos7 \/ Moves7Tos9 \/ Moves7Tos8 \/ Moves8Tos7 \/ Moves9Tos10 \/ Moves9Tos4 \/ Moves10Tos11 \/ Moves11Tos13 \/ Moves11Tos12 \/ Moves12Tos11 \/ Moves13Tos14 \/ Moves14Tos15 \/ Moves15Tos0
+NoFutureTokenLeakage == phase # &quot;s5&quot;
+FiniteWeightsAndLoss == phase # &quot;s8&quot;
+NoRewardExploit == phase # &quot;s12&quot;
+====
+</pre>
+
+      <h3 style="margin-top:18px;">2. The Mermaid Statechart (<code>chart.mmd</code> laid out by <code>pele</code>)</h3>
+      <pre class="code-block" is:raw>---
+title: "LLM build: abstract demonstration graph"
+---
+stateDiagram-v2
+  state "Legend" as legend {
+    lg0: Breaks FiniteWeightsAndLoss or NoFutureTokenLeakage or NoRewardExploit
+    lg1: Path to the FiniteWeightsAndLoss or NoFutureTokenLeakage or NoRewardExploit bug
+  }
+  class lg0 breaks
+  class lg1 bugPath
+  s0: 01 Raw Web Crawl
+  s1: 02 Deduplicated Corpus
+  s2: 03 BPE Token Stream
+  s3: 04 Embeddings + RoPE
+  s4: 05 Causal Self-Attention
+  s5: 06 Future Tokens Leaked
+  s6: 07 SwiGLU #38; MoE Experts
+  s7: 08 3D Parallel All-Reduce
+  s8: 09 Non-finite Weight Collapse
+  s9: 10 Grad Clip #38; AdamW Step
+  s10: 11 Base Model Checkpoint
+  s11: 12 Supervised Fine-Tuning
+  s12: 13 Reward-Hacked Collapse
+  s13: 14 RLHF #38; GRPO Verifiers
+  s14: 15 PagedAttention KV Serving
+  s15: 16 Grounded Assistant
+  [*] --&gt; s0
+  s0 --&gt; s1: MinHash dedup #38; language and quality filters
+  s0 --&gt; s2: tokenize raw HTML directly [skip dedup]
+  s1 --&gt; s2: byte-pair encoding (BPE) merges frequent pairs
+  s2 --&gt; s3: lookup d=4096 vectors #38; rotate by RoPE θ_i
+  s3 --&gt; s4: project Q, K, V [causal mask ON]
+  s3 --&gt; s5: project Q, K, V [causal mask broken]
+  s4 --&gt; s5: disable upper-triangle mask [mask leaked]
+  s4 --&gt; s6: add residual stream #38; RMSNorm into SwiGLU/MoE
+  s5 --&gt; s4: restore upper-triangular #8722;#8734; causal mask [repair]
+  s6 --&gt; s7: compute next-token cross-entropy and backpropagate
+  s7 --&gt; s8: inject numerical instability [failure scenario]
+  s7 --&gt; s9: clip global grad norm #8214;g#8214;₂ #8804; 1.0 [grad clip ON]
+  s8 --&gt; s7: rewind to last healthy checkpoint #38; enable grad clip 1.0
+  s9 --&gt; s4: next micro-batch forward pass (loop)
+  s9 --&gt; s10: repeat for 15T tokens (90 days) #8594; anneal on math #38; code
+  s10 --&gt; s11: train on example prompt/assistant conversations (SFT)
+  s11 --&gt; s12: maximize reward model with β = 0.00 [KL leash OFF]
+  s11 --&gt; s13: run RLHF / GRPO with KL penalty β = 0.04 [KL leash ON]
+  s12 --&gt; s11: restore KL divergence leash β#183;D_KL(π_θ #8214; π_ref) [repair]
+  s13 --&gt; s14: quantize #38; deploy to PagedAttention KV-cache engine
+  s14 --&gt; s15: speculative draft + temperature/top-p sampling #8594; answer
+  s15 --&gt; s0: collect new synthetic traces for next generation #8594; cycle
+  classDef breaks fill:#ffecee,stroke:#e72e3b,stroke-width:2.5px,color:#cd2834
+  class s0 bugPath
+  class s2 bugPath
+  class s3 bugPath
+  class s4 bugPath
+  class s5 breaks
+  class s5 bugPath
+  class s6 bugPath
+  class s7 bugPath
+  class s8 breaks
+  class s8 bugPath
+  class s9 bugPath
+  class s10 bugPath
+  class s11 bugPath
+  class s12 breaks
+  class s12 bugPath
+</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     FIXED BOTTOM STEPPER PANEL (One Becomes Two .stepper + Circular .scope)
+     ========================================================================== -->
+<aside class="stepper" id="stepper" aria-label="Interactive statechart stepper">
+  <div class="stepper-top">
+    <div class="scope-wrap">
+      <div class="scope" title="Live hand-drawn microscope scope (4-frame wobble at 180ms)">
+        <canvas id="scope-canvas" width="240" height="240"></canvas>
+      </div>
+      <div class="scope-wobble-tag" id="scope-frame-indicator">pencil+pastel · frame 1/4</div>
+    </div>
+
+    <div class="stepper-main">
+      <div class="stepper-header-row">
+        <h2 class="stepper-state-title" id="stepper-title">01 · Raw Web Crawl (CommonCrawl)</h2>
+        <div class="stepper-controls">
+          <button class="step-ctrl-btn" id="ctrl-back" title="Step back">← Back</button>
+          <button class="step-ctrl-btn" id="ctrl-play" title="Auto-play through the statechart">▶ Play</button>
+          <button class="step-ctrl-btn" id="ctrl-reset" title="Reset to initial state">↺ Start again</button>
+          <button class="step-ctrl-btn" id="ctrl-minimize" title="Minimize or expand panel">▾ Minimize</button>
+        </div>
+      </div>
+
+      <p class="stepper-desc" id="stepper-desc">
+        Petabytes of raw HTML, code, math papers, and books arrive from the open web—full of boilerplate, duplicate paragraphs, and garbled encodings waiting to be cleaned.
+      </p>
+
+      <!-- Interactive Live Probe Toggles ( directly affects TLA+ guards & canvas drawing! ) -->
+      <div class="scope-probe-bar">
+        <span style="color:var(--gel-gold);">Live Invariant Guards:</span>
+        <button class="probe-toggle" id="guard-mask" title="Toggle causal upper-triangular attention mask">
+          Causal Mask: <strong>ON (Lower-Tri)</strong>
+        </button>
+        <button class="probe-toggle" id="guard-clip" title="Toggle global gradient norm clipping ||g|| <= 1.0">
+          Grad Clip (‖g‖≤1.0): <strong>ON</strong>
+        </button>
+        <button class="probe-toggle" id="guard-kl" title="Toggle KL divergence penalty beta during RLHF/GRPO">
+          KL Leash (β=0.04): <strong>ON</strong>
+        </button>
+        <span id="tlc-status-badge" style="margin-left:auto;color:#8ce09a;">✓ All 3 demonstration guards enabled</span>
+      </div>
+
+      <div>
+        <div class="stepper-choices-label">Choose the next step leaving this state (words in [brackets] show guard conditions):</div>
+        <div class="stepper-choices" id="stepper-choices"></div>
+      </div>
+
+      <details class="path-drawer" open>
+        <summary>The path so far (<span id="path-count">1</span> state visited)</summary>
+        <div class="path-trail" id="path-trail"></div>
+      </details>
+    </div>
+  </div>
+</aside>
+
+<script is:inline>
+/* ============================================================================
+   1. FORMAL STATECHART MODEL & VIEW (TLA+ States, Transitions, Paper Stocks)
+   ============================================================================ */
+const PHASES = [
+  {
+    id: "phase-data",
+    title: "I. Raw Bytes to Token Stream (Data & Tokenization)",
+    meta: "300B web pages → 15T subword tokens · Invariant: Clean deduplicated distribution"
+  },
+  {
+    id: "phase-arch",
+    title: "II. Inside the Transformer Forward Pass (Architecture)",
+    meta: "x_{l+1} = x_l + Attn(RMSNorm(x_l)) + SwiGLU(RMSNorm(h_l)) · Invariant: NoFutureTokenLeakage"
+  },
+  {
+    id: "phase-train",
+    title: "III. Distributed Pre-Training at Cluster Scale (Optimization)",
+    meta: "16,384 GPUs · 3D Parallelism (TP×PP×FSDP) · Invariant: FiniteWeightsAndLoss"
+  },
+  {
+    id: "phase-align",
+    title: "IV. Post-Training, Alignment & Live Serving (SFT, RLHF/GRPO & KV-Cache)",
+    meta: "SFT + GRPO Verifiers + PagedAttention · Invariant: NoRewardExploit"
+  }
+];
+
+const STATES = [
+  // PHASE I: DATA & TOKENIZATION
+  {
+    id: "s0",
+    num: "01",
+    phase: "phase-data",
+    title: "Raw Web Crawl",
+    subtitle: "300B noisy HTML pages",
+    paperBg: "#d8c19a",
+    paperText: "#231e18",
+    paperTag: "warm kraft paper",
+    breaksRule: false,
+    desc: "On warm kraft paper, petabytes of raw CommonCrawl HTML, GitHub code, and arXiv PDFs pour into the funnel. Filtering removes unwanted material; the removal fraction depends on the corpus and recipe.",
+    artType: "crawl",
+    steps: [
+      { to: "s1", label: "MinHash dedup & language and quality filters", bug: false },
+      { to: "s2", label: "tokenize raw HTML directly [skip dedup]", bug: false }
+    ]
+  },
+  {
+    id: "s1",
+    num: "02",
+    phase: "phase-data",
+    title: "Deduplicated Corpus",
+    subtitle: "15T clean tokens balanced",
+    paperBg: "#1b434d",
+    paperText: "#f3ede0",
+    paperTag: "dark teal paper",
+    breaksRule: false,
+    desc: "On dark teal paper, 128-perm MinHash LSH strips near-duplicate documents while domain mixture weights upsample math, code, and curated books.",
+    artType: "dedup",
+    steps: [
+      { to: "s2", label: "byte-pair encoding (BPE) merges frequent pairs", bug: false }
+    ]
+  },
+  {
+    id: "s2",
+    num: "03",
+    phase: "phase-data",
+    title: "BPE Token Stream",
+    subtitle: "V = 128,256 subword vocabulary",
+    paperBg: "#253855",
+    paperText: "#f2ece1",
+    paperTag: "blueprint graph paper",
+    breaksRule: false,
+    desc: "On graph paper, UTF-8 bytes iteratively merge their most frequent adjacent pairs into integer token IDs—using a byte-level vocabulary in this example. Token lengths vary by language and content.",
+    artType: "bpe",
+    steps: [
+      { to: "s3", label: "lookup d=4096 vectors & rotate by RoPE θ_i", bug: false }
+    ]
+  },
+  {
+    id: "s3",
+    num: "04",
+    phase: "phase-data",
+    title: "Embeddings + RoPE",
+    subtitle: "Vectors spun by position angle",
+    paperBg: "#4a2744",
+    paperText: "#f6ecf4",
+    paperTag: "plum rag paper",
+    breaksRule: false,
+    desc: "On plum paper, each token ID becomes a vector; RoPE then operates on projected queries and keys. In this example d=4,096. Rotary Position Embeddings (RoPE) rotate 2D coordinate pairs by angle m·θ_i so the positional interaction in Q/K dot products depends on relative displacement (m − n), alongside token content.",
+    artType: "rope",
+    steps: [
+      { to: "s4", label: "project Q, K, V [causal mask ON]", bug: false },
+      { to: "s5", label: "project Q, K, V [causal mask broken]", bug: true, rule: "NoFutureTokenLeakage" }
+    ]
+  },
+
+  // PHASE II: TRANSFORMER ARCHITECTURE
+  {
+    id: "s4",
+    num: "05",
+    phase: "phase-arch",
+    title: "Causal Self-Attention",
+    subtitle: "Softmax(QKᵀ/√dₖ + M)V",
+    paperBg: "#192238",
+    paperText: "#f4eee1",
+    paperTag: "midnight navy paper",
+    breaksRule: false,
+    desc: "On midnight navy paper, golden query rays meet key vectors. The upper-right triangle (j > i) is masked to −∞ so token i can never peek at token i+1 while predicting the future.",
+    artType: "attention",
+    steps: [
+      { to: "s6", label: "add residual stream & RMSNorm into SwiGLU/MoE", bug: false },
+      { to: "s5", label: "disable upper-triangle mask [mask leaked]", bug: true, rule: "NoFutureTokenLeakage" }
+    ]
+  },
+  {
+    id: "s5",
+    num: "06",
+    phase: "phase-arch",
+    title: "Future Tokens Leaked",
+    subtitle: "Breaks NoFutureTokenLeakage",
+    paperBg: "#5e1922",
+    paperText: "#ffe9ec",
+    paperTag: "crimson warning stock",
+    breaksRule: true,
+    ruleName: "NoFutureTokenLeakage",
+    desc: "MODEL COUNTEREXAMPLE (3 transitions): A missing causal mask allows future target information into training. Loss can look misleadingly good while autoregressive inference suffers; no training experiment is measured here.",
+    artType: "mask_bug",
+    steps: [
+      { to: "s4", label: "restore upper-triangular −∞ causal mask [repair]", bug: false }
+    ]
+  },
+  {
+    id: "s6",
+    num: "07",
+    phase: "phase-arch",
+    title: "SwiGLU & MoE Experts",
+    subtitle: "Top-2 of 64 sparse FFN routing",
+    paperBg: "#2e473b",
+    paperText: "#eff7f2",
+    paperTag: "forest sage paper",
+    breaksRule: false,
+    desc: "On sage paper, each token's residual vector passes through a router gate that activates only Top-2 of 64 SwiGLU feed-forward experts—allowing more total parameters with sparse per-token activation. Routing and communication still have costs.",
+    artType: "moe",
+    steps: [
+      { to: "s7", label: "compute next-token cross-entropy and backpropagate", bug: false }
+    ]
+  },
+  {
+    id: "s7",
+    num: "08",
+    phase: "phase-arch",
+    title: "3D Parallel All-Reduce",
+    subtitle: "TP × PP × FSDP across 16,384 GPUs",
+    paperBg: "#222428",
+    paperText: "#f3efe6",
+    paperTag: "charcoal studio paper",
+    breaksRule: false,
+    desc: "On charcoal paper, tensor shards sync over 900 GB/s NVLink inside each 8-GPU node while pipeline micro-batches and FSDP gradients ring-reduce over 400 Gb/s InfiniBand.",
+    artType: "parallel",
+    steps: [
+      { to: "s9", label: "clip global grad norm ‖g‖₂ ≤ 1.0 [grad clip ON]", bug: false },
+      { to: "s8", label: "inject numerical instability [failure scenario]", bug: true, rule: "FiniteWeightsAndLoss" }
+    ]
+  },
+
+  // PHASE III: PRE-TRAINING OPTIMIZATION & CHECKPOINTS
+  {
+    id: "s8",
+    num: "09",
+    phase: "phase-train",
+    title: "NaN Weight Collapse",
+    subtitle: "Breaks FiniteWeightsAndLoss",
+    paperBg: "#681d25",
+    paperText: "#ffebed",
+    paperTag: "crimson warning stock",
+    breaksRule: true,
+    ruleName: "FiniteWeightsAndLoss",
+    desc: "MODEL COUNTEREXAMPLE (6 transitions): This injected numerical failure reaches non-finite weights. Gradient clipping bounds finite gradient norms; it cannot repair existing NaN/Inf values or guarantee finite activations. FP16 and BF16 have different exponent ranges.",
+    artType: "nan_bug",
+    steps: [
+      { to: "s7", label: "rewind to last healthy checkpoint & enable grad clip 1.0", bug: false }
+    ]
+  },
+  {
+    id: "s9",
+    num: "10",
+    phase: "phase-train",
+    title: "Grad Clip & AdamW Step",
+    subtitle: "FP32 master weights + cosine LR",
+    paperBg: "#b35c44",
+    paperText: "#fff6f2",
+    paperTag: "terracotta paper",
+    breaksRule: false,
+    desc: "On terracotta paper, gradients are rescaled to ‖g‖₂ ≤ 1.0. AdamW updates first and second moments (m_t, v_t) in FP32 master precision while following a warmup-stable-decay learning rate schedule.",
+    artType: "adamw",
+    steps: [
+      { to: "s10", label: "repeat for 15T tokens (90 days) → anneal on math & code", bug: false },
+      { to: "s4", label: "next micro-batch forward pass (loop)", bug: false }
+    ]
+  },
+  {
+    id: "s10",
+    num: "11",
+    phase: "phase-train",
+    title: "Base Model Checkpoint",
+    subtitle: "World simulator, not yet an assistant",
+    paperBg: "#c9964c",
+    paperText: "#231a0d",
+    paperTag: "ochre archival paper",
+    breaksRule: false,
+    desc: "On ochre paper sits the finished pre-trained base model. It has compressed human knowledge into next-token probabilities, yet if you ask a question it may simply continue with five more questions.",
+    artType: "base_ckpt",
+    steps: [
+      { to: "s11", label: "train on example prompt/assistant conversations (SFT)", bug: false }
+    ]
+  },
+  {
+    id: "s11",
+    num: "12",
+    phase: "phase-train",
+    title: "Supervised Fine-Tuning",
+    subtitle: "Loss masked strictly to assistant turns",
+    paperBg: "#d8b4bc",
+    paperText: "#29181c",
+    paperTag: "blush cotton paper",
+    breaksRule: false,
+    desc: "On blush pink paper, human demonstrations teach instruction following, formatting, and tool use. Cross-entropy loss is computed only on assistant tokens while user prompt tokens are masked out.",
+    artType: "sft",
+    steps: [
+      { to: "s13", label: "run RLHF / GRPO with KL penalty β = 0.04 [KL leash ON]", bug: false },
+      { to: "s12", label: "maximize reward model with β = 0.00 [KL leash OFF]", bug: true, rule: "NoRewardExploit" }
+    ]
+  },
+
+  // PHASE IV: ALIGNMENT, RLHF/GRPO & INFERENCE SERVING
+  {
+    id: "s12",
+    num: "13",
+    phase: "phase-align",
+    title: "Reward-Hacked Collapse",
+    subtitle: "Breaks NoRewardExploit",
+    paperBg: "#631924",
+    paperText: "#ffeaed",
+    paperTag: "crimson warning stock",
+    breaksRule: true,
+    ruleName: "NoRewardExploit",
+    desc: "MODEL COUNTEREXAMPLE (9 transitions): A deliberately modelled policy exploits an imperfect reward. KL regularization can discourage reference-policy drift, but beta = 0 does not inevitably cause collapse and beta > 0 does not guarantee alignment.",
+    artType: "reward_bug",
+    steps: [
+      { to: "s11", label: "restore KL divergence leash β·D_KL(π_θ ‖ π_ref) [repair]", bug: false }
+    ]
+  },
+  {
+    id: "s13",
+    num: "14",
+    phase: "phase-align",
+    title: "RLHF & GRPO Verifiers",
+    subtitle: "Group-relative advantage + KL leash",
+    paperBg: "#335447",
+    paperText: "#f1f8f4",
+    paperTag: "deep emerald paper",
+    breaksRule: false,
+    desc: "On deep emerald paper, the policy samples G=8 candidate reasoning chains per prompt. Code & math verifiers plus human preference models score each rollout, reinforcing winners while KL regularization discourages reference-policy drift. This is an illustrative recipe, not an alignment guarantee.",
+    artType: "grpo",
+    steps: [
+      { to: "s14", label: "quantize & deploy to PagedAttention KV-cache engine", bug: false }
+    ]
+  },
+  {
+    id: "s14",
+    num: "15",
+    phase: "phase-align",
+    title: "PagedAttention KV Serving",
+    subtitle: "Prefill parallel · Decode memory-bound",
+    paperBg: "#2c3e5e",
+    paperText: "#f2f5fa",
+    paperTag: "indigo ledger paper",
+    breaksRule: false,
+    desc: "On indigo paper, past Key and Value tensors are cached in non-contiguous 16-token pages to reuse earlier projections. Attention still reads relevant cached keys and values, so total decode work is not constant in prefix length.",
+    artType: "kv_cache",
+    steps: [
+      { to: "s15", label: "speculative draft + temperature/top-p sampling → answer", bug: false }
+    ]
+  },
+  {
+    id: "s15",
+    num: "16",
+    phase: "phase-align",
+    title: "Grounded Assistant",
+    subtitle: "Healthy end state · All invariants hold",
+    paperBg: "#e9dec3",
+    paperText: "#1f1b16",
+    paperTag: "archival cream paper",
+    breaksRule: false,
+    desc: "On archival cream paper, the trained model streams an answer. Grounding, calibration, safety and throughput require separate evidence; reaching this state proves none of them.",
+    artType: "healthy_end",
+    steps: [
+      { to: "s0", label: "collect new synthetic traces for next generation → cycle", bug: false }
+    ]
+  }
+];
+
+const STATE_MAP = Object.fromEntries(STATES.map(s => [s.id, s]));
+
+/* ============================================================================
+   2. OAV-STYLE HAND-DRAWN PENCIL, PASTEL & GEL PEN ENGINE
+      - 4-Frame Wobble Loop: frame sequence [0, 1, 2, 1] every 180ms
+      - Deterministic noise jitter so lines shimmer like hand-inked animation
+   ============================================================================ */
+function mulberry32(seed) {
+  let a = seed >>> 0;
+  return function() {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function handLine(ctx, x1, y1, x2, y2, color, width, wobbleSeed, wobbleAmp = 1.35) {
+  const rng = mulberry32(wobbleSeed);
+  const dist = Math.hypot(x2 - x1, y2 - y1);
+  const segs = Math.max(3, Math.min(18, Math.floor(dist / 14)));
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = width;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  // Two-pass simulated pencil/gel stroke
+  for (let pass = 0; pass < 2; pass++) {
+    ctx.globalAlpha = pass === 0 ? 0.92 : 0.42;
+    ctx.beginPath();
+    for (let i = 0; i <= segs; i++) {
+      const t = i / segs;
+      const env = Math.sin(Math.PI * t);
+      const jx = (rng() - 0.5) * 2 * wobbleAmp * env;
+      const jy = (rng() - 0.5) * 2 * wobbleAmp * env;
+      const px = x1 + (x2 - x1) * t + jx;
+      const py = y1 + (y2 - y1) * t + jy;
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function handCircle(ctx, cx, cy, r, strokeColor, fillColor, width, wobbleSeed, wobbleAmp = 1.2) {
+  const rng = mulberry32(wobbleSeed);
+  const steps = 24;
+  ctx.save();
+  ctx.beginPath();
+  for (let i = 0; i <= steps; i++) {
+    const a = (i / steps) * Math.PI * 2;
+    const rad = r + (rng() - 0.5) * 2 * wobbleAmp;
+    const x = cx + Math.cos(a) * rad;
+    const y = cy + Math.sin(a) * rad;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  if (fillColor) {
+    ctx.fillStyle = fillColor;
+    ctx.fill();
+  }
+  if (strokeColor) {
+    ctx.strokeStyle = strokeColor;
+    ctx.lineWidth = width;
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function handRect(ctx, x, y, w, h, strokeColor, fillColor, width, wobbleSeed, wobbleAmp = 1.1) {
+  const rng = mulberry32(wobbleSeed);
+  ctx.save();
+  if (fillColor) {
+    ctx.fillStyle = fillColor;
+    ctx.beginPath();
+    ctx.moveTo(x + (rng()-0.5)*wobbleAmp, y + (rng()-0.5)*wobbleAmp);
+    ctx.lineTo(x + w + (rng()-0.5)*wobbleAmp, y + (rng()-0.5)*wobbleAmp);
+    ctx.lineTo(x + w + (rng()-0.5)*wobbleAmp, y + h + (rng()-0.5)*wobbleAmp);
+    ctx.lineTo(x + (rng()-0.5)*wobbleAmp, y + h + (rng()-0.5)*wobbleAmp);
+    ctx.closePath();
+    ctx.fill();
+  }
+  if (strokeColor) {
+    handLine(ctx, x, y, x + w, y, strokeColor, width, wobbleSeed + 1, wobbleAmp);
+    handLine(ctx, x + w, y, x + w, y + h, strokeColor, width, wobbleSeed + 2, wobbleAmp);
+    handLine(ctx, x + w, y + h, x, y + h, strokeColor, width, wobbleSeed + 3, wobbleAmp);
+    handLine(ctx, x, y + h, x, y, strokeColor, width, wobbleSeed + 4, wobbleAmp);
+  }
+  ctx.restore();
+}
+
+function drawPaperTooth(ctx, w, h, bgColor, frameIdx) {
+  ctx.fillStyle = bgColor;
+  ctx.fillRect(0, 0, w, h);
+  const rng = mulberry32(900 + frameIdx * 17);
+  ctx.save();
+  for (let i = 0; i < 65; i++) {
+    const x = rng() * w;
+    const y = rng() * h;
+    const len = 6 + rng() * 18;
+    ctx.strokeStyle = i % 2 === 0 ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.09)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + len, y + (rng() - 0.5) * 4);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+/* ============================================================================
+   3. BESPOKE ILLUSTRATIONS FOR ALL 16 STATES (Simulated Pencil, Pastel, Gel Pen)
+   ============================================================================ */
+const guards = {
+  causalMask: true,
+  gradClip: true,
+  klLeash: true
+};
+
+function renderStateArtwork(ctx, w, h, state, frameIdx, nowSec) {
+  drawPaperTooth(ctx, w, h, state.paperBg, frameIdx);
+  const seedBase = (parseInt(state.num, 10) * 131) + frameIdx * 37;
+  const cx = w / 2;
+  const cy = h / 2;
+
+  ctx.save();
+  ctx.font = "11px 'IBM Plex Mono', monospace";
+
+  switch (state.artType) {
+    case "crawl": {
+      // Funnel of noisy web documents pouring into filter sieve
+      const docColors = ["#fff7e6", "#f4d393", "#e8998d", "#b5d6d6", "#e0c8f0"];
+      for (let i = 0; i < 7; i++) {
+        const yOff = ((nowSec * 38 + i * 24) % (h * 0.65));
+        const xOff = cx - 68 + ((i * 37) % 136) + Math.sin(nowSec * 2 + i) * 6;
+        handRect(ctx, xOff - 14, 10 + yOff, 28, 20, "#3a3026", docColors[i % docColors.length], 1.4, seedBase + i);
+        handLine(ctx, xOff - 9, 16 + yOff, xOff + 8, 16 + yOff, "#3a3026", 1, seedBase + i + 20);
+      }
+      // Sieve funnel
+      handLine(ctx, cx - 70, h * 0.56, cx - 22, h * 0.85, "#231e18", 2.5, seedBase + 50);
+      handLine(ctx, cx + 70, h * 0.56, cx + 22, h * 0.85, "#231e18", 2.5, seedBase + 51);
+      handLine(ctx, cx - 56, h * 0.66, cx + 56, h * 0.66, "#d9383a", 2.0, seedBase + 52);
+      ctx.fillStyle = "#231e18";
+      ctx.fillText("<html/> spam 85%", 12, h - 10);
+      break;
+    }
+
+    case "dedup": {
+      // Two columns of document beads with red X on duplicates and golden keep-threads
+      for (let r = 0; r < 4; r++) {
+        const y = 24 + r * ((h - 44) / 3.3);
+        const isDup = (r === 1 || r === 3);
+        handCircle(ctx, cx - 48, y, 11, "#f3ede0", isDup ? "#8c3b3b" : "#4ca686", 1.6, seedBase + r);
+        handCircle(ctx, cx + 48, y, 11, "#f3ede0", isDup ? "#8c3b3b" : "#f0c86a", 1.6, seedBase + r + 10);
+        handLine(ctx, cx - 34, y, cx + 34, y, isDup ? "#ff6b6b" : "#f0c86a", 1.8, seedBase + r + 20);
+        if (isDup) {
+          handLine(ctx, cx - 8, y - 8, cx + 8, y + 8, "#ff5a64", 2.4, seedBase + r + 30);
+          handLine(ctx, cx + 8, y - 8, cx - 8, y + 8, "#ff5a64", 2.4, seedBase + r + 31);
+        }
+      }
+      ctx.fillStyle = "#f0c86a";
+      ctx.fillText("MinHash LSH", 12, h - 10);
+      break;
+    }
+
+    case "bpe": {
+      // Blueprint grid + BPE merge tree ("t"+"h" -> "th" -> "the")
+      ctx.strokeStyle = "rgba(255,255,255,0.1)";
+      ctx.lineWidth = 1;
+      for (let gx = 0; gx < w; gx += 18) {
+        ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, h); ctx.stroke();
+      }
+      for (let gy = 0; gy < h; gy += 18) {
+        ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(w, gy); ctx.stroke();
+      }
+      const leaves = ["t", "h", "e", "_l", "l", "m"];
+      leaves.forEach((ch, idx) => {
+        const lx = 22 + idx * ((w - 44) / 5);
+        const ly = h - 28;
+        handRect(ctx, lx - 13, ly - 11, 26, 20, "#f0c86a", "#18263a", 1.4, seedBase + idx);
+        ctx.fillStyle = "#fff";
+        ctx.fillText(ch, lx - 6, ly + 3);
+      });
+      // Merge arcs
+      handLine(ctx, 32, h - 40, cx - 30, 48, "#6ee7b7", 2.0, seedBase + 30);
+      handLine(ctx, 64, h - 40, cx - 30, 48, "#6ee7b7", 2.0, seedBase + 31);
+      handLine(ctx, cx + 10, h - 40, cx + 34, 48, "#f0c86a", 2.0, seedBase + 32);
+      handRect(ctx, cx - 54, 24, 52, 24, "#6ee7b7", "#142234", 1.8, seedBase + 40);
+      ctx.fillStyle = "#6ee7b7";
+      ctx.fillText("#1820", cx - 47, 40);
+      handRect(ctx, cx + 10, 24, 52, 24, "#f0c86a", "#142234", 1.8, seedBase + 41);
+      ctx.fillStyle = "#f0c86a";
+      ctx.fillText("#9941", cx + 17, 40);
+      break;
+    }
+
+    case "rope": {
+      // Rotating RoPE frequency dials (m * theta_i)
+      const radii = [22, 42, 62];
+      radii.forEach((rad, i) => {
+        handCircle(ctx, cx, cy, rad, "rgba(246,236,244,0.35)", null, 1.3, seedBase + i);
+        const angle = nowSec * (1.8 - i * 0.45) + i * 1.1;
+        const px = cx + Math.cos(angle) * rad;
+        const py = cy + Math.sin(angle) * rad;
+        handLine(ctx, cx, cy, px, py, i === 0 ? "#f0c86a" : "#7ee0c6", 2.2, seedBase + i + 10);
+        handCircle(ctx, px, py, 5.5, "#fff", i === 0 ? "#f0c86a" : "#e87a90", 1.5, seedBase + i + 20);
+      });
+      ctx.fillStyle = "#f0c86a";
+      ctx.fillText("e^{i(m-n)θ}", 12, h - 10);
+      break;
+    }
+
+    case "attention": {
+      // 5x5 Causal Self-Attention Grid: lower triangle glowing gold/teal, upper triangle masked X
+      const n = 5;
+      const cell = Math.min(w, h) * 0.13;
+      const startX = cx - (n * cell) / 2;
+      const startY = cy - (n * cell) / 2;
+      for (let r = 0; r < n; r++) {
+        for (let c = 0; c < n; c++) {
+          const x = startX + c * cell;
+          const y = startY + r * cell;
+          const masked = (c > r) && guards.causalMask;
+          const pulse = 0.45 + 0.5 * Math.sin(nowSec * 3 + r * 0.9 - c * 0.7);
+          const fill = masked
+            ? "rgba(15, 20, 34, 0.85)"
+            : `rgba(240, 200, 106, ${0.28 + 0.62 * pulse})`;
+          handRect(ctx, x, y, cell - 3, cell - 3, "rgba(255,255,255,0.3)", fill, 1.1, seedBase + r * 7 + c, 0.7);
+          if (masked) {
+            handLine(ctx, x + 4, y + 4, x + cell - 7, y + cell - 7, "#ff6b6b", 1.2, seedBase + r * 11 + c, 0.5);
+          }
+        }
+      }
+      ctx.fillStyle = "#f0c86a";
+      ctx.fillText("j ≤ i causal", 10, h - 9);
+      break;
+    }
+
+    case "mask_bug": {
+      // Broken causal mask: bright red arrows leaking from future column j > i back to token i
+      const n = 4;
+      const cell = Math.min(w, h) * 0.15;
+      const startX = cx - (n * cell) / 2;
+      const startY = cy - (n * cell) / 2;
+      for (let r = 0; r < n; r++) {
+        for (let c = 0; c < n; c++) {
+          const x = startX + c * cell;
+          const y = startY + r * cell;
+          const isLeak = c > r;
+          handRect(ctx, x, y, cell - 3, cell - 3, "#ff99a0", isLeak ? "#e72e3b" : "rgba(255,255,255,0.12)", 1.3, seedBase + r * 5 + c, 0.9);
+        }
+      }
+      handLine(ctx, startX + 3.2 * cell, startY + 0.5 * cell, startX + 0.5 * cell, startY + 0.5 * cell, "#ffeb3b", 2.6, seedBase + 99);
+      ctx.fillStyle = "#ffdce0";
+      ctx.fillText("LEAK: reads t+1!", 10, h - 9);
+      break;
+    }
+
+    case "moe": {
+      // Router dispatching tokens into Top-2 of 6 expert boxes
+      handCircle(ctx, 36, cy, 15, "#f0c86a", "#1f3329", 2.0, seedBase + 1);
+      ctx.fillStyle = "#f0c86a";
+      ctx.fillText("G(x)", 24, cy + 4);
+      const activeA = Math.floor(nowSec * 1.5) % 5;
+      const activeB = (activeA + 2) % 5;
+      for (let e = 0; e < 5; e++) {
+        const ey = 18 + e * ((h - 32) / 4.3);
+        const ex = w - 68;
+        const hot = (e === activeA || e === activeB);
+        handLine(ctx, 52, cy, ex, ey + 8, hot ? "#f0c86a" : "rgba(255,255,255,0.18)", hot ? 2.4 : 1.1, seedBase + e + 10);
+        handRect(ctx, ex, ey, 50, 17, hot ? "#f0c86a" : "rgba(255,255,255,0.35)", hot ? "#d97f38" : "rgba(0,0,0,0.25)", 1.4, seedBase + e + 20);
+      }
+      ctx.fillStyle = "#eff7f2";
+      ctx.fillText("Top-2 Sparse MoE", 10, h - 9);
+      break;
+    }
+
+    case "parallel": {
+      // 8 GPU nodes connected in an NVLink / InfiniBand All-Reduce ring with circulating gradient pulses
+      const rRing = Math.min(w, h) * 0.31;
+      for (let i = 0; i < 6; i++) {
+        const a1 = (i / 6) * Math.PI * 2 + nowSec * 0.4;
+        const a2 = ((i + 1) / 6) * Math.PI * 2 + nowSec * 0.4;
+        const x1 = cx + Math.cos(a1) * rRing, y1 = cy + Math.sin(a1) * rRing;
+        const x2 = cx + Math.cos(a2) * rRing, y2 = cy + Math.sin(a2) * rRing;
+        handLine(ctx, x1, y1, x2, y2, "#6ee7b7", 2.2, seedBase + i);
+        handRect(ctx, x1 - 12, y1 - 9, 24, 18, "#f0c86a", "#2e3440", 1.5, seedBase + i + 20);
+      }
+      ctx.fillStyle = "#6ee7b7";
+      ctx.fillText("Ring All-Reduce", 10, h - 9);
+      break;
+    }
+
+    case "nan_bug": {
+      // Exploding jagged loss curve shooting off top of chart into NaN skulls
+      handLine(ctx, 18, h - 22, cx - 10, h - 38, "#ffdce0", 2.2, seedBase + 1);
+      handLine(ctx, cx - 10, h - 38, cx + 18, 12, "#ffeb3b", 3.0, seedBase + 2);
+      handLine(ctx, cx + 18, 12, w - 18, 28, "#ff4d4d", 2.8, seedBase + 3);
+      handCircle(ctx, cx + 18, 18, 14, "#ffeb3b", "#e72e3b", 2.2, seedBase + 4);
+      ctx.fillStyle = "#fff";
+      ctx.fillText("NaN!", cx + 5, 22);
+      ctx.fillStyle = "#ffdce0";
+      ctx.fillText("non-finite numerical failure", 10, h - 9);
+      break;
+    }
+
+    case "adamw": {
+      // Smoothly descending loss curve with golden clipping ceiling bar
+      handLine(ctx, 14, 34, w - 14, 34, "#f0c86a", 1.6, seedBase + 1);
+      ctx.fillStyle = "#f0c86a";
+      ctx.fillText("clip ceiling ‖g‖≤1.0", 16, 28);
+      let px = 16, py = 46;
+      for (let i = 1; i <= 8; i++) {
+        const nx = 16 + i * ((w - 32) / 8);
+        const ny = 44 + (1 - Math.exp(-i * 0.35)) * (h - 72) + Math.sin(nowSec * 3 + i) * 3;
+        handLine(ctx, px, py, nx, ny, "#fff6f2", 2.4, seedBase + i + 10);
+        px = nx; py = ny;
+      }
+      handCircle(ctx, px, py, 6, "#231e18", "#f0c86a", 1.6, seedBase + 30);
+      break;
+    }
+
+    case "base_ckpt": {
+      // Warm glowing neural crystal / golden monolith on ochre paper
+      handRect(ctx, cx - 36, 22, 72, h - 46, "#231a0d", "#e6b86a", 2.2, seedBase + 1);
+      for (let l = 0; l < 4; l++) {
+        const ly = 36 + l * 18;
+        handLine(ctx, cx - 24, ly, cx + 24, ly, "#231a0d", 1.5, seedBase + l + 10);
+      }
+      ctx.fillStyle = "#231a0d";
+      ctx.fillText("15T Base Weights", 12, h - 8);
+      break;
+    }
+
+    case "sft": {
+      // User prompt bubble (greyed mask) -> Assistant response bubble (bright loss active)
+      handRect(ctx, 16, 20, w * 0.56, 30, "#29181c", "rgba(255,255,255,0.45)", 1.5, seedBase + 1);
+      ctx.fillStyle = "#5c4348";
+      ctx.fillText("User: mask=0", 24, 39);
+      handRect(ctx, w * 0.28, 62, w * 0.62, 36, "#29181c", "#f0c86a", 1.8, seedBase + 2);
+      ctx.fillStyle = "#29181c";
+      ctx.fillText("Assistant: loss ✓", w * 0.32, 84);
+      break;
+    }
+
+    case "reward_bug": {
+      // Policy trajectory snapping its tether and spiraling into reward-hacked stars
+      handCircle(ctx, 36, h - 34, 12, "#fff", "#3c8d6d", 1.6, seedBase + 1);
+      handLine(ctx, 48, h - 38, cx, cy, "#ffeb3b", 2.4, seedBase + 2);
+      handLine(ctx, cx, cy, w - 26, 22, "#ff5a64", 2.8, seedBase + 3);
+      ctx.fillStyle = "#ffeb3b";
+      ctx.fillText("R=+9.9 gibberish!", 12, 24);
+      ctx.fillStyle = "#ffdce0";
+      ctx.fillText("β_KL = 0 drift", 12, h - 9);
+      break;
+    }
+
+    case "grpo": {
+      // Group of G=4 rollout branches scored by verifier + golden KL tether back to pi_ref
+      for (let g = 0; g < 4; g++) {
+        const gy = 22 + g * ((h - 44) / 3.2);
+        const good = (g === 1 || g === 2);
+        handLine(ctx, 26, cy, w - 58, gy, good ? "#f0c86a" : "rgba(255,255,255,0.28)", good ? 2.3 : 1.2, seedBase + g);
+        handCircle(ctx, w - 46, gy, 9, "#fff", good ? "#4ca686" : "#8c3b3b", 1.4, seedBase + g + 10);
+      }
+      handCircle(ctx, 26, cy, 11, "#fff", "#f0c86a", 1.8, seedBase + 30);
+      ctx.fillStyle = "#f1f8f4";
+      ctx.fillText("GRPO + KL β=0.04", 10, h - 9);
+      break;
+    }
+
+    case "kv_cache": {
+      // PagedAttention KV memory blocks filling sequentially + fast single-token query
+      for (let b = 0; b < 6; b++) {
+        const bx = 16 + (b % 3) * 44;
+        const by = 22 + Math.floor(b / 3) * 34;
+        const active = b <= (Math.floor(nowSec * 2) % 6);
+        handRect(ctx, bx, by, 36, 24, "#f0c86a", active ? "#3d7a9e" : "rgba(255,255,255,0.1)", 1.4, seedBase + b);
+      }
+      handCircle(ctx, w - 34, cy, 14, "#f0c86a", "#d97f38", 1.8, seedBase + 20);
+      ctx.fillStyle = "#f0c86a";
+      ctx.fillText("Paged KV cache", 10, h - 9);
+      break;
+    }
+
+    case "healthy_end": {
+      // Radiant connected neural star / two healthy halves in harmony
+      handCircle(ctx, cx, cy - 4, 34, "#1f1b16", "#f0c86a", 2.2, seedBase + 1);
+      for (let r = 0; r < 8; r++) {
+        const a = (r / 8) * Math.PI * 2 + nowSec * 0.5;
+        handLine(ctx, cx + Math.cos(a) * 38, cy - 4 + Math.sin(a) * 38,
+                      cx + Math.cos(a) * 54, cy - 4 + Math.sin(a) * 54, "#2b7a78", 2.2, seedBase + r + 10);
+      }
+      ctx.fillStyle = "#1f1b16";
+      ctx.fillText("✓ Grounded LLM", cx - 44, h - 8);
+      break;
+    }
+  }
+  ctx.restore();
+}
+
+/* ============================================================================
+   4. BUILD THE WALL DOM, TEXT LIST, AND STEPPER CONTROLLER (step.mjs logic)
+   ============================================================================ */
+const wallGrid = document.getElementById("wall-grid");
+const plateElements = {};
+const plateCanvases = {};
+
+function buildWallDOM() {
+  wallGrid.innerHTML = "";
+  PHASES.forEach(phase => {
+    const banner = document.createElement("div");
+    banner.className = "phase-banner";
+    banner.innerHTML = `<span class="phase-title">${phase.title}</span><span class="phase-meta">${phase.meta}</span>`;
+    wallGrid.appendChild(banner);
+
+    STATES.filter(s => s.phase === phase.id).forEach(state => {
+      const card = document.createElement("article");
+      card.className = "plate" + (state.breaksRule ? " breaks-rule" : "");
+      card.id = `plate-${state.id}`;
+      card.style.backgroundColor = state.paperBg;
+      card.style.color = state.paperText;
+      card.setAttribute("role", "button");
+      card.setAttribute("tabindex", "0");
+
+      const stepsHtml = state.steps.map((st, idx) => {
+        const target = STATE_MAP[st.to];
+        return `<span class="step-chip ${st.bug ? 'bug-chip' : ''}" data-from="${state.id}" data-to="${st.to}" data-idx="${idx}" title="${st.label}">→ ${target.num} ${st.bug ? '⚡' : ''}</span>`;
+      }).join("");
+
+      card.innerHTML = `
+        <div class="plate-pin"></div>
+        <div>
+          <div class="plate-header">
+            <span class="plate-id">STATE ${state.num}</span>
+            <span class="plate-tag">${state.breaksRule ? '⚡ Breaks ' + state.ruleName : state.paperTag}</span>
+          </div>
+          <div class="plate-canvas-wrap">
+            <canvas class="plate-canvas" width="240" height="165"></canvas>
+          </div>
+          <h3 class="plate-title">${state.title}</h3>
+          <p class="plate-caption">${state.desc}</p>
+        </div>
+        <div class="plate-steps-out">${stepsHtml}</div>
+      `;
+
+      card.addEventListener("click", (e) => {
+        const chip = e.target.closest(".step-chip");
+        if (chip) {
+          e.stopPropagation();
+          const toId = chip.getAttribute("data-to");
+          stepToState(toId, state.id);
+          return;
+        }
+        stepToState(state.id, currentStateId);
+      });
+
+      wallGrid.appendChild(card);
+      plateElements[state.id] = card;
+      plateCanvases[state.id] = card.querySelector("canvas");
+    });
+  });
+
+  // Also populate "Read the Chart as Text" list in View 5
+  const textList = document.getElementById("state-text-list");
+  if (textList) {
+    textList.innerHTML = STATES.map(s => {
+      const lines = s.steps.map(st => {
+        const dst = STATE_MAP[st.to];
+        return `<div class="transition-line ${st.bug ? 'bug' : ''}">• ${st.label} → <strong>${dst.num} ${dst.title}</strong></div>`;
+      }).join("");
+      return `<div class="state-text-item">
+        <strong>${s.num}. ${s.title}</strong> <span style="font-family:var(--font-mono);font-size:11px;opacity:0.75;">(${s.paperTag}${s.breaksRule ? ' · BREAKS ' + s.ruleName : ''})</span>
+        ${lines}
+      </div>`;
+    }).join("");
+  }
+}
+
+/* ============================================================================
+   5. STEP-THROUGH CONTROLLER, COSINE-EASED SVG PATH ANIMATION & GLIDE SCROLL
+   ============================================================================ */
+let currentStateId = "s0";
+let prevStateId = "s0";
+let historyStack = [{ stateId: "s0", via: "initial state" }];
+let autoPlayTimer = null;
+
+// Route animation state
+let routeAnim = {
+  active: false,
+  t0: 0,
+  dur: 950,
+  isBug: false
+};
+
+function getPlateCenter(stateId) {
+  const stage = document.getElementById("wall-stage");
+  const el = plateElements[stateId];
+  if (!stage || !el) return { x: 0, y: 0, w: 0, h: 0, left: 0, top: 0 };
+  const sRect = stage.getBoundingClientRect();
+  const eRect = el.getBoundingClientRect();
+  const left = eRect.left - sRect.left;
+  const top = eRect.top - sRect.top;
+  return {
+    left,
+    top,
+    w: eRect.width,
+    h: eRect.height,
+    x: left + eRect.width / 2,
+    y: top + eRect.height / 2
+  };
+}
+
+function drawStaticWallEdges() {
+  const g = document.getElementById("static-edges-group");
+  if (!g) return;
+  g.innerHTML = "";
+  STATES.forEach(s => {
+    const a = getPlateCenter(s.id);
+    if (a.w === 0) return;
+    s.steps.forEach(st => {
+      const b = getPlateCenter(st.to);
+      if (b.w === 0) return;
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const cx = (a.x + b.x) / 2 - dy * 0.12;
+      const cy = (a.y + b.y) / 2 + dx * 0.08;
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path.setAttribute("d", `M ${a.x.toFixed(1)} ${a.y.toFixed(1)} Q ${cx.toFixed(1)} ${cy.toFixed(1)} ${b.x.toFixed(1)} ${b.y.toFixed(1)}`);
+      path.setAttribute("fill", "none");
+      path.setAttribute("stroke", st.bug ? "rgba(231, 46, 59, 0.34)" : "rgba(240, 200, 106, 0.2)");
+      path.setAttribute("stroke-width", st.bug ? "2" : "1.6");
+      if (st.bug) path.setAttribute("stroke-dasharray", "5 5");
+      g.appendChild(path);
+    });
+  });
+}
+
+function updateSpotlightAndRoute(fromId, toId, isBugStep) {
+  const spot = document.getElementById("step-spot");
+  const targetBox = getPlateCenter(toId);
+  if (spot && targetBox.w > 0) {
+    spot.classList.add("visible");
+    spot.classList.toggle("bug-spot", !!isBugStep || STATE_MAP[toId].breaksRule);
+    spot.style.width = `${targetBox.w + 8}px`;
+    spot.style.height = `${targetBox.h + 8}px`;
+    spot.style.transform = `translate(${targetBox.left - 4}px, ${targetBox.top - 4}px)`;
+  }
+
+  const route = document.getElementById("step-route");
+  const routeBg = document.getElementById("step-route-bg");
+  const token = document.getElementById("step-token");
+  if (!route || !fromId || fromId === toId) {
+    if (token) token.setAttribute("opacity", "0");
+    return;
+  }
+
+  const a = getPlateCenter(fromId);
+  const b = getPlateCenter(toId);
+  if (a.w === 0 || b.w === 0) return;
+
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const cx = (a.x + b.x) / 2 - dy * 0.14;
+  const cy = (a.y + b.y) / 2 + dx * 0.1;
+  const dStr = `M ${a.x.toFixed(1)} ${a.y.toFixed(1)} Q ${cx.toFixed(1)} ${cy.toFixed(1)} ${b.x.toFixed(1)} ${b.y.toFixed(1)}`;
+  route.setAttribute("d", dStr);
+  routeBg.setAttribute("d", dStr);
+
+  const strokeCol = (isBugStep || STATE_MAP[toId].breaksRule) ? "#ff5a64" : "#f0c86a";
+  route.setAttribute("stroke", strokeCol);
+  route.setAttribute("marker-end", (isBugStep || STATE_MAP[toId].breaksRule) ? "url(#arrow-red)" : "url(#arrow-gold)");
+  token.setAttribute("fill", strokeCol);
+
+  const L = route.getTotalLength();
+  route.style.strokeDasharray = `${L}`;
+  route.style.strokeDashoffset = `${L}`;
+  routeAnim = {
+    active: true,
+    t0: performance.now(),
+    dur: Math.max(650, Math.min(1600, 420 + L * 1.8)),
+    isBug: isBugStep
+  };
+}
+
+function glideScrollToPlate(stateId) {
+  const el = plateElements[stateId];
+  if (!el) return;
+  const rect = el.getBoundingClientRect();
+  const targetY = window.scrollY + rect.top - (window.innerHeight * 0.28);
+  const startY = window.scrollY;
+  const diff = targetY - startY;
+  if (Math.abs(diff) < 40) return;
+  const t0 = performance.now();
+  const dur = 450;
+  function stepScroll(now) {
+    const u = Math.min(1, (now - t0) / dur);
+    const e = 0.5 - Math.cos(Math.PI * u) / 2;
+    window.scrollTo(0, startY + diff * e);
+    if (u < 1) requestAnimationFrame(stepScroll);
+  }
+  requestAnimationFrame(stepScroll);
+}
+
+function stepToState(targetId, fromId = null, pushHistory = true) {
+  const prev = fromId || currentStateId;
+  prevStateId = prev;
+  currentStateId = targetId;
+  const state = STATE_MAP[targetId];
+
+  // Sync guard badges if landing on a bug state
+  if (targetId === "s5") guards.causalMask = false;
+  if (targetId === "s8") guards.gradClip = false;
+  if (targetId === "s12") guards.klLeash = false;
+  if (targetId === "s4") guards.causalMask = true;
+  if (targetId === "s9") guards.gradClip = true;
+  if (targetId === "s13") guards.klLeash = true;
+  syncGuardUI();
+
+  if (pushHistory && historyStack[historyStack.length - 1]?.stateId !== targetId) {
+    const prevStateObj = STATE_MAP[prev];
+    const transitionObj = prevStateObj?.steps.find(st => st.to === targetId);
+    historyStack.push({
+      stateId: targetId,
+      via: transitionObj ? transitionObj.label : `jumped to ${state.num}`
+    });
+  }
+
+  // Highlight active & visited plates
+  const visitedSet = new Set(historyStack.map(h => h.stateId));
+  STATES.forEach(s => {
+    const el = plateElements[s.id];
+    if (!el) return;
+    el.classList.toggle("active-state", s.id === targetId);
+    el.classList.toggle("visited-state", visitedSet.has(s.id) && s.id !== targetId);
+  });
+
+  // Update Stepper UI
+  const titleEl = document.getElementById("stepper-title");
+  titleEl.textContent = `${state.num} · ${state.title} (${state.subtitle})`;
+  titleEl.classList.toggle("bug-title", !!state.breaksRule);
+  document.getElementById("stepper-desc").textContent = state.desc;
+
+  // Populate next step choice buttons
+  const choicesEl = document.getElementById("stepper-choices");
+  choicesEl.innerHTML = "";
+  state.steps.forEach(st => {
+    const dst = STATE_MAP[st.to];
+    const btn = document.createElement("button");
+    btn.className = "choice-btn" + (st.bug ? " bug-choice" : "");
+    btn.innerHTML = `<span>${st.label}</span> <strong>→ ${dst.num} ${dst.title}</strong>`;
+    btn.addEventListener("click", () => {
+      stopAutoPlay();
+      stepToState(st.to, state.id, true);
+      glideScrollToPlate(st.to);
+    });
+    choicesEl.appendChild(btn);
+  });
+
+  // Update history breadcrumbs
+  document.getElementById("ctrl-back").disabled = historyStack.length <= 1;
+  document.getElementById("path-count").textContent = String(historyStack.length);
+  const trailEl = document.getElementById("path-trail");
+  trailEl.innerHTML = historyStack.map((item, idx) => {
+    const stObj = STATE_MAP[item.stateId];
+    return `<span class="path-crumb ${stObj.breaksRule ? 'bug-crumb' : ''}" data-hist-idx="${idx}" title="${item.via}">
+      ${idx === 0 ? '' : '→ '}${stObj.num} ${stObj.title}
+    </span>`;
+  }).join("");
+  trailEl.querySelectorAll(".path-crumb").forEach(crumb => {
+    crumb.addEventListener("click", () => {
+      const idx = parseInt(crumb.getAttribute("data-hist-idx"), 10);
+      historyStack = historyStack.slice(0, idx + 1);
+      stepToState(historyStack[idx].stateId, currentStateId, false);
+    });
+  });
+
+  // Expand stepper if minimized
+  document.getElementById("stepper").classList.remove("minimized");
+  document.getElementById("ctrl-minimize").textContent = "▾ Minimize";
+  updateSpotlightAndRoute(prev, targetId, state.breaksRule);
+}
+
+function syncGuardUI() {
+  const gm = document.getElementById("guard-mask");
+  gm.classList.toggle("broken", !guards.causalMask);
+  gm.innerHTML = `Causal Mask: <strong>${guards.causalMask ? 'ON (Lower-Tri)' : 'BROKEN (Leaking!)'}</strong>`;
+
+  const gc = document.getElementById("guard-clip");
+  gc.classList.toggle("broken", !guards.gradClip);
+  gc.innerHTML = `Grad Clip (‖g‖≤1.0): <strong>${guards.gradClip ? 'ON' : 'OFF (Spike Risk!)'}</strong>`;
+
+  const gk = document.getElementById("guard-kl");
+  gk.classList.toggle("broken", !guards.klLeash);
+  gk.innerHTML = `KL Leash (β=0.04): <strong>${guards.klLeash ? 'ON' : 'OFF (β=0 Drift!)'}</strong>`;
+
+  const badge = document.getElementById("tlc-status-badge");
+  const allOk = guards.causalMask && guards.gradClip && guards.klLeash;
+  badge.style.color = allOk ? "#8ce09a" : "#ff7b82";
+  badge.textContent = allOk
+    ? "✓ All 3 demonstration guards enabled"
+    : "⚡ Modelled failure path active";
+}
+
+// Guard button handlers
+document.getElementById("guard-mask").addEventListener("click", () => {
+  guards.causalMask = !guards.causalMask;
+  syncGuardUI();
+  stepToState(guards.causalMask ? "s4" : "s5", currentStateId, true);
+});
+document.getElementById("guard-clip").addEventListener("click", () => {
+  guards.gradClip = !guards.gradClip;
+  syncGuardUI();
+  stepToState(guards.gradClip ? "s9" : "s8", currentStateId, true);
+});
+document.getElementById("guard-kl").addEventListener("click", () => {
+  guards.klLeash = !guards.klLeash;
+  syncGuardUI();
+  stepToState(guards.klLeash ? "s13" : "s12", currentStateId, true);
+});
+
+// Stepper control buttons & guided tours
+function stopAutoPlay() {
+  if (autoPlayTimer) {
+    clearInterval(autoPlayTimer);
+    autoPlayTimer = null;
+  }
+  const playBtn = document.getElementById("ctrl-play");
+  playBtn.classList.remove("playing");
+  playBtn.textContent = "▶ Play";
+}
+
+function runGuidedTour(pathIds) {
+  stopAutoPlay();
+  switchPerspective("view-chart");
+  historyStack = [{ stateId: pathIds[0], via: "tour start" }];
+  stepToState(pathIds[0], pathIds[0], false);
+  glideScrollToPlate(pathIds[0]);
+
+  let i = 1;
+  const playBtn = document.getElementById("ctrl-play");
+  playBtn.classList.add("playing");
+  playBtn.textContent = "⏸ Playing...";
+
+  autoPlayTimer = setInterval(() => {
+    if (i >= pathIds.length) {
+      stopAutoPlay();
+      return;
+    }
+    const nextId = pathIds[i];
+    stepToState(nextId, currentStateId, true);
+    glideScrollToPlate(nextId);
+    i++;
+  }, 1500);
+}
+
+document.getElementById("ctrl-back").addEventListener("click", () => {
+  stopAutoPlay();
+  if (historyStack.length > 1) {
+    const popped = historyStack.pop();
+    const target = historyStack[historyStack.length - 1];
+    stepToState(target.stateId, popped.stateId, false);
+    glideScrollToPlate(target.stateId);
+  }
+});
+
+document.getElementById("ctrl-reset").addEventListener("click", () => {
+  stopAutoPlay();
+  guards.causalMask = true;
+  guards.gradClip = true;
+  guards.klLeash = true;
+  historyStack = [{ stateId: "s0", via: "reset" }];
+  stepToState("s0", currentStateId, false);
+  glideScrollToPlate("s0");
+});
+
+document.getElementById("ctrl-play").addEventListener("click", () => {
+  if (autoPlayTimer) {
+    stopAutoPlay();
+  } else {
+    // Healthy path tour from current state or full lifecycle
+    const healthyOrder = ["s0", "s1", "s2", "s3", "s4", "s6", "s7", "s9", "s10", "s11", "s13", "s14", "s15"];
+    const startIdx = Math.max(0, healthyOrder.indexOf(currentStateId));
+    const slice = healthyOrder.slice(startIdx);
+    runGuidedTour(slice.length > 1 ? slice : healthyOrder);
+  }
+});
+
+document.getElementById("ctrl-minimize").addEventListener("click", () => {
+  const stepper = document.getElementById("stepper");
+  const minimized = stepper.classList.toggle("minimized");
+  document.getElementById("ctrl-minimize").textContent = minimized ? "▴ Expand" : "▾ Minimize";
+});
+
+document.getElementById("btn-start-stepper").addEventListener("click", () => {
+  runGuidedTour(["s0", "s1", "s2", "s3", "s4", "s6", "s7", "s9", "s10", "s11", "s13", "s14", "s15"]);
+});
+document.getElementById("btn-tour-mask").addEventListener("click", () => {
+  runGuidedTour(["s0", "s2", "s3", "s5"]);
+});
+document.getElementById("btn-tour-nan").addEventListener("click", () => {
+  runGuidedTour(["s0", "s2", "s3", "s4", "s6", "s7", "s8"]);
+});
+document.getElementById("btn-tour-reward").addEventListener("click", () => {
+  runGuidedTour(["s0", "s2", "s3", "s4", "s6", "s7", "s9", "s10", "s11", "s12"]);
+});
+document.getElementById("reset-home-link").addEventListener("click", (e) => {
+  e.preventDefault();
+  switchPerspective("view-chart");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+/* ============================================================================
+   6. PERSPECTIVE TAB SWITCHING
+   ============================================================================ */
+function switchPerspective(viewId) {
+  if (viewId !== "view-chart") stopAutoPlay();
+  document.getElementById("stepper").classList.toggle("perspective-hidden", viewId !== "view-chart");
+  document.querySelectorAll(".mode-tab").forEach(tab => {
+    const active = tab.getAttribute("data-view") === viewId;
+    tab.classList.toggle("active", active);
+    tab.setAttribute("aria-selected", active ? "true" : "false");
+  });
+  document.querySelectorAll(".view-section").forEach(sec => {
+    sec.classList.toggle("active", sec.id === viewId);
+  });
+  if (viewId === "view-chart") {
+    setTimeout(() => {
+      drawStaticWallEdges();
+      updateSpotlightAndRoute(prevStateId, currentStateId, STATE_MAP[currentStateId].breaksRule);
+    }, 50);
+  }
+}
+
+document.querySelectorAll(".mode-tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    switchPerspective(tab.getAttribute("data-view"));
+  });
+});
+
+/* ============================================================================
+   7. VIEW 2: COLORFIGURES 360° ISOMETRIC SEE-THROUGH TRANSFORMER ENGINE
+   ============================================================================ */
+const isoState = {
+  yaw: 0.6,
+  pitch: 0.45,
+  dragging: false,
+  lastX: 0,
+  seeThrough: true,
+  labelsOn: true,
+  turntable: false,
+  wobble: 1.0,
+  swatch: "terracotta",
+  selectedPart: 1,
+  activeAction: "Forward Pass",
+  spikeAlert: false
+};
+
+const SWATCH_COLORS = {
+  terracotta: { shell: "#c85a42", accent: "#f0c86a", dark: "#6e2c1e" },
+  mustard:    { shell: "#dca244", accent: "#2b7a78", dark: "#6b4c16" },
+  mint:       { shell: "#4c9a78", accent: "#f0c86a", dark: "#1f4d39" },
+  cobalt:     { shell: "#3b66b0", accent: "#f0c86a", dark: "#1b3159" },
+  plum:       { shell: "#7a4972", accent: "#7ee0c6", dark: "#3b1f36" }
+};
+
+const PART_DESCRIPTIONS = {
+  1: "<strong>Inside Part 1 (BPE Tokenizer &amp; Embedding Table):</strong> Splits UTF-8 text into subword token IDs (V=128,256) and maps each token to a dense d=4,096 residual stream vector.",
+  2: "<strong>Inside Part 2 (RoPE Rotary Phase Gears &amp; Causal Gate):</strong> Rotates Query and Key coordinate pairs by angle m·θ_i and blocks future tokens (j > i) with an upper-triangular −∞ mask.",
+  3: "<strong>Inside Part 3 (Grouped-Query Attention Drum):</strong> Computes scaled dot-product scores Softmax(QKᵀ/√dₖ + M)V across 64 Query heads sharing 8 Key/Value heads.",
+  4: "<strong>Inside Part 4 (SwiGLU / Top-2 MoE Sparse Router):</strong> Routes each token to its Top-2 highest-scoring experts out of 64 feed-forward blocks, using sparse per-token activation; routing and communication add overhead.",
+  5: "<strong>Inside Part 5 (NVLink 900 GB/s Ring &amp; Grad Clipper):</strong> All-reduces gradients across GPU shards and clips global norm ‖g‖₂ ≤ 1.0 before AdamW updates FP32 master weights.",
+  6: "<strong>Inside Part 6 (PagedAttention KV-Cache Bank):</strong> Stores past Key/Value tensors in 16-token non-contiguous memory pages so autoregressive decoding streams at 18 ms/token."
+};
+
+const isoBox = document.getElementById("iso-canvas-box");
+isoBox.addEventListener("pointerdown", (e) => {
+  isoState.dragging = true;
+  isoState.lastX = e.clientX;
+  isoBox.setPointerCapture(e.pointerId);
+});
+isoBox.addEventListener("pointermove", (e) => {
+  if (!isoState.dragging) return;
+  const dx = e.clientX - isoState.lastX;
+  isoState.lastX = e.clientX;
+  isoState.yaw += dx * 0.011;
+  const deg = Math.round(((isoState.yaw * 180 / Math.PI) % 360 + 360) % 360);
+  document.getElementById("iso-angle-readout").textContent = `${deg}°`;
+});
+isoBox.addEventListener("pointerup", () => { isoState.dragging = false; });
+isoBox.addEventListener("pointercancel", () => { isoState.dragging = false; });
+
+document.getElementById("iso-btn-seethrough").addEventListener("click", (e) => {
+  isoState.seeThrough = !isoState.seeThrough;
+  e.currentTarget.textContent = `See-through: ${isoState.seeThrough ? 'ON' : 'OFF'}`;
+});
+document.getElementById("iso-btn-labels").addEventListener("click", (e) => {
+  isoState.labelsOn = !isoState.labelsOn;
+  e.currentTarget.textContent = `Labels: ${isoState.labelsOn ? 'ON' : 'OFF'}`;
+});
+document.getElementById("iso-btn-turntable").addEventListener("click", (e) => {
+  isoState.turntable = !isoState.turntable;
+  e.currentTarget.classList.toggle("secondary", !isoState.turntable);
+});
+document.getElementById("iso-wobble-slider").addEventListener("input", (e) => {
+  isoState.wobble = parseFloat(e.target.value);
+  document.getElementById("wobble-val-label").textContent = `${isoState.wobble.toFixed(1)}×`;
+});
+
+document.querySelectorAll("#iso-swatches .color-swatch").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("#iso-swatches .color-swatch").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    isoState.swatch = btn.getAttribute("data-swatch");
+  });
+});
+
+document.querySelectorAll("#iso-part-list .part-badge").forEach(badge => {
+  badge.addEventListener("click", () => {
+    document.querySelectorAll("#iso-part-list .part-badge").forEach(b => b.classList.remove("active"));
+    badge.classList.add("active");
+    const p = parseInt(badge.getAttribute("data-part"), 10);
+    isoState.selectedPart = p;
+    document.getElementById("iso-part-explain").innerHTML = PART_DESCRIPTIONS[p];
+  });
+});
+
+function setMachineAction(name, partNum, spike = false) {
+  isoState.activeAction = name;
+  isoState.selectedPart = partNum;
+  isoState.spikeAlert = spike;
+  document.getElementById("iso-mode-readout").textContent = name;
+  document.querySelectorAll("#iso-part-list .part-badge").forEach(b => {
+    b.classList.toggle("active", parseInt(b.getAttribute("data-part"), 10) === partNum);
+  });
+  document.getElementById("iso-part-explain").innerHTML = PART_DESCRIPTIONS[partNum];
+}
+
+document.getElementById("mach-act-prompt").addEventListener("click", () => setMachineAction("Feeding BPE Tokens", 1));
+document.getElementById("mach-act-attn").addEventListener("click", () => setMachineAction("Scoring Causal Q·Kᵀ/√d", 3));
+document.getElementById("mach-act-moe").addEventListener("click", () => setMachineAction("Routing Top-2 MoE Experts", 4));
+document.getElementById("mach-act-grad").addEventListener("click", () => setMachineAction("NVLink Ring All-Reduce", 5));
+document.getElementById("mach-act-spike").addEventListener("click", () => setMachineAction("⚡ Numerical Spike Demo", 5, true));
+document.getElementById("mach-act-kv").addEventListener("click", () => setMachineAction("Streaming Paged KV-Cache", 6));
+
+function projectIso(x, y, z, cx, cy, scale, yaw, pitch) {
+  const cosY = Math.cos(yaw), sinY = Math.sin(yaw);
+  const rx = x * cosY - z * sinY;
+  const rz = x * sinY + z * cosY;
+  const sx = cx + rx * scale;
+  const sy = cy + (y + rz * Math.sin(pitch)) * scale;
+  return { x: sx, y: sy };
+}
+
+function drawIsoWireBox(ctx, bx, by, bz, bw, bh, bd, cx, cy, scale, yaw, pitch, strokeCol, fillCol, seed, wobble) {
+  const pts = [
+    [-bw, -bh, -bd], [bw, -bh, -bd], [bw, bh, -bd], [-bw, bh, -bd],
+    [-bw, -bh,  bd], [bw, -bh,  bd], [bw, bh,  bd], [-bw, bh,  bd]
+  ].map(([vx, vy, vz]) => projectIso(bx + vx, by + vy, bz + vz, cx, cy, scale, yaw, pitch));
+
+  if (fillCol) {
+    ctx.save();
+    ctx.fillStyle = fillCol;
+    ctx.beginPath();
+    [0, 1, 5, 4].forEach((idx, i) => i === 0 ? ctx.moveTo(pts[idx].x, pts[idx].y) : ctx.lineTo(pts[idx].x, pts[idx].y));
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    [1, 2, 6, 5].forEach((idx, i) => i === 0 ? ctx.moveTo(pts[idx].x, pts[idx].y) : ctx.lineTo(pts[idx].x, pts[idx].y));
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  const edges = [
+    [0,1],[1,2],[2,3],[3,0],
+    [4,5],[5,6],[6,7],[7,4],
+    [0,4],[1,5],[2,6],[3,7]
+  ];
+  edges.forEach(([a, b], idx) => {
+    handLine(ctx, pts[a].x, pts[a].y, pts[b].x, pts[b].y, strokeCol, 1.8, seed + idx, wobble);
+  });
+  return pts[0];
+}
+
+function renderIsoMachine(nowSec, frameIdx) {
+  const canvas = document.getElementById("iso-canvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width, h = canvas.height;
+
+  if (isoState.turntable && !isoState.dragging) {
+    isoState.yaw += 0.008;
+    const deg = Math.round(((isoState.yaw * 180 / Math.PI) % 360 + 360) % 360);
+    document.getElementById("iso-angle-readout").textContent = `${deg}°`;
+  }
+
+  drawPaperTooth(ctx, w, h, "#efe5ce", frameIdx);
+  const cx = w * 0.5;
+  const cy = h * 0.52;
+  const scale = 1.18;
+  const pal = SWATCH_COLORS[isoState.swatch] || SWATCH_COLORS.terracotta;
+  const wob = isoState.wobble * 1.3;
+  const seed = 700 + frameIdx * 29;
+
+  // Isometric floor grid
+  for (let g = -220; g <= 220; g += 55) {
+    const p1 = projectIso(g, 135, -220, cx, cy, scale, isoState.yaw, isoState.pitch);
+    const p2 = projectIso(g, 135,  220, cx, cy, scale, isoState.yaw, isoState.pitch);
+    handLine(ctx, p1.x, p1.y, p2.x, p2.y, "rgba(34,31,27,0.14)", 1, seed + g, wob * 0.4);
+    const q1 = projectIso(-220, 135, g, cx, cy, scale, isoState.yaw, isoState.pitch);
+    const q2 = projectIso( 220, 135, g, cx, cy, scale, isoState.yaw, isoState.pitch);
+    handLine(ctx, q1.x, q1.y, q2.x, q2.y, "rgba(34,31,27,0.14)", 1, seed + g + 500, wob * 0.4);
+  }
+
+  // Outer Transformer & GPU Pod Chassis
+  const shellFill = isoState.seeThrough ? "rgba(200, 90, 66, 0.14)" : pal.shell;
+  drawIsoWireBox(ctx, 0, 0, 0, 185, 125, 135, cx, cy, scale, isoState.yaw, isoState.pitch, "#221f1b", shellFill, seed + 10, wob);
+
+  // Internal Working Parts (visible in See-Through or X-Ray outline)
+  const partAnchors = {};
+
+  // Part 1: BPE Tokenizer Hopper & Embedding Table (Bottom Left)
+  partAnchors[1] = drawIsoWireBox(
+    ctx, -115, 65, 0, 46, 38, 82, cx, cy, scale, isoState.yaw, isoState.pitch,
+    isoState.selectedPart === 1 ? "#d9383a" : "#221f1b",
+    isoState.seeThrough ? "rgba(240, 200, 106, 0.65)" : null,
+    seed + 100, wob
+  );
+
+  // Part 2: RoPE Rotary Phase Gears
+  const gearCenter = projectIso(-45, 45, 0, cx, cy, scale, isoState.yaw, isoState.pitch);
+  handCircle(ctx, gearCenter.x, gearCenter.y, 32, "#221f1b", "rgba(126, 224, 198, 0.72)", 2.0, seed + 200, wob);
+  const gAngle = nowSec * 2.4;
+  handLine(ctx, gearCenter.x, gearCenter.y, gearCenter.x + Math.cos(gAngle) * 28, gearCenter.y + Math.sin(gAngle) * 28, "#d9383a", 2.4, seed + 210, wob);
+  partAnchors[2] = gearCenter;
+
+  // Part 3: Multi-Head Causal Attention Drum (Center)
+  partAnchors[3] = drawIsoWireBox(
+    ctx, 10, -10, 0, 56, 48, 76, cx, cy, scale, isoState.yaw, isoState.pitch,
+    isoState.selectedPart === 3 ? "#d9383a" : "#221f1b",
+    isoState.seeThrough ? "rgba(46, 94, 170, 0.55)" : null,
+    seed + 300, wob
+  );
+
+  // Part 4: SwiGLU / Top-2 MoE Sparse Expert Banks (Upper Right)
+  for (let ex = -1; ex <= 1; ex++) {
+    const anchor = drawIsoWireBox(
+      ctx, 108, -32 + ex * 38, 0, 42, 14, 65, cx, cy, scale, isoState.yaw, isoState.pitch,
+      "#221f1b",
+      ex === 0 ? "rgba(240, 200, 106, 0.85)" : "rgba(60, 141, 109, 0.58)",
+      seed + 400 + ex * 20, wob
+    );
+    if (ex === -1) partAnchors[4] = anchor;
+  }
+
+  // Part 5: NVLink All-Reduce Ring & Grad Clipper (Top Crown)
+  const ringCenter = projectIso(0, -105, 0, cx, cy, scale, isoState.yaw, isoState.pitch);
+  handCircle(ctx, ringCenter.x, ringCenter.y, 44, isoState.spikeAlert ? "#e72e3b" : "#221f1b", isoState.spikeAlert ? "rgba(231,46,59,0.55)" : "rgba(240,200,106,0.45)", 2.2, seed + 500, wob);
+  partAnchors[5] = ringCenter;
+
+  // Part 6: PagedAttention KV-Cache Memory Drawer (Bottom Right)
+  partAnchors[6] = drawIsoWireBox(
+    ctx, 105, 76, 0, 48, 30, 78, cx, cy, scale, isoState.yaw, isoState.pitch,
+    isoState.selectedPart === 6 ? "#d9383a" : "#221f1b",
+    isoState.seeThrough ? "rgba(122, 73, 114, 0.62)" : null,
+    seed + 600, wob
+  );
+
+  // Animated Token Particles Flowing Through the Machine
+  for (let p = 0; p < 6; p++) {
+    const u = ((nowSec * 0.55) + p / 6) % 1;
+    const tx = -140 + u * 280;
+    const ty = Math.sin(u * Math.PI * 2) * 35;
+    const pt = projectIso(tx, ty, 0, cx, cy, scale, isoState.yaw, isoState.pitch);
+    handCircle(ctx, pt.x, pt.y, 7, "#221f1b", isoState.spikeAlert ? "#ff4d4d" : "#f0c86a", 1.6, seed + 700 + p, wob * 0.6);
+  }
+
+  // Draw Numbered Callout Badges if Labels are ON
+  if (isoState.labelsOn) {
+    ctx.save();
+    ctx.font = "bold 12px 'IBM Plex Mono', monospace";
+    for (let k = 1; k <= 6; k++) {
+      const pt = partAnchors[k];
+      if (!pt) continue;
+      const isSel = isoState.selectedPart === k;
+      handCircle(ctx, pt.x, pt.y - 12, isSel ? 14 : 11, "#221f1b", isSel ? "#f0c86a" : "#fffdf7", 2.0, seed + 800 + k, wob * 0.5);
+      ctx.fillStyle = "#221f1b";
+      ctx.fillText(String(k), pt.x - 4, pt.y - 8);
+    }
+    ctx.restore();
+  }
+}
+
+/* ============================================================================
+   8. VIEW 3: FIELDNOTES PLACE (SPATIAL CROSS-SECTION OF THE 4 WORLDS)
+   ============================================================================ */
+let activePlaceZone = 0;
+let placeBubbleText = "Tap any room or engineer! Currently inspecting: MinHash deduplication sieve.";
+
+const placeCanvas = document.getElementById("place-canvas");
+if (placeCanvas) {
+  placeCanvas.addEventListener("click", (e) => {
+    const rect = placeCanvas.getBoundingClientRect();
+    const xRatio = (e.clientX - rect.left) / rect.width;
+    const zone = Math.min(3, Math.max(0, Math.floor(xRatio * 4)));
+    selectPlaceZone(zone);
+  });
+}
+
+function selectPlaceZone(zone) {
+  activePlaceZone = zone;
+  const titles = [
+    "I. The Web & Corpus Foundry (15T Tokens)",
+    "II. The 25-Megawatt 16,384-GPU Datacenter Pod",
+    "III. The Alignment & GRPO Verification Studio",
+    "IV. The Low-Latency PagedAttention Serving Engine"
+  ];
+  const bubbles = [
+    "Engineer Maya: 'We filtered 300B CommonCrawl pages down to 15T clean tokens and merged 128,256 BPE subwords!'",
+    "Cluster Ops Dev: 'All 16,384 H100s synced over 900 GB/s NVLink! Grad norm clipped at 0.94 — zero NaN spikes!'",
+    "Alignment Lead Priya: 'GRPO sampled 8 reasoning chains; math verifier rewarded proof #3 while KL β=0.04 kept calibration tight!'",
+    "Inference Daemon: 'PagedAttention cached 32K prompt tokens in 16-token blocks — streaming response at 18 ms/token!'"
+  ];
+  document.getElementById("place-zone-label").textContent = titles[zone];
+  placeBubbleText = bubbles[zone];
+  document.querySelectorAll("#place-cards .place-card").forEach(c => {
+    c.classList.toggle("active", parseInt(c.getAttribute("data-zone"), 10) === zone);
+  });
+}
+
+document.querySelectorAll("#place-cards .place-card").forEach(card => {
+  card.addEventListener("click", () => {
+    selectPlaceZone(parseInt(card.getAttribute("data-zone"), 10));
+  });
+});
+
+function renderPlaceCrossSection(nowSec, frameIdx) {
+  if (!placeCanvas) return;
+  const ctx = placeCanvas.getContext("2d");
+  const w = placeCanvas.width, h = placeCanvas.height;
+  drawPaperTooth(ctx, w, h, "#e9dbb9", frameIdx);
+  const seed = 1200 + frameIdx * 41;
+  const zw = (w - 40) / 4;
+
+  const zoneMeta = [
+    { title: "I. CORPUS FOUNDRY", bg: "#dfd0ad", accent: "#c85a42" },
+    { title: "II. 16K GPU CLUSTER", bg: "#cfd8dc", accent: "#2e5eaa" },
+    { title: "III. ALIGNMENT STUDIO", bg: "#d4e4d8", accent: "#3c8d6d" },
+    { title: "IV. SERVING ENGINE", bg: "#e2d6e6", accent: "#7a4972" }
+  ];
+
+  for (let z = 0; z < 4; z++) {
+    const x = 20 + z * zw;
+    const y = 52;
+    const zh = h - 118;
+    const isAct = z === activePlaceZone;
+    handRect(ctx, x + 6, y, zw - 12, zh, isAct ? "#221f1b" : "rgba(34,31,27,0.4)", zoneMeta[z].bg, isAct ? 2.8 : 1.4, seed + z * 20, 1.3);
+
+    ctx.save();
+    ctx.font = "bold 13px 'IBM Plex Mono', monospace";
+    ctx.fillStyle = "#221f1b";
+    ctx.fillText(zoneMeta[z].title, x + 18, y + 26);
+
+    // Room-specific hand-drawn equipment & animated workers
+    const cx = x + zw / 2;
+    const cy = y + zh / 2;
+
+    if (z === 0) {
+      // Hopper & BPE conveyor belt
+      handRect(ctx, cx - 55, cy - 60, 110, 48, "#221f1b", "#f0c86a", 1.8, seed + 101);
+      ctx.fillText("MinHash + BPE", cx - 46, cy - 32);
+      for (let b = 0; b < 4; b++) {
+        const bx = x + 28 + ((nowSec * 45 + b * 52) % (zw - 66));
+        handRect(ctx, bx, cy + 18, 28, 20, "#221f1b", "#fffdf7", 1.4, seed + 110 + b);
+      }
+    } else if (z === 1) {
+      // 3 Server Racks with blinking NVLink LEDs
+      for (let r = -1; r <= 1; r++) {
+        const rx = cx + r * 62 - 22;
+        handRect(ctx, rx, cy - 70, 44, 130, "#221f1b", "#263238", 1.8, seed + 200 + r);
+        for (let u = 0; u < 5; u++) {
+          const ledCol = ((Math.floor(nowSec * 5) + u + r) % 3 === 0) ? "#f0c86a" : "#6ee7b7";
+          handCircle(ctx, rx + 22, cy - 50 + u * 22, 5, "#221f1b", ledCol, 1.2, seed + 220 + u);
+        }
+      }
+    } else if (z === 2) {
+      // Human annotator desk + GRPO verifier chalkboard
+      handRect(ctx, cx - 75, cy - 68, 150, 64, "#221f1b", "#2d4236", 1.8, seed + 300);
+      ctx.fillStyle = "#f0c86a";
+      ctx.fillText("π_θ / π_ref · KL=0.04", cx - 64, cy - 32);
+      // Stick-figure researcher waving
+      handCircle(ctx, cx, cy + 28, 14, "#221f1b", "#f4d393", 1.8, seed + 310);
+      handLine(ctx, cx, cy + 42, cx, cy + 82, "#221f1b", 2.2, seed + 311);
+      handLine(ctx, cx, cy + 54, cx + 24, cy + 36 + Math.sin(nowSec * 5) * 8, "#221f1b", 2.0, seed + 312);
+    } else if (z === 3) {
+      // PagedAttention KV blocks & streaming token pipe
+      for (let p = 0; p < 6; p++) {
+        const px = cx - 70 + (p % 3) * 48;
+        const py = cy - 55 + Math.floor(p / 3) * 38;
+        handRect(ctx, px, py, 38, 26, "#221f1b", "#f0c86a", 1.5, seed + 400 + p);
+      }
+      ctx.fillStyle = "#221f1b";
+      ctx.fillText("KV Page Table → 60 tok/s", cx - 78, cy + 56);
+    }
+    ctx.restore();
+  }
+
+  // Speech bubble banner at bottom of Place canvas
+  handRect(ctx, 26, h - 52, w - 52, 38, "#221f1b", "#fffdf7", 2.0, seed + 900, 1.0);
+  ctx.save();
+  ctx.font = "14px 'IBM Plex Mono', monospace";
+  ctx.fillStyle = "#221f1b";
+  ctx.fillText(placeBubbleText, 42, h - 28);
+  ctx.restore();
+}
+
+/* ============================================================================
+   9. VIEW 4: FIELDNOTES TIME TAPE & CHINCHILLA SCALING CALCULATOR
+   ============================================================================ */
+const TIME_STOPS = [
+  { pos: 8,  label: "12 ns",     detail: "1 H100 Tensor Core FP16 Matrix-Multiply-Accumulate (MMA)" },
+  { pos: 24, label: "18 ms",     detail: "1 Autoregressive Token Decoded via PagedAttention KV-Cache" },
+  { pos: 40, label: "110 ms",    detail: "1 Forward Pass through 80 Transformer Layers (4,096 context)" },
+  { pos: 54, label: "420 ms",    detail: "1 Global 3D-Parallel Step (Forward + Backward + NVLink All-Reduce)" },
+  { pos: 72, label: "14 hours",  detail: "Supervised Fine-Tuning (SFT) on 100,000 Reasoning Demonstrations" },
+  { pos: 84, label: "12 days",   detail: "RLHF & GRPO Verifier Rollouts with KL Penalty Leash" },
+  { pos: 96, label: "90 days",   detail: "Full Pre-Training Run (15 Trillion Tokens across 16,384 GPUs)" }
+];
+
+let timeSliderVal = 52;
+document.getElementById("time-log-slider").addEventListener("input", (e) => {
+  timeSliderVal = parseInt(e.target.value, 10);
+  let nearest = TIME_STOPS[0];
+  TIME_STOPS.forEach(st => {
+    if (Math.abs(st.pos - timeSliderVal) < Math.abs(nearest.pos - timeSliderVal)) nearest = st;
+  });
+  document.getElementById("time-cursor-readout").textContent = `${nearest.label} (${nearest.detail})`;
+});
+
+function renderTimeTape(_nowSec, frameIdx) {
+  const canvas = document.getElementById("time-canvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width, h = canvas.height;
+  drawPaperTooth(ctx, w, h, "#ede1c5", frameIdx);
+  const seed = 1600 + frameIdx * 23;
+
+  // Horizontal logarithmic tape axis
+  const yAxis = h * 0.52;
+  handLine(ctx, 40, yAxis, w - 40, yAxis, "#221f1b", 3.0, seed + 1, 1.4);
+
+  TIME_STOPS.forEach((st, idx) => {
+    const x = 40 + (st.pos / 100) * (w - 80);
+    const active = Math.abs(st.pos - timeSliderVal) < 10;
+    const yCard = idx % 2 === 0 ? yAxis - 78 : yAxis + 28;
+    handLine(ctx, x, yAxis - 10, x, idx % 2 === 0 ? yAxis - 34 : yAxis + 28, "#221f1b", 1.8, seed + idx + 10);
+    handCircle(ctx, x, yAxis, active ? 10 : 6.5, "#221f1b", active ? "#d9383a" : "#f0c86a", 1.8, seed + idx + 20);
+    handRect(ctx, x - 62, yCard, 124, 44, "#221f1b", active ? "#f0c86a" : "#fffdf7", active ? 2.2 : 1.3, seed + idx + 30);
+
+    ctx.save();
+    ctx.font = "bold 12px 'IBM Plex Mono', monospace";
+    ctx.fillStyle = "#221f1b";
+    ctx.fillText(st.label, x - 52, yCard + 18);
+    ctx.font = "10.5px 'IBM Plex Mono', monospace";
+    ctx.fillText(st.detail.slice(0, 18) + "…", x - 52, yCard + 34);
+    ctx.restore();
+  });
+
+  // Scrubber cursor line
+  const cx = 40 + (timeSliderVal / 100) * (w - 80);
+  handLine(ctx, cx, 16, cx, h - 16, "#d9383a", 2.4, seed + 99, 0.9);
+}
+
+function updateScalingCalculator() {
+  const N_bil = parseFloat(document.getElementById("calc-n-slider").value);
+  const D_tril = parseFloat(document.getElementById("calc-d-slider").value);
+  document.getElementById("calc-n-label").textContent = `${N_bil} Billion`;
+  document.getElementById("calc-d-label").textContent = `${D_tril.toFixed(1)} Trillion`;
+
+  // C = 6 * N * D
+  const flopsExp24 = (6 * (N_bil * 1e9) * (D_tril * 1e12)) / 1e24;
+  document.getElementById("calc-flops-out").textContent = `${flopsExp24.toFixed(2)} × 10²⁴ FLOPs`;
+
+  // Days on 8,192 H100s at 45% MFU (~445 TFLOP/s effective per GPU)
+  const clusterFlopsPerSec = 8192 * 445e12;
+  const days = (flopsExp24 * 1e24) / (clusterFlopsPerSec * 86400);
+  document.getElementById("calc-days-out").textContent = `~${Math.max(1, Math.round(days))} idealized compute days at assumed 8,192 × 445 TFLOP/s`;
+
+  // Memory = 16 bytes * N
+  const vramGB = Math.round(N_bil * 16);
+  document.getElementById("calc-mem-out").textContent = `${vramGB.toLocaleString()} GB VRAM`;
+
+  // Parametric Chinchilla loss L(N,D) = E + A / N^0.34 + B / D^0.28
+  const E = 1.69;
+  const A = 406.4 / Math.pow(N_bil * 1e9, 0.34);
+  const B = 410.7 / Math.pow(D_tril * 1e12, 0.28);
+  const loss = E + A + B;
+  document.getElementById("calc-loss-out").textContent = `${loss.toFixed(3)} nats / token`;
+
+  const ratio = Math.round((D_tril * 1000) / N_bil);
+  const optNote = ratio > 40 ? "Above historical ~20× reference" : (ratio >= 18 ? "Near historical ~20× reference" : "Below historical ~20× reference");
+  document.getElementById("calc-ratio-out").textContent = `Token/Param Ratio: ${ratio}× (${optNote})`;
+}
+
+document.getElementById("calc-n-slider").addEventListener("input", updateScalingCalculator);
+document.getElementById("calc-d-slider").addEventListener("input", updateScalingCalculator);
+
+/* ============================================================================
+   10. MASTER ANIMATION LOOP (180ms [0,1,2,1] WOBBLE + COSINE ROUTE + SCOPE)
+   ============================================================================ */
+const WOBBLE_SEQ = [0, 1, 2, 1];
+const scopeCanvas = document.getElementById("scope-canvas");
+const scopeCtx = scopeCanvas.getContext("2d");
+
+function masterTick(now) {
+  const nowSec = now / 1000;
+  const seqIdx = Math.floor(now / 180) % 4;
+  const frameIdx = WOBBLE_SEQ[seqIdx];
+
+  document.getElementById("scope-frame-indicator").textContent =
+    `pencil+pastel · wobble frame ${seqIdx + 1}/4`;
+
+  // 1. Render Circular Scope Canvas for Active State
+  const activeState = STATE_MAP[currentStateId];
+  if (activeState) {
+    renderStateArtwork(scopeCtx, scopeCanvas.width, scopeCanvas.height, activeState, frameIdx, nowSec);
+  }
+
+  // 2. Render Active View Canvases
+  const chartActive = document.getElementById("view-chart").classList.contains("active");
+  if (chartActive) {
+    STATES.forEach(st => {
+      const c = plateCanvases[st.id];
+      if (c) renderStateArtwork(c.getContext("2d"), c.width, c.height, st, frameIdx, nowSec);
+    });
+
+    // Update cosine-eased SVG route animation (#step-route & #step-token)
+    if (routeAnim.active) {
+      const route = document.getElementById("step-route");
+      const token = document.getElementById("step-token");
+      const L = route.getTotalLength();
+      if (L > 0) {
+        const u = Math.min(1, (now - routeAnim.t0) / routeAnim.dur);
+        const e = 0.5 - Math.cos(Math.PI * u) / 2;
+        route.style.strokeDashoffset = `${L * (1 - e)}`;
+        const pt = route.getPointAtLength(e * L);
+        token.setAttribute("cx", pt.x.toFixed(1));
+        token.setAttribute("cy", pt.y.toFixed(1));
+        token.setAttribute("opacity", "1");
+        if (u >= 1) routeAnim.active = false;
+      }
+    }
+  } else if (document.getElementById("view-machine").classList.contains("active")) {
+    renderIsoMachine(nowSec, frameIdx);
+  } else if (document.getElementById("view-place").classList.contains("active")) {
+    renderPlaceCrossSection(nowSec, frameIdx);
+  } else if (document.getElementById("view-time").classList.contains("active")) {
+    renderTimeTape(nowSec, frameIdx);
+  }
+
+  requestAnimationFrame(masterTick);
+}
+
+window.addEventListener("resize", () => {
+  drawStaticWallEdges();
+  updateSpotlightAndRoute(prevStateId, currentStateId, STATE_MAP[currentStateId].breaksRule);
+});
+
+// Initialize everything on load
+window.addEventListener("DOMContentLoaded", () => {
+  buildWallDOM();
+  updateScalingCalculator();
+  setTimeout(() => {
+    drawStaticWallEdges();
+    stepToState("s0", "s0", false);
+    if (matchMedia("(max-width: 720px)").matches) {
+      document.getElementById("stepper").classList.add("minimized");
+      document.getElementById("ctrl-minimize").textContent = "▴ Expand";
+    }
+  }, 60);
+  requestAnimationFrame(masterTick);
+  document.fonts?.ready.then(() => { drawStaticWallEdges(); updateSpotlightAndRoute(prevStateId, currentStateId, STATE_MAP[currentStateId].breaksRule); });
+});
+</script>
 </body>
 </html>
