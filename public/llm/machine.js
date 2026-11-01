@@ -35,6 +35,7 @@
     return p[0];
   }
   const BOIL = [0, 1, 2, 1];
+  const PARTS3D = { 1: [-115, 65, 0], 2: [-45, 45, 0], 3: [10, -10, 0], 4: [108, -32, 0], 5: [0, -105, 0], 6: [105, 76, 0] };
 
   function mount(o) {
     const ctx = o.canvas.getContext('2d');
@@ -76,7 +77,12 @@
       const ring = project(0, -105, 0, yaw, pitch);
       circle(ctx, ring.x, ring.y, 44, col(5), 'rgba(240,200,106,.45)', 2.2, seed + 500, amp); anchors[5] = ring;
       anchors[6] = wireBox(ctx, 105, 76, 0, 48, 30, 78, yaw, pitch, col(6), state.xray ? 'rgba(122,73,114,.62)' : null, seed + 600, amp);
-      for (let p = 0; p < 6; p++) { const u = ((still ? .3 : sec * .55) + p / 6) % 1; const pt = project(-140 + u * 280, Math.sin(u * Math.PI * 2) * 35, 0, yaw, pitch); circle(ctx, pt.x, pt.y, 7, INK, GOLD, 1.6, seed + 700 + p, .6); }
+      const via = PARTS3D[state.part] || [0, 0, 0];
+      const route = u => { const a = [-150, 20, 0], b = [150, 20, 0]; const m = via; const w = 1 - u, q0 = w * w, q1 = 2 * w * u, q2 = u * u; return [q0 * a[0] + q1 * m[0] + q2 * b[0], q0 * a[1] + q1 * (m[1] - 18) + q2 * b[1], q0 * a[2] + q1 * m[2] + q2 * b[2]]; };
+      const pulse = still ? .5 : .5 + .5 * Math.sin(sec * 3);
+      const lit = project(...via, yaw, pitch);
+      ctx.save(); const glow = ctx.createRadialGradient(lit.x, lit.y, 4, lit.x, lit.y, 70 + pulse * 18); glow.addColorStop(0, `rgba(240,200,106,${.55 + pulse * .25})`); glow.addColorStop(1, 'rgba(240,200,106,0)'); ctx.fillStyle = glow; ctx.fillRect(lit.x - 100, lit.y - 100, 200, 200); ctx.restore();
+      for (let p = 0; p < 6; p++) { const u = ((still ? .3 : sec * .45) + p / 6) % 1; const [x, y, z] = route(u); const pt = project(x, y, z, yaw, pitch); const near = Math.abs(u - .5) < .12; circle(ctx, pt.x, pt.y, near ? 9 : 7, INK, near ? '#fff1c2' : GOLD, 1.6, seed + 700 + p, .6); }
       ctx.save(); ctx.font = '700 13px "KevinSans", "Fraunces", serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       for (let k = 1; k <= 6; k++) { const pt = anchors[k]; const sel = state.part === k; circle(ctx, pt.x, pt.y - 12, sel ? 14 : 11, INK, sel ? GOLD : '#fffdf7', 2, seed + 800 + k, .5); ctx.fillStyle = INK; ctx.fillText(String(k), pt.x, pt.y - 11); }
       ctx.restore(); ctx.restore();

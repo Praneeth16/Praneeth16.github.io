@@ -14,4 +14,6 @@ Mode: Experience. The drawings are the page; the interface recedes.
 - Motion: the cover has the single authored moment (the question writes itself, splits into tokens, and points down). Canvases animate only while in view and stop when the tab is hidden or the reader pauses motion. Detours crossfade the drawing in place; nothing opens a modal.
 - Reduced motion: every canvas paints a complete still frame; cover elements appear without animation.
 - States: hover and focus on every control, pressed state for the break and machine buttons, a red outline on a broken scene.
+- Thread spine: a gold dashed thread runs between scenes carrying the TLA+ transition label as a paper tag. Red branches leave the thread at the three failure states and double as the break toggle; a pale loop marks the training loop. Strokes use `vector-effect: non-scaling-stroke` because the SVG is stretched to the gap height.
+- Step-through panel: fixed card on desktop, bottom sheet under 1200px. Shows the current state, the transitions that can happen next as gold, red, and pale moves, Back, Play, and dims every scene except the active one while open. Arrow keys step; Escape closes.
 - Checks: `node scripts/check-llm-story.mjs` verifies the scene order against the TLA+ lifecycle model and that every drawing is used once.

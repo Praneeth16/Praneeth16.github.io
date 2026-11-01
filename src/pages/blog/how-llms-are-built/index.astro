@@ -1,10 +1,10 @@
 ---
 import '../../../styles/llm.css';
 
-type Detour = { art: string; state: string; title: string; body: string; invariant: string; action: string; repair: string };
+type Detour = { art: string; state: string; title: string; body: string; invariant: string; action: string; repair: string; trigger: string; mend: string };
 type Scene = {
   id: string; art: string; state: string; chapter: number; title: string; lead: string; body: string;
-  paper: string; ink: string; alt: string; detour?: Detour;
+  paper: string; ink: string; alt: string; next: string; loop?: string; detour?: Detour;
 };
 
 const chapters = [
@@ -18,60 +18,73 @@ const scenes: Scene[] = [
   { id: 'crawl', art: 'crawl', state: 's0', chapter: 0, paper: '#d8c19a', ink: '#231e18',
     title: 'Raw web crawl', lead: 'Petabytes in. A fraction kept.',
     body: 'Everything starts as text nobody wrote for a model: web pages, code repositories, scanned papers. A filter decides what is worth keeping, and how much it rejects depends on the recipe. A single crawl snapshot runs to petabytes before the filter touches it.',
+    next: 'MinHash dedup, then language and quality filters',
     alt: 'Documents from the web, code, and papers fall into a funnel. Some are rejected sideways; the rest stack up as a filtered corpus.' },
   { id: 'dedup', art: 'dedup', state: 's1', chapter: 0, paper: '#1b434d', ink: '#f3ede0',
     title: 'Deduplicated corpus', lead: 'Near copies out. Mixture weights in.',
     body: 'The same page appears thousands of times across a crawl. MinHash signatures find near duplicates so each document is learned once. Then mixture weights decide how much code, math, and books the model sees relative to the open web.',
+    next: 'byte-pair encoding merges frequent pairs',
     alt: 'Document signatures are compared, near-duplicate groups merge, and one representative of each group is kept.' },
   { id: 'bpe', art: 'bpe', state: 's2', chapter: 0, paper: '#253855', ink: '#f2ece1',
     title: 'Byte-pair tokens', lead: 'Bytes merge into pieces the model can count.',
     body: 'A tokenizer starts from raw bytes and repeatedly merges the most frequent adjacent pair. After a hundred thousand merges, common words are single tokens and rare words split into parts. Llama 3 uses a vocabulary of 128,256 tokens. The question at the top of this page becomes a handful of them.',
+    next: 'look up d = 4,096 vectors and rotate by position',
     alt: 'Byte-level pieces of a word merge pairwise into larger tokens with integer ids.' },
   { id: 'rope', art: 'rope', state: 's3', chapter: 1, paper: '#4a2744', ink: '#f6ecf4',
     title: 'Embeddings and rotary position', lead: 'A token becomes a vector. Position becomes an angle.',
     body: 'Each token id looks up a vector of a few thousand numbers. Position is not stored in that vector. Rotary embeddings rotate pairs of coordinates in the query and key projections by an angle proportional to position, so the score between two tokens depends on how far apart they are.',
+    next: 'project Q, K, V [causal mask on]',
     alt: 'Token vectors are looked up, then query and key pairs rotate by an angle that grows with position.' },
   { id: 'attention', art: 'attention', state: 's4', chapter: 1, paper: '#192238', ink: '#f4eee1',
     title: 'Causal self-attention', lead: 'Every token asks the tokens before it.',
     body: 'A query from one position scores against the keys of every earlier position. Softmax turns the scores into weights, and the weighted sum of values flows back into that position. Future positions are masked to minus infinity, so a token predicting the next word cannot read it.',
+    next: 'add the residual stream, RMSNorm, into SwiGLU or MoE',
     alt: 'A query token draws rays to earlier keys, scores them, and mixes their values. Later positions are blocked by a mask.',
-    detour: { art: 'mask_bug', state: 's5', action: 'Remove the mask', repair: 'Restore the mask', invariant: 'NoFutureTokenLeakage',
+    detour: { art: 'mask_bug', state: 's5', action: 'Remove the mask', repair: 'Restore the mask', trigger: 'disable the upper-triangle mask [mask leaked]', mend: 'restore the −∞ causal mask [repair]', invariant: 'NoFutureTokenLeakage',
       title: 'the mask slips', body: 'Without the mask, each position can read its own answer. Training loss drops fast and the curve looks brilliant. The model then falls apart the moment it has to generate without the future in view.' } },
   { id: 'moe', art: 'moe', state: 's6', chapter: 1, paper: '#2e473b', ink: '#eff7f2',
     title: 'SwiGLU and mixture of experts', lead: 'Wide feed-forward layers. Only a few used per token.',
     body: 'After attention, each position passes through a feed-forward block. In a mixture-of-experts layer a small router scores many such blocks and sends the token to the top two. The model holds far more parameters than any single token touches, at the cost of routing and communication.',
+    next: 'next-token cross-entropy, then backpropagate',
     alt: 'A router scores expert blocks, dispatches a token to the top two, and combines their weighted outputs.' },
   { id: 'parallel', art: 'parallel', state: 's7', chapter: 2, paper: '#222428', ink: '#f3efe6',
     title: 'Three-dimensional parallelism', lead: 'One model. Thousands of GPUs. One gradient.',
     body: 'No single GPU holds the model. Tensor parallelism splits a layer across the GPUs in a node, pipeline parallelism splits layers across nodes, and data parallelism gives each group its own batch. Gradients ring-reduce across the whole cluster before any weight changes.',
+    next: 'clip the global gradient norm to 1.0 [grad clip on]',
     alt: 'Gradient chunks are partitioned across GPUs, reduced around a ring, and gathered back.',
-    detour: { art: 'nan_bug', state: 's8', action: 'Inject an overflow', repair: 'Rewind to the checkpoint', invariant: 'FiniteWeightsAndLoss',
+    detour: { art: 'nan_bug', state: 's8', action: 'Inject an overflow', repair: 'Rewind to the checkpoint', trigger: 'inject numerical instability [failure scenario]', mend: 'rewind to the last healthy checkpoint, clip at 1.0 [repair]', invariant: 'FiniteWeightsAndLoss',
       title: 'numbers stop being numbers', body: 'A large activation overflows a 16-bit float. Infinity becomes NaN, NaN spreads through every weight it touches, and the loss goes vertical. Clipping bounds finite gradients but cannot repair a value that is already infinite. Recovery means rewinding to the last healthy checkpoint.' } },
   { id: 'adamw', art: 'adamw', state: 's9', chapter: 2, paper: '#b35c44', ink: '#fff6f2',
     title: 'Clip, then step', lead: 'Gradients rescaled. Moments updated. Weights moved.',
     body: 'The global gradient norm is clipped to a ceiling, often 1.0. AdamW keeps running averages of the gradient and its square in 32-bit precision and uses them to scale each weight’s update. A learning-rate schedule warms up, holds, and decays over the run.',
+    next: 'repeat for 15T tokens, about 90 days, then anneal on math and code', loop: 'next micro-batch forward pass [loop back to attention]',
     alt: 'Finite gradients are clipped to a norm ceiling, Adam moments update, and a weight step is taken.' },
   { id: 'checkpoint', art: 'base_ckpt', state: 's10', chapter: 2, paper: '#c9964c', ink: '#231a0d',
     title: 'The base model', lead: 'A world simulator that does not yet take instructions.',
     body: 'Weights are serialized to disk. The result predicts the next token of almost any text whose shape it has seen. Ask it a question and it may continue with five more questions, because that is what questions are often followed by on the web.',
+    next: 'train on prompt and assistant conversations',
     alt: 'Learned tensors are collected and serialized into a checkpoint file.' },
   { id: 'sft', art: 'sft', state: 's11', chapter: 3, paper: '#d8b4bc', ink: '#29181c',
     title: 'Supervised fine-tuning', lead: 'Demonstrations teach the shape of an answer.',
     body: 'Thousands of prompt-and-response pairs, written or reviewed by people, teach the model to answer rather than continue. The loss is computed only on the assistant’s tokens. The prompt is context, not target.',
+    next: 'RLHF or GRPO with a KL penalty, β = 0.04 [KL leash on]',
     alt: 'A prompt is read as context, a demonstration response is predicted, and loss applies only to assistant tokens.',
-    detour: { art: 'reward_bug', state: 's12', action: 'Drop the KL penalty', repair: 'Restore the penalty', invariant: 'NoRewardExploit',
+    detour: { art: 'reward_bug', state: 's12', action: 'Drop the KL penalty', repair: 'Restore the penalty', trigger: 'maximize the reward model with β = 0 [KL leash off]', mend: 'restore β · D_KL(π_θ ‖ π_ref) [repair]', invariant: 'NoRewardExploit',
       title: 'the reward gets gamed', body: 'Optimize hard against an imperfect reward model with nothing holding the policy near its reference, and it finds whatever the reward model over-rates: length, confidence, a favourite phrasing. Scores climb while answers degrade.' } },
   { id: 'grpo', art: 'grpo', state: 's13', chapter: 3, paper: '#335447', ink: '#f1f8f4',
     title: 'Reinforcement from feedback and verifiers', lead: 'Sample several answers. Reward the better ones. Stay close to home.',
     body: 'For each prompt the policy samples a group of responses. Verifiers check code and math; preference models score the rest. Group-relative advantage pushes probability toward the better responses, and a KL penalty keeps the policy near the supervised model.',
+    next: 'quantize and deploy to a paged KV-cache engine',
     alt: 'Eight rollouts from one policy are scored relative to each other, and the policy updates under a KL penalty.' },
   { id: 'serving', art: 'kv_cache', state: 's14', chapter: 3, paper: '#2c3e5e', ink: '#f2f5fa',
     title: 'Serving with a key-value cache', lead: 'Compute the prefix once. Then append.',
     body: 'At inference the prompt is processed in one parallel pass and its keys and values are cached. Each new token attends over the cache and appends its own entry. PagedAttention stores the cache in fixed-size pages so memory is not wasted on padding.',
+    next: 'speculative draft, temperature and top-p sampling',
     alt: 'The prompt prefills a cache of keys and values; a new query reads the cache and appends its own entry.' },
   { id: 'answer', art: 'healthy_end', state: 's15', chapter: 3, paper: '#e9dec3', ink: '#1f1b16',
     title: 'The answer', lead: 'A streamed reply. Evaluation still matters.',
     body: 'The question from the top of the page arrives. Tokens stream out one at a time, each sampled from a distribution over the vocabulary. Reaching this point proves the pipeline ran, not that the answer is grounded, calibrated, or safe. That takes separate evidence.',
+    next: 'collect new traces for the next generation, and begin again',
     alt: 'The question “How do LLMs learn?” enters a chat box and an answer is handwritten token by token beneath it.' },
 ];
 
@@ -98,6 +111,7 @@ const question = 'How do LLMs learn?';
 const questionTokens = ['How', ' do', ' LL', 'Ms', ' learn', '?'];
 const description = 'A visual story of how a language model is made. One question travels from raw web text through tokens, attention, cluster-scale training, and feedback to the first streamed answer.';
 const sceneInChapter = (c: number) => scenes.filter((s) => s.chapter === c);
+const chart = scenes.map((s) => ({ id: s.id, title: s.title, chapter: chapters[s.chapter].title, state: s.state, next: s.next, loop: s.loop, detour: s.detour && { title: s.detour.title, trigger: s.detour.trigger, mend: s.detour.mend, state: s.detour.state } }));
 ---
 <!doctype html>
 <html lang="en">
@@ -122,7 +136,7 @@ const sceneInChapter = (c: number) => scenes.filter((s) => s.chapter === c);
   <div class="progress" aria-hidden="true"><i id="progress"></i></div>
   <header class="mast">
     <a class="brand" href="/">Praneeth Paikray</a>
-    <nav aria-label="Site"><a href="/#writing-title">Writing</a><button type="button" id="motion" aria-pressed="false">Pause motion</button></nav>
+    <nav aria-label="Site"><a href="/#writing-title">Writing</a><button type="button" id="step-open-mast" aria-expanded="false" aria-controls="stepper">Step through</button><button type="button" id="motion" aria-pressed="false">Pause motion</button></nav>
   </header>
 
   <nav class="index" aria-label="Chapters">
@@ -137,7 +151,16 @@ const sceneInChapter = (c: number) => scenes.filter((s) => s.chapter === c);
         <div class="cover-copy">
           <h1>Before the <em>answer.</em></h1>
           <p class="deck">A question takes a second to answer. Everything that made the answer possible took months. Follow the sentence through the machine that produced it.</p>
-          <a class="begin" href="#data">Follow the sentence <svg viewBox="0 0 24 40" aria-hidden="true"><path d="M12 2v34M4 28l8 9 8-9" /></svg></a>
+          <div class="cover-actions">
+            <a class="begin" href="#data">Follow the sentence <svg viewBox="0 0 24 40" aria-hidden="true"><path d="M12 2v34M4 28l8 9 8-9" /></svg></a>
+            <button type="button" class="step-open" id="step-open" aria-expanded="false" aria-controls="stepper"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 3l12 7-12 7z" /></svg>Step through the chart</button>
+          </div>
+          <ul class="legend" aria-label="How to read the threads">
+            <li><i class="swatch gold"></i>the healthy path, 13 states</li>
+            <li><i class="swatch red"></i>what the model checker reaches when a check breaks, 3 states</li>
+            <li><i class="swatch pale"></i>every other step</li>
+            <li class="legend-note">16 states and 22 transitions, each tried by TLC.</li>
+          </ul>
         </div>
         <div class="cover-art" aria-hidden="true">
           <div class="chat">
@@ -160,6 +183,18 @@ const sceneInChapter = (c: number) => scenes.filter((s) => s.chapter === c);
 
         {sceneInChapter(ci).map((s) => (
           <>
+            {(() => { const gi = scenes.indexOf(s); const prev = gi > 0 ? scenes[gi - 1] : null; return (
+              <div class:list={['thread', prev?.detour && 'has-branch', prev?.loop && 'has-loop']} data-from={prev?.id} data-to={s.id} data-broken-label={prev?.detour?.mend}>
+                <svg viewBox="0 0 100 130" preserveAspectRatio="none" aria-hidden="true">
+                  <path class="gold" d="M50 0 C47 35 53 70 50 100 L50 130" />
+                  {prev?.detour && <path class="red" d="M50 8 C72 12 94 34 94 65 C94 96 72 118 50 122" />}
+                  {prev?.loop && <path class="pale" d="M50 8 C28 12 6 34 6 65 C6 96 28 118 50 122" />}
+                </svg>
+                <p class="tag gold-tag">{prev ? prev.next : 'begin with the open web'}</p>
+                {prev?.detour && <button type="button" class="tag red-tag" data-break-for={prev.id}>{prev.detour.trigger}</button>}
+                {prev?.loop && <a class="tag pale-tag" href="#attention">{prev.loop}</a>}
+              </div>
+            ); })()}
             <article class="scene" id={s.id} data-art={s.art} data-state={s.state} data-paper={s.paper} data-ink={s.ink} data-detour={s.detour?.art} data-detour-state={s.detour?.state}>
               <figure class="scene-art">
                 <div class="sheet"><canvas role="img" aria-label={s.alt}></canvas></div>
@@ -237,6 +272,11 @@ const sceneInChapter = (c: number) => scenes.filter((s) => s.chapter === c);
       </section>
     ))}
 
+    <div class="thread thread-end" data-from="answer" aria-hidden="true">
+      <svg viewBox="0 0 100 130" preserveAspectRatio="none"><path class="gold" d="M50 0 C47 35 53 70 50 100 L50 130" /></svg>
+      <p class="tag gold-tag">{scenes[scenes.length - 1].next}</p>
+    </div>
+
     <section class="end" id="end">
       <h2>Now you see <em>what came before.</em></h2>
       <p>One question, six tokens, and a pipeline that took months to build before it could reply in a second.</p>
@@ -255,6 +295,16 @@ const sceneInChapter = (c: number) => scenes.filter((s) => s.chapter === c);
     </details>
   </main>
 
+  <aside class="stepper" id="stepper" hidden aria-labelledby="step-now">
+    <p class="step-chapter" id="step-chapter"></p>
+    <h2 class="step-now" id="step-now" tabindex="-1"></h2>
+    <p class="step-ask" id="step-ask">What can happen next?</p>
+    <ul class="step-moves" id="step-moves"></ul>
+    <p class="step-hint">Words in brackets say when a step can happen.</p>
+    <div class="step-controls"><button type="button" id="step-back">Back</button><button type="button" id="step-play" aria-pressed="false">Play</button><button type="button" id="step-close">Close</button></div>
+    <p class="step-live" aria-live="polite" id="step-live"></p>
+  </aside>
+  <script is:inline type="application/json" id="chart-data" set:html={JSON.stringify(chart)}></script>
   <footer class="foot"><a href="/">← More from Praneeth</a><span>2 November 2026</span><a href="https://github.com/Praneeth16">GitHub</a></footer>
   <noscript><p class="noscript">The drawings animate and the sliders compute with JavaScript. Without it the story still reads top to bottom.</p></noscript>
   <script is:inline src="/llm/card-scenes.js"></script>
