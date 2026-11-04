@@ -7,7 +7,7 @@
 - Motion: none beyond hover and focus.
 
 ## Homepage identity hero
-- The homepage alone opens to a 1240px, three-column composition: a Fraunces introduction, a slowly turning sculptural loop, and a short description with a writing link. Essays retain the 700px house layout.
+- The homepage alone opens to a 1240px, three-column composition: a Karrik introduction, a slowly turning sculptural loop, and a short description with a writing link. Karrik's irregular grotesque forms carry the identity, with its real italic for the greeting; Inclusive Sans supplies readable body and interface text. Both families are self-hosted as WOFF2 with their OFL licenses in `public/fonts`. Homepage typography is scoped in `src/styles/home-type.css`; essays retain their existing fonts and 700px house layout.
 - The loop is a self-contained Canvas 2D mesh with a muted green band; its ribbed surface and continuous form suggest the build/evaluate/learn cycle. An inline SVG provides the no-JavaScript and unavailable-canvas fallback.
 - Animation runs at up to 30fps only while the sculpture is visible and the tab is active. A persistent control pauses/resumes it. Reduced-motion preferences start with a still frame and disable pointer tilt and entrance animation.
 - At tablet sizes the description moves below the identity and sculpture. Phones use a single reading order, with ordinary scrolling and no touch gesture interception.
