@@ -2,17 +2,11 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import metadata from '../generated/article-meta.json';
 import systemOne from '../generated/system-one/article-meta.json';
+import IdentityHero from '../components/IdentityHero.astro';
 ---
 <BaseLayout title="Praneeth Paikray" description="Notes and experiments on building AI systems. Praneeth Paikray, AI Solutions Architect at Databricks, based in Bengaluru.">
-  <div class="home container">
-    <section aria-labelledby="intro-title">
-      <h1 id="intro-title">Hi, I’m Praneeth.</h1>
-      <div class="intro">
-        <p>I’m an AI Solutions Architect at Databricks, based in Bengaluru. I work on agent systems, evaluation, and the engineering that helps AI work reliably in practice.</p>
-        <p>Here I share experiments, code, and explanations of what the results tell us. My current interests include agent memory, domain-specific agents, and learning from evaluation feedback.</p>
-      </div>
-      <div class="intro-links"><a href="https://github.com/Praneeth16">GitHub ↗</a><a href="https://www.linkedin.com/in/praneeth-paikray/">LinkedIn ↗</a></div>
-    </section>
+  <IdentityHero />
+  <div class="home container home-writing">
     <section class="writing-list" aria-labelledby="writing-title">
       <p class="section-label" id="writing-title">Writing</p>
       <a class="post-link" href="/blog/how-llms-are-built/">
@@ -43,3 +37,13 @@ import systemOne from '../generated/system-one/article-meta.json';
     </section>
   </div>
 </BaseLayout>
+
+<style>
+  .home-writing { padding-top: 0; min-height: 0; }
+  .home-writing .writing-list { margin-top: 0; }
+  :global(body:has(.identity-hero) .header-inner) { width: min(100% - 80px, 1240px); }
+  :global(body:has(.identity-hero) .site-header) { border-bottom: 0; }
+  @media(max-width:700px) {
+    :global(body:has(.identity-hero) .header-inner) { width: calc(100% - 40px); }
+  }
+</style>

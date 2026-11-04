@@ -1,0 +1,116 @@
+---
+---
+<section class="identity-hero" aria-labelledby="intro-title">
+  <div class="identity-stage">
+    <div class="identity-name">
+      <p class="hello" aria-hidden="true">Hello.</p>
+      <h1 id="intro-title"><span class="sr-only">Hi, </span>I’m<br /><span>Praneeth.</span></h1>
+      <p class="identity-note">A little curiosity.<br />A lot of experiments.</p>
+    </div>
+
+    <figure class="identity-object" aria-label="An abstract loop representing building, evaluating, and improving AI systems.">
+      <div class="loop-art" aria-hidden="true">
+        <svg class="loop-fallback" viewBox="0 0 440 520" fill="none">
+          <defs><linearGradient id="loop-shade" x1="100" y1="80" x2="350" y2="400" gradientUnits="userSpaceOnUse"><stop stop-color="#889796"/><stop offset=".45" stop-color="#233f40"/><stop offset="1" stop-color="#0b2124"/></linearGradient></defs>
+          <ellipse cx="220" cy="256" rx="115" ry="170" stroke="url(#loop-shade)" stroke-width="72" transform="rotate(-20 220 256)"/>
+          <ellipse cx="220" cy="256" rx="115" ry="170" stroke="#739b8f" stroke-width="2" transform="rotate(-20 220 256)"/>
+        </svg>
+        <canvas class="loop-canvas"></canvas>
+      </div>
+      <figcaption>Build. Evaluate. Learn. Repeat.</figcaption>
+    </figure>
+
+    <div class="identity-about">
+      <p class="identity-role">AI Solutions Architect<br /><span>Databricks · Bengaluru</span></p>
+      <p class="identity-description">I build AI systems.<br />Then I find out<br /><em>what makes them work.</em></p>
+      <p class="identity-detail">Experiments in agents, memory, and evaluation. Code, results, and the things I learn along the way.</p>
+      <a class="writing-cta" href="#writing-title">Explore my writing <span aria-hidden="true">↗</span></a>
+      <div class="identity-links"><a href="https://github.com/Praneeth16">GitHub ↗</a><a href="https://www.linkedin.com/in/praneeth-paikray/">LinkedIn ↗</a></div>
+    </div>
+  </div>
+  <div class="hero-foot">
+    <a class="scroll-link" href="#writing-title"><span aria-hidden="true">↓</span> Notes from the workbench</a>
+    <button class="motion-toggle" type="button" aria-pressed="false" hidden><span class="motion-icon" aria-hidden="true">Ⅱ</span><span class="motion-label">Pause motion</span></button>
+  </div>
+</section>
+
+<script>
+  import { initIdentityLoop } from '../scripts/identity-loop';
+  initIdentityLoop();
+</script>
+
+<style>
+  .identity-hero { width:min(100% - 80px,1240px); margin:auto; padding:42px 0 0; }
+  .identity-stage { display:grid; grid-template-columns:1.05fr 1.3fr .9fr; align-items:center; gap:12px; min-height:570px; }
+  .identity-name { position:relative; z-index:1; padding-bottom:12px; }
+  .hello { color:#397966; font:italic 55px/1 var(--serif); letter-spacing:-3px; margin:0 0 -4px 5px; transform:rotate(-12deg); transform-origin:left; }
+  h1 { font-family:var(--display); font-size:clamp(56px,6.5vw,91px); font-weight:650; letter-spacing:-.075em; line-height:.98; margin:0; }
+  h1 span:not(.sr-only) { white-space:nowrap; }
+  .identity-note { font:12px/1.8 var(--mono); color:var(--ink-soft); margin:30px 0 0 5px; }
+  .identity-object { position:relative; margin:0 -16px; min-width:0; }
+  .loop-art { position:relative; width:100%; aspect-ratio:440/520; }
+  .loop-canvas,.loop-fallback { position:absolute; inset:0; width:100%; height:100%; }
+  .loop-canvas { opacity:0; }
+  .loop-art.is-ready .loop-canvas { opacity:1; }
+  .loop-art.is-ready .loop-fallback { visibility:hidden; }
+  figcaption { text-align:center; font:10px/1.6 var(--mono); letter-spacing:.015em; color:var(--muted); margin-top:-12px; }
+  .identity-about { padding-left:18px; padding-top:28px; }
+  .identity-role { font:10px/1.9 var(--mono); margin:0 0 27px; }
+  .identity-role span { color:var(--ink-soft); }
+  .identity-description { font:500 clamp(21px,2.1vw,29px)/1.32 var(--serif); letter-spacing:-.025em; margin:0 0 20px; }
+  .identity-description em { font-weight:400; color:#397966; }
+  .identity-detail { font:15px/1.65 var(--serif); color:var(--ink-soft); margin:0 0 26px; max-width:265px; }
+  .writing-cta { display:inline-flex; align-items:center; gap:22px; font:11px/1.8 var(--mono); color:var(--ink); text-decoration:none; border-bottom:1px solid var(--ink); padding:0 0 7px; }
+  .writing-cta span { font-size:19px; transition:transform .2s; }
+  .writing-cta:hover span { transform:translate(3px,-3px); }
+  .identity-links { display:flex; gap:20px; margin-top:22px; font:10px/1.5 var(--mono); }
+  .identity-links a { text-decoration:none; color:var(--ink-soft); }
+  .identity-links a:hover { color:var(--accent); text-decoration:underline; }
+  .hero-foot { display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--hair); padding:19px 0; margin:30px 0 64px; }
+  .scroll-link { font:10px/1.6 var(--mono); color:var(--ink-soft); text-decoration:none; display:flex; gap:12px; align-items:center; }
+  .scroll-link span { font-size:17px; }
+  .motion-toggle { font:10px/1.6 var(--mono); display:flex; align-items:center; gap:8px; border:0; background:transparent; padding:8px 0 8px 12px; color:var(--ink-soft); }
+  .motion-toggle[hidden] { display:none; }
+  .motion-toggle:hover { color:var(--ink); }
+  .motion-icon { font-size:14px; min-width:12px; }
+  .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+  @media(min-width:1000px) and (prefers-reduced-motion:no-preference) {
+    .identity-name,.identity-about { animation:identity-arrive 1s both cubic-bezier(.22,1,.36,1); }
+    .identity-about { animation-delay:.15s; }
+    @keyframes identity-arrive { from { opacity:0; transform:translateY(15px); } to { opacity:1; transform:translateY(0); } }
+  }
+  @media(min-width:1500px) { .identity-stage { min-height:650px; } }
+  @media(max-width:1000px) and (min-width:701px) {
+    .identity-stage { grid-template-columns:1fr 1.15fr; min-height:0; }
+    .identity-name { padding-left:16px; }
+    h1 { font-size:76px; }
+    .identity-about { grid-column:1/-1; display:grid; grid-template-columns:1fr 1fr; column-gap:40px; padding:25px 16px 0; }
+    .identity-role { grid-column:1; }
+    .identity-description { grid-column:1; grid-row:2/5; font-size:28px; }
+    .identity-detail { grid-column:2; grid-row:1/3; max-width:320px; }
+    .writing-cta,.identity-links { grid-column:2; width:fit-content; }
+    .hero-foot { margin-top:45px; }
+  }
+  @media(max-width:700px) {
+    .identity-hero { width:calc(100% - 40px); padding-top:32px; }
+    .identity-stage { grid-template-columns:1fr; gap:0; min-height:0; }
+    .identity-name { padding:0; }
+    .hello { font-size:40px; margin-left:3px; }
+    h1 { font-size:clamp(60px,15vw,84px); line-height:.98; }
+    h1 br { display:none; }
+    h1 span:not(.sr-only) { display:block; }
+    .identity-note { margin-top:18px; font-size:11px; }
+    .identity-object { width:100%; max-width:360px; justify-self:center; margin:-18px 0 0; }
+    .loop-art { aspect-ratio:440/400; }
+    figcaption { margin-top:-4px; font-size:9px; }
+    .identity-about { padding:36px 0 0; }
+    .identity-role { margin-bottom:17px; }
+    .identity-description { font-size:29px; }
+    .identity-detail { max-width:350px; font-size:17px; }
+    .writing-cta { font-size:12px; }
+    .identity-links { font-size:11px; }
+    .hero-foot { margin:34px 0 34px; gap:12px; }
+    .scroll-link,.motion-toggle { font-size:9px; }
+  }
+  @media print { .identity-stage { min-height:0; } .identity-object,.hero-foot { display:none; } .identity-stage { grid-template-columns:1fr 1fr; } }
+</style>

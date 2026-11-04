@@ -6,6 +6,12 @@
 - Layout: single 700px measure, sticky header with a reading-progress line, interactive widgets break out to 960px.
 - Motion: none beyond hover and focus.
 
+## Homepage identity hero
+- The homepage alone opens to a 1240px, three-column composition: a Fraunces introduction, a slowly turning sculptural loop, and a short description with a writing link. Essays retain the 700px house layout.
+- The loop is a self-contained Canvas 2D mesh with a muted green band; its ribbed surface and continuous form suggest the build/evaluate/learn cycle. An inline SVG provides the no-JavaScript and unavailable-canvas fallback.
+- Animation runs at up to 30fps only while the sculpture is visible and the tab is active. A persistent control pauses/resumes it. Reduced-motion preferences start with a still frame and disable pointer tilt and entrance animation.
+- At tablet sizes the description moves below the identity and sculpture. Phones use a single reading order, with ordinary scrolling and no touch gesture interception.
+
 ## Visual story surface (`blog/how-llms-are-built`)
 Mode: Experience. The drawings are the page; the interface recedes.
 - Type: KevinSans (MIT, from statechart-art) for display and headings, Spectral for body and captions, DM Mono only for data readouts and the angle indicator. No eyebrows or section numbers.
