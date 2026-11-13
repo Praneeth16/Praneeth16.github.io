@@ -1,50 +1,34 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import metadata from '../generated/article-meta.json';
-import systemOne from '../generated/system-one/article-meta.json';
-import IdentityHero from '../components/IdentityHero.astro';
+import WritingIndex from '../components/home/WritingIndex';
+import AgentWorkbench from '../components/home/AgentWorkbench';
 import '../styles/home-type.css';
+import '../styles/homepage.css';
+const essays = [
+ {number:'01',type:'Visual story',title:'Before the Answer',summary:'How a language model is made. Sixteen scenes, from raw text to the first token.',href:'/blog/how-llms-are-built/',date:'02 Nov 2026',tag:'16 scenes'},
+ {number:'02',type:'Interactive essay',title:'Databricks Is Databricks for Agents',summary:'Context, execution, evaluation, and serving. Follow the connections.',href:'/blog/databricks-for-agents/',date:'31 Oct 2026',tag:'15 min'},
+ {number:'03',type:'Interactive essay',title:'Reading Tastes, Ranking Titles',summary:'Language models as recommenders, and what Netflix’s GenRec changes.',href:'/blog/genrec/',date:'02 Oct 2026',tag:'12 min'},
+ {number:'04',type:'Benchmark',title:'WTF Is a System One Model?',summary:'Fast intuition meets tabular data. Looking inside the model and the benchmark.',href:'/blog/wtf-is-a-system-one-model/',date:'26 Sep 2026',tag:'Models'},
+ {number:'05',type:'Interactive study',title:'Adapting Jev with GEPA',summary:'Can a model learn your domain? An experiment in feedback, prompts, and evaluation.',href:'/blog/adapting-jev-with-gepa/',date:'20 Sep 2026',tag:'Evaluation'},
+];
 ---
-<BaseLayout title="Praneeth Paikray" description="Notes and experiments on building AI systems. Praneeth Paikray, AI Solutions Architect at Databricks, based in Bengaluru.">
-  <IdentityHero />
-  <div class="home container home-writing">
-    <section class="writing-list" aria-labelledby="writing-title">
-      <p class="section-label" id="writing-title">Writing</p>
-      <a class="post-link" href="/blog/how-llms-are-built/">
-        <h2>Before the Answer: How a Language Model Is Made</h2>
-        <p>One question travels from raw web text through tokens, attention, cluster-scale training, and feedback to its first streamed answer. Sixteen animated drawings, three things that break, and a scaling lab.</p>
-        <span class="meta">2 Nov 2026 · Visual story · 16 scenes</span>
-      </a>
-      <a class="post-link" href="/blog/databricks-for-agents/">
-        <h2>Databricks Is Databricks for Agents</h2>
-        <p>Build and run agents with governed context, agent execution, MLflow, AIR with NVIDIA, and open-model serving. Explore the platform and how its capabilities connect.</p>
-        <span class="meta">31 Oct 2026 · 15 min read · Interactive essay</span>
-      </a>
-      <a class="post-link" href="/blog/genrec/">
-        <h2>Reading Tastes, Ranking Titles</h2>
-        <p>How language models became recommenders, and what Netflix’s GenRec changes. Explore catalog scoring, training, cost, and the research lineage.</p>
-        <span class="meta">2 Oct 2026 · 12 min read · Interactive essay</span>
-      </a>
-      <a class="post-link" href="/blog/wtf-is-a-system-one-model/">
-        <h2>WTF Is a System One Model?</h2>
-        <p>{systemOne.subtitle}</p>
-        <span class="meta">26 Sep 2026 · {systemOne.readingMinutes} min read · Benchmark</span>
-      </a>
-      <a class="post-link" href="/blog/adapting-jev-with-gepa/">
-        <h2>Adapting Jev to Your Domain with GEPA</h2>
-        <p>{metadata.subtitle}</p>
-        <span class="meta">20 Sep 2026 · {metadata.readingMinutes} min read · Interactive study</span>
-      </a>
-    </section>
-  </div>
+<BaseLayout title="Praneeth Paikray | AI systems, under the hood" description="Experiments, visual stories, and field notes on building AI systems. By Praneeth Paikray, AI Solutions Architect at Databricks.">
+<div class="home-stageshow">
+  <section class="hs-hero hs-width" aria-labelledby="home-heading">
+    <div class="hs-intro"><p class="hs-eyebrow"><span class="hs-dot"></span> Praneeth’s field notes</p><h1 id="home-heading">AI systems,<br/><em>under the hood.</em></h1><p class="hs-lede">I build AI systems. Then I take them apart to understand what actually works.</p><p class="hs-byline">Praneeth Paikray · AI at Databricks · Bengaluru</p><a class="hs-text-link" href="#writing-title">Explore the writing <span aria-hidden="true">↘</span></a></div>
+    <AgentWorkbench client:visible />
+  </section>
+  <section class="hs-feature hs-width" aria-labelledby="featured-title">
+    <div class="hs-section-line"><span>Start here</span><span>One question, sixteen scenes</span></div>
+    <a class="hs-feature-link" href="/blog/how-llms-are-built/">
+      <div class="hs-feature-copy"><p class="hs-eyebrow">A visual story</p><h2 id="featured-title">Before<br/>the Answer<span>.</span></h2><p>What happens before a language model can say anything at all?</p><span class="hs-text-link">Step inside the model <span aria-hidden="true">↗</span></span></div>
+      <div class="hs-model" aria-hidden="true"><div class="hs-model-top"><span>FROM TEXT TO THOUGHT</span><span>01—16</span></div><div class="hs-token-row"><span>The</span><span>next</span><span>word</span><span class="hs-token-active">?</span></div><div class="hs-attention"><div class="hs-attention-label">attention</div><div class="hs-matrix">{Array.from({length:64},(_,i)=><i style={`--cell:${[.12,.23,.42,.68,.9][(i*7+Math.floor(i/8)*3)%5]}`}/>)}</div></div><div class="hs-model-bottom"><span>Patterns become predictions.</span><span>→</span></div></div>
+    </a>
+  </section>
+  <section class="hs-writing hs-width" aria-labelledby="writing-title">
+    <div class="hs-writing-head"><div><p class="hs-eyebrow">The notebook</p><h2 id="writing-title">Ideas, put to the test.</h2></div><p>Essays you can explore.<br/>Experiments you can inspect.</p></div>
+    <WritingIndex essays={essays} client:visible />
+  </section>
+  <section class="hs-about hs-width" aria-labelledby="about-title"><div><p class="hs-eyebrow">Behind the notebook</p><h2 id="about-title">Built in the field.<br/>Shared in the open.</h2></div><div><p>I’m Praneeth, an AI Solutions Architect at Databricks in Bengaluru. My work sits around agents, evaluation, and the systems that make them useful.</p><p>This is where I share the questions, experiments, and explanations along the way.</p><div class="hs-about-links"><a href="https://github.com/Praneeth16">GitHub ↗</a><a href="https://www.linkedin.com/in/praneeth-paikray/">LinkedIn ↗</a><a href="/rss.xml">RSS ↗</a></div></div></section>
+</div>
 </BaseLayout>
-
-<style>
-  .home-writing { padding-top: 0; min-height: 0; }
-  .home-writing .writing-list { margin-top: 0; }
-  :global(body:has(.identity-hero) .header-inner) { width: min(100% - 80px, 1240px); }
-  :global(body:has(.identity-hero) .site-header) { border-bottom: 0; }
-  @media(max-width:700px) {
-    :global(body:has(.identity-hero) .header-inner) { width: calc(100% - 40px); }
-  }
-</style>

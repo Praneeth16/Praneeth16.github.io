@@ -6,11 +6,12 @@
 - Layout: single 700px measure, sticky header with a reading-progress line, interactive widgets break out to 960px.
 - Motion: none beyond hover and focus.
 
-## Homepage identity hero
-- The homepage alone opens to a 1240px, three-column composition: a Karrik introduction, a slowly turning sculptural loop, and a short description with a writing link. Karrik's irregular grotesque forms carry the identity, with its real italic for the greeting; Inclusive Sans supplies readable body and interface text. Both families are self-hosted as WOFF2 with their OFL licenses in `public/fonts`. Homepage typography is scoped in `src/styles/home-type.css`; essays retain their existing fonts and 700px house layout.
-- The loop is a self-contained Canvas 2D mesh with a muted green band; its ribbed surface and continuous form suggest the build/evaluate/learn cycle. An inline SVG provides the no-JavaScript and unavailable-canvas fallback.
-- Animation runs at up to 30fps only while the sculpture is visible and the tab is active. A persistent control pauses/resumes it. Reduced-motion preferences start with a still frame and disable pointer tilt and entrance animation.
-- At tablet sizes the description moves below the identity and sculpture. Phones use a single reading order, with ordinary scrolling and no touch gesture interception.
+## Homepage / StageShow
+- Karrik headings and Inclusive Sans body copy, self-hosted with their OFL licenses. Homepage styles stay scoped to `.home-stageshow`; essays keep their existing layout and typography.
+- A 1280px editorial layout on pale paper with olive and forest-green accents. Hero copy shares the first section with an illustrated agent evaluation, followed by a featured visual story, filterable essay index and a short author introduction.
+- StageShow's form-error gold supplies the workbench structure. The scene is explicitly sample data, plays on request, and holds the result. Replay is an explicit reset; Show result stops motion. Reduced motion and pre-hydration show the complete result.
+- The narrow workbench is a separate 358px composition without the sidebar. CSS also keeps the server-rendered poster readable before hydration.
+- Vercel UI SDK's Segmented Control handles the writing filters, including keyboard navigation and accessible selection. All five essays remain in the server-rendered HTML.
 
 ## Visual story surface (`blog/how-llms-are-built`)
 Mode: Experience. The drawings are the page; the interface recedes.

@@ -1,11 +1,8 @@
----
-const isHome=Astro.url.pathname==='/';
----
 <header class="site-header">
   <div class="header-inner container">
     <a class="brand" href="/">Praneeth Paikray</a>
     <nav class="site-nav" aria-label="Primary navigation">
-      <a href="/" aria-current={isHome?'page':undefined}>About</a>
+      <a href="/#about-title">About</a>
       <a href="/#writing-title">Writing</a>
     </nav>
   </div>

@@ -1,0 +1,35 @@
+.workbench-wrap { min-width:0; }
+.workbench-caption,.workbench-controls { display:flex; justify-content:space-between; align-items:center; gap:14px; font:12px/1.5 'Inclusive Sans',sans-serif; color:#62665c; }
+.workbench-caption { padding:0 22px 8px; }.workbench-caption span:first-child {color:#30372c;display:flex;align-items:center;gap:8px}.workbench-caption i {width:6px;height:6px;border-radius:50%;background:#49674b}
+.workbench-controls {padding:16px 22px 0;}.workbench-controls div{display:flex;gap:12px}.workbench-controls button{font:inherit;color:#315c43;background:none;border:0;border-bottom:1px solid #a7b4a0;padding:3px 0;cursor:pointer}.workbench-controls button:hover{color:#142d1b}
+.agent-demo .ss-stage {background:transparent;overflow:hidden;}
+.agent-demo .aw-window {position:absolute;left:22px;top:18px;width:636px;height:414px;}
+.agent-demo .aw-body {display:flex;height:100%;background:var(--ss-surface);}
+.agent-demo .aw-sidebar {width:162px;flex:none;padding:25px 14px;background:#f3f3ed;border-right:1px solid #e5e6df;font-size:12px;color:#7c8074;}
+.agent-demo .aw-sidebar>div{padding:9px 10px;}.agent-demo .aw-sidebar-title{font-size:9px;letter-spacing:.12em;display:block;padding:0 10px 19px}.agent-demo .aw-selected{background:#e4e9dd;color:#2e4f34;border-radius:5px}.agent-demo .aw-sidebar .aw-sidebar-note{font-size:11px;line-height:1.8;margin-top:70px;}
+.agent-demo .aw-content {padding:24px 27px;width:100%;min-width:0;}
+.agent-demo .aw-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;}.agent-demo .aw-title{font-size:16px;font-weight:600;}
+.agent-demo .aw-answer{background:#f7f8f3;border:1px solid #eaede3;border-radius:8px;padding:14px 15px;margin-bottom:18px;font-size:13px;line-height:1.5;}.agent-demo .aw-label{display:block;font-size:9px;letter-spacing:.12em;color:#7b8074;margin-bottom:9px;}.agent-demo .aw-evidence{margin-top:9px;height:18px;font-size:11px;}.agent-demo .aw-good{color:#376546}.agent-demo .aw-bad{color:#ac5744}
+.agent-demo .aw-feedback{height:42px;padding-top:8px;font-size:11px;color:#727769;}.agent-demo .ss-field{font-size:12px;}.agent-demo .ss-field__label{font-size:11px;}.agent-demo .ss-stage[data-layout='compact'] .aw-window{left:12px;top:16px;width:334px;height:424px;}.agent-demo .ss-stage[data-layout='compact'] .aw-content{padding:24px 18px;}.agent-demo .ss-stage[data-layout='compact'] .aw-title{font-size:15px;}.agent-demo .ss-stage[data-layout='compact'] .aw-answer{padding:14px 12px;}.agent-demo .ss-stage[data-layout='compact'] .aw-heading{gap:8px;}.agent-demo .ss-stage[data-layout='compact'] .ss-field__box{font-size:11px;}
+@media(max-width:600px){.workbench-caption{padding:0 12px 5px}.workbench-controls{padding:12px 12px 0;align-items:flex-start;font-size:11px}.workbench-controls>span{max-width:132px}.workbench-controls div{gap:8px;flex-wrap:wrap;justify-content:flex-end}}
+.agent-demo .aw-good svg{display:inline-block;vertical-align:-2px;margin-right:2px;}
+
+.workbench-wrap:not([data-ready]) .workbench-controls div{visibility:hidden;}
+.workbench-picture{container-type:inline-size;}
+@container (max-width: 559px){
+.workbench-wrap:not([data-ready]) .agent-demo{height:400px!important;}
+.workbench-wrap:not([data-ready]) .ss-stage{width:100%!important;height:400px!important;transform:none!important;}
+.workbench-wrap:not([data-ready]) .aw-window{left:12px;top:16px;width:calc(100% - 24px);height:424px;}
+.workbench-wrap:not([data-ready]) .aw-sidebar{display:none;}
+.workbench-wrap:not([data-ready]) .aw-content{padding:24px 18px;}
+.workbench-wrap:not([data-ready]) .aw-title{font-size:14px;}
+.workbench-wrap:not([data-ready]) .aw-evidence{font-size:10px;}
+}
+.agent-demo .ss-stage[data-layout='compact'] .aw-label{font-size:12px;}
+.agent-demo .ss-stage[data-layout='compact'] .aw-evidence{font-size:12px;}
+.agent-demo .ss-stage[data-layout='compact'] .ss-field__label{font-size:12px;}
+.agent-demo .ss-stage[data-layout='compact'] .aw-feedback{font-size:12px;}
+@media(max-width:360px){.agent-demo .ss-stage[data-layout='compact'] .aw-content{padding-inline:14px;}.agent-demo .ss-stage[data-layout='compact'] .aw-title{font-size:16px;}}
+.agent-demo .ss-stage[data-layout='compact'] .ss-field__box{font-size:13px;}
+.agent-demo .ss-stage[data-layout='compact'] .aw-evidence{font-size:13px;}
+.agent-demo .ss-stage[data-layout='compact'] .aw-feedback{font-size:13px;line-height:1.4;}
