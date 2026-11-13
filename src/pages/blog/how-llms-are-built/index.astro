@@ -1,4 +1,5 @@
 ---
+import '../../../styles/home-type.css';
 import '../../../styles/llm.css';
 
 type Detour = { art: string; state: string; title: string; body: string; invariant: string; action: string; repair: string; trigger: string; mend: string };
@@ -111,7 +112,7 @@ const question = 'How do LLMs learn?';
 const questionTokens = ['How', ' do', ' LL', 'Ms', ' learn', '?'];
 const description = 'A visual story of how a language model is made. One question travels from raw web text through tokens, attention, cluster-scale training, and feedback to the first streamed answer.';
 const sceneInChapter = (c: number) => scenes.filter((s) => s.chapter === c);
-const chart = scenes.map((s) => ({ id: s.id, title: s.title, chapter: chapters[s.chapter].title, state: s.state, next: s.next, loop: s.loop, detour: s.detour && { title: s.detour.title, trigger: s.detour.trigger, mend: s.detour.mend, state: s.detour.state } }));
+
 ---
 <!doctype html>
 <html lang="en">
@@ -122,92 +123,99 @@ const chart = scenes.map((s) => ({ id: s.id, title: s.title, chapter: chapters[s
   <meta name="description" content={description} />
   <link rel="canonical" href="https://praneeth16.github.io/blog/how-llms-are-built/" />
   <link rel="icon" href="/favicon.svg" />
-  <meta name="theme-color" content="#f4efe4" />
+  <meta name="theme-color" content="#fbfbf7" />
   <meta property="og:type" content="article" />
   <meta property="og:title" content="Before the answer: how a language model is made" />
   <meta property="og:description" content={description} />
   <meta property="og:url" content="https://praneeth16.github.io/blog/how-llms-are-built/" />
   <meta property="og:image" content="https://praneeth16.github.io/llm/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <link rel="preload" href="/llm/fonts/KevinSans-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/karrik-regular.woff2" as="font" type="font/woff2" crossorigin />
 </head>
 <body>
   <a class="skip" href="#data">Skip to the story</a>
   <div class="progress" aria-hidden="true"><i id="progress"></i></div>
   <header class="mast">
     <a class="brand" href="/">Praneeth Paikray</a>
-    <nav aria-label="Site"><a href="/#writing-title">Writing</a><button type="button" id="step-open-mast" aria-expanded="false" aria-controls="stepper">Step through</button><button type="button" id="motion" aria-pressed="false">Pause motion</button></nav>
+    <nav aria-label="Site">
+      <a href="/#writing-title">Writing</a>
+      <button type="button" id="motion" aria-pressed="false" hidden>Pause motion</button>
+    </nav>
   </header>
 
-  <nav class="index" aria-label="Chapters">
-    <ol>
-      {chapters.map((c) => <li><a href={'#' + c.id} data-index={c.id}>{c.title}</a></li>)}
-    </ol>
-  </nav>
+  <aside class="stepper" id="stepper" aria-label="Guided reading" hidden>
+    <div class="stepper-inner">
+      <div class="step-location">
+        <p class="step-count" id="step-count"></p>
+        <p class="step-now" id="step-now" aria-live="polite"></p>
+      </div>
+      <div class="step-controls">
+        <button type="button" id="step-back">Previous</button>
+        <button type="button" id="step-next">Next</button>
+        <button type="button" id="step-play" aria-pressed="false">Play</button>
+        <button type="button" id="step-close">Exit guide</button>
+      </div>
+    </div>
+  </aside>
 
   <main>
-    <section class="cover" id="cover">
+    <noscript><p class="noscript">Enable JavaScript for animated drawings and the scaling lab.</p></noscript>
+    <header class="cover" id="cover">
       <div class="cover-grid">
         <div class="cover-copy">
+          <p class="article-type">Visual essay</p>
           <h1>Before the <em>answer.</em></h1>
           <p class="deck">A question takes a second to answer. Everything that made the answer possible took months. Follow the sentence through the machine that produced it.</p>
+          <p class="byline">Praneeth Paikray <span>·</span> <time datetime="2026-11-02">2 November 2026</time></p>
           <div class="cover-actions">
-            <a class="begin" href="#data">Follow the sentence <svg viewBox="0 0 24 40" aria-hidden="true"><path d="M12 2v34M4 28l8 9 8-9" /></svg></a>
-            <button type="button" class="step-open" id="step-open" aria-expanded="false" aria-controls="stepper"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 3l12 7-12 7z" /></svg>Step through the chart</button>
+            <a class="begin" href="#data">Read the story <span aria-hidden="true">↓</span></a>
+            <button type="button" id="step-open" aria-expanded="false" aria-controls="stepper" hidden>Start guided reading</button>
           </div>
-          <ul class="legend" aria-label="How to read the threads">
-            <li><i class="swatch gold"></i>the healthy path, 13 states</li>
-            <li><i class="swatch red"></i>what the model checker reaches when a check breaks, 3 states</li>
-            <li><i class="swatch pale"></i>every other step</li>
-            <li class="legend-note">16 states and 22 transitions, each tried by TLC.</li>
-          </ul>
         </div>
-        <div class="cover-art" aria-hidden="true">
-          <div class="chat">
-            <p class="question"><span id="question-text">{question}</span><i class="caret"></i></p>
-            <p class="chat-hint">a reply has not started yet</p>
+        <figure class="cover-art" aria-label="The question How do LLMs learn? split into six example tokens">
+          <div class="cover-art-meta" aria-hidden="true"><span>Input</span><span>6 tokens</span></div>
+          <p class="question"><span id="question-text">{question}</span></p>
+          <div class="token-panel">
+            <p>Tokenization</p>
+            <ol class="tokens" aria-label="Example tokens">{questionTokens.map((t, i) => <li style={`--i:${i}`}>{t.replace(' ', ' ')}</li>)}</ol>
           </div>
-          <svg class="split-arrow" viewBox="0 0 120 90" aria-hidden="true"><path d="M60 4c0 30-26 30-26 60M60 4c0 30 26 30 26 60M28 56l6 12 6-12M80 56l6 12 6-12" /></svg>
-          <ol class="tokens">{questionTokens.map((t, i) => <li style={`--i:${i}`}>{t.replace(' ', ' ')}</li>)}</ol>
-          <p class="tokens-note">six tokens, waiting for a model</p>
-        </div>
+        </figure>
       </div>
-    </section>
+    </header>
+
+    <nav class="index" aria-label="Chapters">
+      <ol>
+        {chapters.map((c, i) => (
+          <li><a href={'#' + c.id} data-index={c.id}><span class="chapter-number" aria-hidden="true">0{i + 1}</span><span>{c.title}</span></a></li>
+        ))}
+      </ol>
+    </nav>
 
     {chapters.map((chapter, ci) => (
       <section class="chapter" id={chapter.id} aria-labelledby={'h-' + chapter.id}>
         <header class="chapter-head">
+          <p class="chapter-kicker">Chapter {ci + 1} of {chapters.length}</p>
           <h2 id={'h-' + chapter.id}>{chapter.title}</h2>
-          <p>{chapter.meta}</p>
+          <p class="chapter-summary">{chapter.meta}</p>
         </header>
 
         {sceneInChapter(ci).map((s) => (
           <>
-            {(() => { const gi = scenes.indexOf(s); const prev = gi > 0 ? scenes[gi - 1] : null; return (
-              <div class:list={['thread', prev?.detour && 'has-branch', prev?.loop && 'has-loop']} data-from={prev?.id} data-to={s.id} data-broken-label={prev?.detour?.mend}>
-                <svg viewBox="0 0 100 130" preserveAspectRatio="none" aria-hidden="true">
-                  <path class="gold" d="M50 0 C47 35 53 70 50 100 L50 130" />
-                  {prev?.detour && <path class="red" d="M50 8 C72 12 94 34 94 65 C94 96 72 118 50 122" />}
-                  {prev?.loop && <path class="pale" d="M50 8 C28 12 6 34 6 65 C6 96 28 118 50 122" />}
-                </svg>
-                <p class="tag gold-tag">{prev ? prev.next : 'begin with the open web'}</p>
-                {prev?.detour && <button type="button" class="tag red-tag" data-break-for={prev.id}>{prev.detour.trigger}</button>}
-                {prev?.loop && <a class="tag pale-tag" href="#attention">{prev.loop}</a>}
-              </div>
-            ); })()}
             <article class="scene" id={s.id} data-art={s.art} data-state={s.state} data-paper={s.paper} data-ink={s.ink} data-detour={s.detour?.art} data-detour-state={s.detour?.state}>
+              <header class="scene-heading">
+                <h3 tabindex="-1">{s.title}</h3>
+                <p class="lead">{s.lead}</p>
+              </header>
               <figure class="scene-art">
-                <div class="sheet"><canvas role="img" aria-label={s.alt}></canvas></div>
+                <div class="sheet" style={`background:${s.paper}`}><canvas role="img" aria-label={s.alt}></canvas></div>
                 <figcaption><ol class="cues" aria-live="off"><li></li><li></li><li></li></ol></figcaption>
               </figure>
               <div class="scene-text">
-                <h3>{s.title}</h3>
-                <p class="lead">{s.lead}</p>
                 <p>{s.body}</p>
                 {s.detour && (
                   <div class="detour">
-                    <button type="button" class="break" aria-pressed="false" data-action={s.detour.action} data-repair={s.detour.repair}>{s.detour.action}</button>
-                    <div class="detour-body">
+                    <button type="button" class="break" aria-pressed="false" aria-controls={s.id + "-detour"} hidden data-action={s.detour.action} data-repair={s.detour.repair}>{s.detour.action}</button>
+                    <div class="detour-body" id={s.id + "-detour"} hidden>
                       <div>
                         <h4>What breaks: {s.detour.title}</h4>
                         <p>{s.detour.body}</p>
@@ -216,6 +224,14 @@ const chart = scenes.map((s) => ({ id: s.id, title: s.title, chapter: chapters[s
                     </div>
                   </div>
                 )}
+                <details class="transition-notes">
+                  <summary>Model transitions</summary>
+                  <dl>
+                    <div><dt>Next state</dt><dd>{s.next}</dd></div>
+                    {s.detour && <div><dt>Failure and repair</dt><dd>{s.detour.trigger}. {s.detour.mend}.</dd></div>}
+                    {s.loop && <div><dt>Training loop</dt><dd><a href="#attention">{s.loop}</a></dd></div>}
+                  </dl>
+                </details>
               </div>
             </article>
 
@@ -272,11 +288,6 @@ const chart = scenes.map((s) => ({ id: s.id, title: s.title, chapter: chapters[s
       </section>
     ))}
 
-    <div class="thread thread-end" data-from="answer" aria-hidden="true">
-      <svg viewBox="0 0 100 130" preserveAspectRatio="none"><path class="gold" d="M50 0 C47 35 53 70 50 100 L50 130" /></svg>
-      <p class="tag gold-tag">{scenes[scenes.length - 1].next}</p>
-    </div>
-
     <section class="end" id="end">
       <h2>Now you see <em>what came before.</em></h2>
       <p>One question, six tokens, and a pipeline that took months to build before it could reply in a second.</p>
@@ -290,23 +301,13 @@ const chart = scenes.map((s) => ({ id: s.id, title: s.title, chapter: chapters[s
         <p>The three failure detours come from a 16-state abstract lifecycle model checked with TLC. Each named invariant is violated by a reachable state in that model. That check says nothing about whether any real model is correct or safe. <a href="/llm/argon-model/report.md">TLC report</a> · <a href="/llm/argon-model/LLMBuild.tla">TLA+ module</a> · <a href="/llm/argon-model/chart.svg">state graph</a>.</p>
         <p>The scaling lab uses the parametric fit from Hoffmann et al., <em>Training Compute-Optimal Large Language Models</em> (2022): L(N, D) = 1.69 + 406.4 / N<sup>0.34</sup> + 410.7 / D<sup>0.28</sup>. Compute uses the common C ≈ 6ND approximation. Memory assumes 2 bytes for weights, 2 for gradients, and 12 for Adam moments and a 32-bit master copy.</p>
         <p>Sources: <a href="https://arxiv.org/abs/2407.21783">The Llama 3 Herd of Models</a> · <a href="https://arxiv.org/abs/1706.03762">Attention Is All You Need</a> · <a href="https://arxiv.org/abs/2104.09864">RoFormer</a> · <a href="https://arxiv.org/abs/2101.03961">Switch Transformers</a> · <a href="https://arxiv.org/abs/2203.15556">Chinchilla</a> · <a href="https://arxiv.org/abs/2309.06180">PagedAttention</a> · <a href="https://arxiv.org/abs/2402.03300">DeepSeekMath (GRPO)</a> · <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.utils.clip_grad_norm_.html">PyTorch gradient clipping</a>.</p>
-        <p>Drawings and page by Praneeth Paikray. The visual form owes a debt to Kevin T. Ngo’s <a href="https://kevintngo.github.io/statechart-art/one-becomes-two/">statechart-art</a>, whose <a href="/llm/STATECHART-ART-LICENSE.txt">MIT-licensed</a> lettering face, KevinSans, sets the headings. Source for the drawings: <a href="https://github.com/Praneeth16/Praneeth16.github.io/blob/main/public/llm/card-scenes.js">card-scenes.js</a>.</p>
+        <p>Drawings and page by Praneeth Paikray. The visual form owes a debt to Kevin T. Ngo’s <a href="https://kevintngo.github.io/statechart-art/one-becomes-two/">statechart-art</a>, whose <a href="/llm/STATECHART-ART-LICENSE.txt">MIT-licensed</a> KevinSans lettering appears in the drawings. Source for the drawings: <a href="https://github.com/Praneeth16/Praneeth16.github.io/blob/main/public/llm/card-scenes.js">card-scenes.js</a>.</p>
       </div>
     </details>
   </main>
 
-  <aside class="stepper" id="stepper" hidden aria-labelledby="step-now">
-    <p class="step-chapter" id="step-chapter"></p>
-    <h2 class="step-now" id="step-now" tabindex="-1"></h2>
-    <p class="step-ask" id="step-ask">What can happen next?</p>
-    <ul class="step-moves" id="step-moves"></ul>
-    <p class="step-hint">Words in brackets say when a step can happen.</p>
-    <div class="step-controls"><button type="button" id="step-back">Back</button><button type="button" id="step-play" aria-pressed="false">Play</button><button type="button" id="step-close">Close</button></div>
-    <p class="step-live" aria-live="polite" id="step-live"></p>
-  </aside>
-  <script is:inline type="application/json" id="chart-data" set:html={JSON.stringify(chart)}></script>
-  <footer class="foot"><a href="/">← More from Praneeth</a><span>2 November 2026</span><a href="https://github.com/Praneeth16">GitHub</a></footer>
-  <noscript><p class="noscript">The drawings animate and the sliders compute with JavaScript. Without it the story still reads top to bottom.</p></noscript>
+  <footer class="foot"><a href="/">← More from Praneeth</a><a href="/#writing-title">Browse the essays</a><a href="https://github.com/Praneeth16">GitHub</a></footer>
+
   <script is:inline src="/llm/card-scenes.js"></script>
   <script is:inline src="/llm/machine.js"></script>
   <script is:inline src="/llm/story.js"></script>
