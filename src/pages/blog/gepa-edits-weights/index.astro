@@ -1,0 +1,154 @@
+---
+import '../../../styles/home-type.css';
+import '../../../styles/wsp.css';
+import LoopScene from '../../../components/wsp/LoopScene';
+import SearchStepScene from '../../../components/wsp/SearchStepScene';
+import PatchScene from '../../../components/wsp/PatchScene';
+import SeedsScene from '../../../components/wsp/SeedsScene';
+import SplitScene from '../../../components/wsp/SplitScene';
+const description = 'A 7-line script took a small model from 7% to 61% on a math test, with no training. Twelve searches show how often that happens.';
+const title = 'Can one model fix another by editing its weights?';
+const url = 'https://praneeth16.github.io/blog/gepa-edits-weights/';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={url} />
+  <link rel="icon" href="/favicon.svg" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={url} />
+  <meta property="og:image" content="https://praneeth16.github.io/wsp/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preload" href="/fonts/karrik-regular.woff2" as="font" type="font/woff2" crossorigin />
+</head>
+<body>
+<div class="wsp">
+  <header class="mast">
+    <a class="brand" href="/">Praneeth Paikray</a>
+    <nav aria-label="Site"><a href="/#writing-title">Writing</a></nav>
+  </header>
+
+  <div class="lead">
+    <h1>{title}</h1>
+    <p class="deck">A 7-line script took a small model from 7% to 61% on a math test, with no training. Then I ran the search again, and the answer changed.</p>
+    <p class="byline">Praneeth Paikray <span>·</span> <time datetime="2026-11-14">14 Nov 2026</time></p>
+  </div>
+
+  <main class="prose">
+    <p>Give Qwen3.5-0.8B, a small open model, this problem. A circular garden is enlarged so that its new diameter is twice the old one. What is the ratio of the original area to the new area?</p>
+
+    <p>The model sets the problem up correctly. Then it writes "Wait, r_new = 2 r_old." It writes the same line again, and again. In one of my runs it wrote that line 691 times, until it hit the limit of 16,384 tokens. It never gave an answer.</p>
+
+    <LoopScene client:visible />
+
+    <p>This happens on most hard problems. MATH-500 is a standard set of 500 competition math problems. On it, the model runs out of room on 93% of its attempts and scores 7%. With its thinking step switched off, the same model scores 45.6%. So the model can do much of the math. It cannot stop checking its work.</p>
+
+    <p>This article is about fixing that without training. A larger model looks inside the small model and writes a short script that changes its weights. The best script I found is seven lines long. With it, the small model scores 60.6%.</p>
+
+    <h2>The edit is a piece of text</h2>
+
+    <p>A model's weights are the numbers that decide what it writes next. Qwen3.5-0.8B has about 800 million of them. The usual way to change them is training, which needs many examples and many small updates.</p>
+
+    <p>On November 2, a team at MIT CSAIL showed another way in a post called <a href="https://rikiyat.github.io/blog/weight-space-programming/">"Sparks of Weight-Space Programming"</a>. A frontier model studied the small model, found the part that drives the repeated checking, and changed 131,072 weights directly. That is 0.016% of the model. The MATH-500 score went from 7.9% to 48.1%, and nothing was trained. In my setup, with strict grading and two samples per problem, that published edit scores 53.3%.</p>
+
+    <p>I wanted to know if this could be a tool that anyone can run. DSPy is a library for building programs around language models. It includes optimizers, which improve a program for you. One of them, GEPA, improves prompts. It asks a strong model to propose a new prompt, tests the prompt on real problems, shows the strong model what went wrong, and keeps the best versions.</p>
+
+    <p>GEPA only needs the thing it improves to be text. A weight edit can be text too, if you write it as a short Python script that changes named parts of the model. So I gave GEPA scripts in place of prompts. The MIT post does not use GEPA or DSPy, so this part is my addition. The result is a DSPy optimizer called WeightSpaceOptimizer.</p>
+
+    <h2>One step of the search</h2>
+
+    <p>Each step has four parts.</p>
+
+    <ul>
+      <li>A strong model reads problems that the small model got wrong. In my runs the strong model was Claude Opus 5.5.</li>
+      <li>The strong model can run a few tests on the small model. A typical test compares the small model's internal state while it loops with its state while it makes progress.</li>
+      <li>The strong model writes a script that edits the weights. The script runs in a sandbox, which refuses edits to the layers that read words in and write words out.</li>
+      <li>The edited model answers 32 practice problems. If it scores better than before, the script is kept, and the next step starts from it.</li>
+    </ul>
+
+    <SearchStepScene client:visible />
+
+    <h2>The edit that won</h2>
+
+    <p>The test in the second part gives the strong model a direction. Here is what that means. At each point in its thinking, the small model's internal state is a list of 1,024 numbers. When the model loops, those numbers shift in a consistent way. That shift is the direction.</p>
+
+    <p>The model has 24 layers, and each layer adds something to the state. The winning script goes through layers 10 to 22 and removes the looping direction from what each one adds. After the edit, those layers cannot push the state toward looping.</p>
+
+    <pre><code>for layer in range(10, 23):
+    d = load_artifact(repetition_dir(layer))
+    d = d / d.norm()
+    P = torch.eye(1024) - torch.outer(d, d)   # removes direction d
+    for part in ["mlp", "attention"]:
+        W = load_original(output_of(layer, part))
+        save_edit(output_of(layer, part), P @ W)</code></pre>
+    <p class="code-note">Simplified. The full script is in the repo.</p>
+
+    <PatchScene client:visible />
+
+    <p>The published edit changes 131,072 weights in two layers. This one changes about 61 million in thirteen layers. It is still one idea, applied in many places.</p>
+
+    <p><strong>It scores 60.6% on MATH-500. The published edit scores 53.3% on the same problems with the same grading.</strong> The gap is 7.3 points, and the 95% interval for it is 4.6 to 10.0. The edited model also uses 23% fewer tokens for each correct answer.</p>
+
+    <p>What changed inside the model? I looked at what each edited model wants to write at the end of a sentence. Every edit makes "Wait" a little less likely. The edits that work also make a closing word, e.g., "So", 4 to 7.5 times more likely. The weak edits barely change it. So the gain comes from stopping. The model learned no new math.</p>
+
+    <h2>Then I ran it again</h2>
+
+    <p>A search like this makes random choices, e.g., which practice problems the strong model is shown at each step. A seed is the number that fixes those choices. I ran the same search with two more seeds and changed nothing else.</p>
+
+    <p>The three seeds scored 60.6%, 40.6% and 32.0%.</p>
+
+    <SeedsScene client:visible />
+
+    <p>Two of the three are below 45.6%, which is what the model scores with thinking switched off and no edit at all. Yet all three searches reported a clear gain on their own practice problems.</p>
+
+    <p>I also ran three seeds that start from the published edit. They scored 59.9%, 54.3% and 32.5%.</p>
+
+    <h2>Was the search loop needed?</h2>
+
+    <p>Those results raise two questions. Did GEPA's loop find the good edit, or did the strong model? And can the search be told what a good edit looks like?</p>
+
+    <p>For the first question, I removed the loop. The strong model wrote four separate scripts. Each one started from the unedited model, and no script built on another. I kept the one that did best on the practice problems. Three seeds scored 59.4%, 43.3% and 36.6%. That is level with the GEPA runs, in both the average and the spread. In this experiment the loop added little. The strong model's idea was either good on the first try or it was not.</p>
+
+    <p>For the second question, I gave the strong model a new tool. The tool measures how much an edit raises the chance of a closing word, because that is what the good edits share. Three seeds scored 54.1%, 50.3% and 43.4%. The worst seed is about 11 points better than before, and the best seed is about 6 points worse. One seed also went too far. Its edit made the model stop so readily that 33% of its answers were finished and wrong. For the published edit that figure is 18%. Three seeds are too few to say that the tool helps.</p>
+
+    <h2>How to pick a run</h2>
+
+    <p>One run tells you little, so you need several runs and a fair way to choose between them.</p>
+
+    <p>The search's own score is not a fair way. The search keeps the edits that do well on its 32 practice problems, so that score flatters whatever it kept. Across my twelve searches, ranking the runs by this score says almost nothing about their MATH-500 rank. The rank correlation is 0.11, where 1 means the same order and 0 means no relation.</p>
+
+    <p>A third set of problems works much better. I kept 48 problems that no search ever saw, and scored each finished edit on them. The rank correlation of this score with MATH-500 is 0.77.</p>
+
+    <SplitScene client:visible />
+
+    <p>It is not perfect. Its top pick was the seed that stopped too readily. That is why I also count the answers that are finished and wrong.</p>
+
+    <h2>When to use this</h2>
+
+    <p>Weight editing of this kind fits a narrow case. You need an open model whose weights you can change, and a failure you can measure, e.g., thinking loops. If you have both, these are the rules I would follow.</p>
+
+    <ul>
+      <li>Run the search several times. One run landed anywhere from 32% to 61%.</li>
+      <li>Keep three sets of problems. The strong model learns from the first. The search keeps edits by the second. You choose between runs on the third.</li>
+      <li>Compare with the simplest fix. Here that is switching thinking off, which scores 45.6%. Six of my twelve runs scored below it.</li>
+      <li>Check what the edit gives up. An edit that makes a model stop sooner can make it stop too soon.</li>
+    </ul>
+
+    <p>The results have limits. I tested one model on one benchmark, with three seeds per setup, and the only failure I studied was thinking loops.</p>
+
+    <p>The code is at <a href="https://github.com/Praneeth16/dspy-weightspace">github.com/Praneeth16/dspy-weightspace</a>. Four other projects are worth reading next to it. <a href="https://pypi.org/project/dspy-wsp/">Drew Breunig's dspy-wsp</a> is another DSPy package for weight edits. <a href="https://github.com/MatinKhajavi/Weight-Space-Programming">Matin Khajavi's replication</a> of the Sparks experiments also found an edit by Claude Opus that beats the published one, 54.4% against 50.8% in his setup. The <a href="https://github.com/areu01or00/qwen0.8B-wsp">qwen0.8B-wsp repo</a> by areu01or00 edits the same model for a different purpose, which is to write new facts into it. Nandakishor's Kaggle notebook <a href="https://www.kaggle.com/code/nandakishorconvai/engine-transfer">engine_transfer</a> copies the answers of a separate classifier into the same model. Its edit is solved directly with no training loop, it changes about one million weights, and it checks that the tasks it did not target stay level.</p>
+
+    <p>Go back to the garden problem. With one of the edits from these searches, the model works through it, writes "Therefore, the ratio of the original area to the enlarged area is 1/4", and stops after 4,636 tokens. One short script made that difference. Whether a search finds that script depends on the seed, so run it more than once.</p>
+  </main>
+
+  <footer class="foot"><a href="/">← More from Praneeth</a><a href="/#writing-title">Browse the essays</a><a href="https://github.com/Praneeth16">GitHub</a></footer>
+</div>
+</body>
+</html>

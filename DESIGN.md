@@ -19,3 +19,11 @@
 - Guided reading adds a sticky bar below the masthead. Previous, Next, and Play move through the scenes, and Exit guide returns focus to the current scene. The page remains scrollable and the model and lab stay in the chapter flow.
 - Visible canvases animate unless motion is paused or reduced. The controls and explanations remain usable with motion paused.
 - `node scripts/check-llm-story.mjs` checks the scene order against the TLA+ model and verifies that every drawing is used once.
+
+## Experiment essay (`blog/gepa-edits-weights`)
+- White theme, separate from the paper house system: page #ffffff, panels #fbfbf7, wash #eff2e8, rules #d9dfd1, ink #262d24, muted #596450, accent green #315c43, failure red #9d3029 with wash #fbefeb. Green means the model stops and answers; red means it loops or fails. No dark sections, no other hues.
+- Karrik headings, Inclusive Sans body (18px, 17px on phones, 720px measure), DM Mono for code and measurements. All self-hosted; no external requests, no analytics.
+- Five StageShow scenes in `src/components/wsp`. Each has a wide design (960px) and a compact design (358px) rendered together and switched by container width, so the poster works without JavaScript. Play runs the script once; Replay restarts; Show result returns to the poster; reduced motion and pre-hydration show the poster only. Controls use the Vercel UI SDK, styled through their `data-slot` hooks in `wsp.css`. On wide screens scenes 1 and 2 sit in a kit window with grey lights. On phones they sit in a page-style panel, because a desktop window is squashed at that width.
+- Every number comes from `src/components/wsp/data.ts`, copied from `04-content/articles/gepa-edits-weights/site-data.json`.
+- A switch above a scene changes the data without remounting the frame, so it keeps keyboard focus. Ties in a ranking keep the order of `data.ts` and are never broken with the score the ranking is compared with.
+- Checks: `npx vitest run src/test/wsp.test.tsx` (data invariants, poster rendering, segmented control), `npm run build`, `node scripts/check-llm-story.mjs`, and a grep for dashes in `src/components/wsp` and the page.
