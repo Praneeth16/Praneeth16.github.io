@@ -1,6 +1,6 @@
 # Rehearsal: GEPA weight-editing essay (five scenes)
 
-Status: the scenes were built, filmed and checked in a local harness, and the StageShow gate printed `rehearsal passed` for all five scenes at both widths. The site's own build (`npm run build`) and tests (`npm test`) did not run on the build machine. Read "Not checked" before relying on this.
+Status: the scenes were built, filmed and checked in a local harness, and the StageShow gate printed `rehearsal passed` for all five scenes at both widths. The site's own build did not run on the build machine. It ran on GitHub Actions on 15 Nov 2026 (commit 8badac1) and passed, and the live page was then checked with the real controls. `npm test` has still not run. Read "Not checked" before relying on this.
 
 ## Why the site build did not run
 - The npm registry proxy on the build machine blocks package versions that were published in the last few days. It returned 403 "Blocked by Security Policy" for several versions in `package-lock.json`, and it serves no version of `@ui-sdk/react`. The policy was not bypassed.
@@ -49,9 +49,16 @@ Every run also printed `film: inconclusive; watch the motion and inspect every i
 - JavaScript off: all five posters and the full article are in the HTML.
 - Screenshots of every poster at four widths, and mid-play and end frames at two widths, were looked at and the faults fixed (overlaps in scene 3, label collisions in scene 4 on phones, overflow in scene 5, unstyled controls).
 
+## Checked on the live page after deploy (15 Nov 2026, Chrome, headless)
+- GitHub Actions "Deploy to GitHub Pages" passed for 8badac1, which includes `astro check` and `astro build` with the real packages.
+- Widths 1440, 768, 390 and 320: no horizontal scroll, no text under 12 px, no console errors, no failed requests, no request to another host, fonts loaded.
+- Every scene at 1440 and 390 with the real `@ui-sdk/react` controls and `client:visible` hydration: Play, Replay and Show result behave as in the harness.
+- The three switches change their scene by mouse and by arrow key and keep focus. Checked by `aria-checked` and by screenshots.
+- Reduced motion and JavaScript off behave as in the harness.
+- Homepage lists the essay first of six, the RSS feed has it first, and the share image loads.
+
 ## Not checked
-- `npm run build` (astro check and astro build) and `npm test`, including `src/test/wsp.test.tsx`, which has never run.
-- The real `@ui-sdk/react` components inside these scenes.
-- `client:visible` hydration through Astro, and the page as deployed.
+- `npm test`, including `src/test/wsp.test.tsx`, which has never run. The deploy workflow does not run tests.
 - Touch hardware, Safari and Firefox, and the OS reduced-motion switch (only Chrome's emulation).
 - Frame-by-frame film at 40 to 80 ms, and a side-by-side still with each gold.
+- The StageShow gate against the deployed page. It ran against the harness only.
