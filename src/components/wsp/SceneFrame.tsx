@@ -106,11 +106,11 @@ export function SceneFrame<S extends object>({ label, caption, toolbar, variant 
   };
 
   return (
-    <figure className="wsp-scene" data-inset={inset}>
+    <figure className="wsp-scene" data-inset={inset} data-ready={ready || undefined}>
       {toolbar && <div className="wsp-toolbar">{toolbar}</div>}
       <div className="wsp-figure" role="img" aria-label={label}>
-        <div className="wsp-twin wsp-twin-wide">{stage(false)}</div>
-        <div className="wsp-twin wsp-twin-narrow">{stage(true)}</div>
+        <div className="wsp-twin wsp-twin-wide" style={{ ['--w' as string]: wide.width, ['--h' as string]: wide.height }}>{stage(false)}</div>
+        <div className="wsp-twin wsp-twin-narrow" style={{ ['--w' as string]: narrow.width, ['--h' as string]: narrow.height }}>{stage(true)}</div>
       </div>
       <figcaption className="wsp-caption">
         <span>{caption}</span>

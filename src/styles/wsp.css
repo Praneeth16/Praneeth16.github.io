@@ -92,6 +92,11 @@ body:has(.wsp) { margin: 0; }
 .wsp .wsp-scene[data-inset='0'] { --inset: 0; }
 .wsp .wsp-toolbar { margin-bottom: 14px; padding-inline: calc(100% * var(--inset) / 960); }
 .wsp .wsp-figure { position: relative; container-type: inline-size; width: 100%; }
+/* Until a scene's script has loaded, and with JavaScript off, the kit draws a stage at its design size. These rules
+   scale the server-rendered poster to the figure. They stop applying once the scene is ready. */
+.wsp .wsp-scene:not([data-ready]) .wsp-twin { --fit: min(1, tan(atan2(100cqw, calc(var(--w) * 1px)))); }
+.wsp .wsp-scene:not([data-ready]) .wsp-twin .ss-fit { height: calc(var(--h) * 1px * var(--fit)) !important; }
+.wsp .wsp-scene:not([data-ready]) .wsp-twin .ss-stage { transform: scale(var(--fit)) !important; }
 .wsp .wsp-twin-narrow { display: none; }
 @container (max-width: 559px) {
   .wsp .wsp-twin-wide { display: none; }
