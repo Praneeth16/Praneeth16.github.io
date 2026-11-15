@@ -60,6 +60,8 @@ export interface SceneFrameProps<S extends object> {
   /** Which version of the scene is shown. A change returns to the poster without remounting the toolbar, so a
    * segmented control keeps keyboard focus. */
   variant?: string;
+  /** The stage's inner gutter on wide screens, in design pixels. 0 when the drawing runs edge to edge. */
+  inset?: 0 | 24;
   wide: Size;
   narrow: Size;
   initial: S;
@@ -68,7 +70,7 @@ export interface SceneFrameProps<S extends object> {
   children: (s: S, compact: boolean) => ReactNode;
 }
 
-export function SceneFrame<S extends object>({ label, caption, toolbar, variant = '', wide, narrow, initial, poster, script, children }: SceneFrameProps<S>) {
+export function SceneFrame<S extends object>({ label, caption, toolbar, variant = '', inset = 24, wide, narrow, initial, poster, script, children }: SceneFrameProps<S>) {
   const [ready, setReady] = useState(false);
   const [still, setStill] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -104,7 +106,7 @@ export function SceneFrame<S extends object>({ label, caption, toolbar, variant 
   };
 
   return (
-    <figure className="wsp-scene">
+    <figure className="wsp-scene" data-inset={inset}>
       {toolbar && <div className="wsp-toolbar">{toolbar}</div>}
       <div className="wsp-figure" role="img" aria-label={label}>
         <div className="wsp-twin wsp-twin-wide">{stage(false)}</div>

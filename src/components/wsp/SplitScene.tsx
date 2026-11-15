@@ -122,6 +122,7 @@ export default function SplitScene() {
   return (
     <SceneFrame<S>
       variant={sort}
+      inset={0}
       label="Three sets of problems, sized 16, 32 and 48, with the role of each. Twelve searches ranked by the search's own score and by MATH-500. The search's own score ranks them with a rank correlation of 0.11, so the lines cross. The held-out score ranks them with a rank correlation of 0.77, so the lines mostly stay level."
       caption="MATH-500, 500 problems, 2 samples each. Twelve searches, ranked by their scores against MATH-500 rank."
       toolbar={

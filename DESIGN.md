@@ -22,7 +22,8 @@
 
 ## Experiment essay (`blog/gepa-edits-weights`)
 - White theme, separate from the paper house system: page #ffffff, panels #fbfbf7, wash #eff2e8, rules #d9dfd1, ink #262d24, muted #596450, accent green #315c43, failure red #9d3029 with wash #fbefeb. Green means the model stops and answers; red means it loops or fails. No dark sections, no other hues.
-- Karrik headings, Inclusive Sans body (18px, 17px on phones, 720px measure), DM Mono for code and measurements. All self-hosted; no external requests, no analytics.
+- Karrik headings, Inclusive Sans body (20px on wide screens, 18px below 960px, 17px on phones, 880px measure), DM Mono for code and measurements. All self-hosted; no external requests, no analytics.
+- Text and scenes share one column. Each figure is sized so that the window or drawing inside it starts and ends on the text edges, and its switch and caption start on the same edge. `SceneFrame` takes `inset` (24 or 0) for the stage's inner gutter.
 - Five StageShow scenes in `src/components/wsp`. Each has a wide design (960px) and a compact design (358px) rendered together and switched by container width, so the poster works without JavaScript. Play runs the script once; Replay restarts; Show result returns to the poster; reduced motion and pre-hydration show the poster only. Controls use the Vercel UI SDK, styled through their `data-slot` hooks in `wsp.css`. On wide screens scenes 1 and 2 sit in a kit window with grey lights. On phones they sit in a page-style panel, because a desktop window is squashed at that width.
 - Every number comes from `src/components/wsp/data.ts`, copied from `04-content/articles/gepa-edits-weights/site-data.json`.
 - A switch above a scene changes the data without remounting the frame, so it keeps keyboard focus. Ties in a ranking keep the order of `data.ts` and are never broken with the score the ranking is compared with.

@@ -1,5 +1,7 @@
 @import url('/fonts/fonts.css');
 
+body:has(.wsp) { margin: 0; }
+
 .wsp {
   --paper: #ffffff;
   --panel: #fbfbf7;
@@ -11,11 +13,10 @@
   --red: #9d3029;
   --red-wash: #fbefeb;
   --gutter: 24px;
-  --measure: 720px;
-  --wide: 960px;
+  --measure: 880px;
   background: var(--paper);
   color: var(--ink);
-  font: 18px/1.7 'Inclusive Sans', sans-serif;
+  font: 20px/1.65 'Inclusive Sans', sans-serif;
   min-height: 100vh;
   -webkit-text-size-adjust: 100%;
 }
@@ -82,10 +83,14 @@
   position: relative;
   left: 50%;
   transform: translateX(-50%);
-  width: min(var(--wide), calc(100vw - 2 * var(--gutter)));
+  /* The stage keeps an inner gutter of --inset design pixels out of 960. The figure is wider than the text column by
+     that share, so the window or drawing inside it lines up with the text edges. */
+  --inset: 24;
+  width: calc(min(var(--measure), 100vw - 2 * var(--gutter)) * 960 / (960 - 2 * var(--inset)));
   margin: 2.2em 0 2.4em;
 }
-.wsp .wsp-toolbar { margin-bottom: 14px; padding-inline: 20px; }
+.wsp .wsp-scene[data-inset='0'] { --inset: 0; }
+.wsp .wsp-toolbar { margin-bottom: 14px; padding-inline: calc(100% * var(--inset) / 960); }
 .wsp .wsp-figure { position: relative; container-type: inline-size; width: 100%; }
 .wsp .wsp-twin-narrow { display: none; }
 @container (max-width: 559px) {
@@ -95,7 +100,7 @@
 .wsp .wsp-twin { width: 100%; }
 .wsp .wsp-caption {
   margin-top: 12px;
-  padding-inline: 24px;
+  padding-inline: calc(100% * var(--inset) / 960);
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -207,20 +212,25 @@
 .wsp .wsp-swatch { display: inline-block; width: 13px; height: 13px; border-radius: 3px; background: var(--wash); border: 1px solid var(--rule); }
 .wsp .wsp-swatch-next { margin-left: 10px; }
 .wsp .wsp-swatch[data-on] { background: var(--accent); border-color: var(--accent); }
-.wsp .wsp-patch.is-compact .wsp-patch-stat { left: 12px; width: 334px; }
+.wsp .wsp-patch.is-compact .wsp-patch-stat { left: 0; width: 358px; }
 .wsp .wsp-patch.is-compact .wsp-patch-big { font-size: 28px; }
 .wsp .wsp-patch.is-compact .wsp-patch-small { font-size: 15px; line-height: 1.45; }
-.wsp .wsp-patch.is-compact .wsp-patch-cols { left: 12px; width: 334px; grid-template-columns: repeat(12, minmax(0, 1fr)); row-gap: 22px; column-gap: 6px; top: 130px; }
+.wsp .wsp-patch.is-compact .wsp-patch-cols { left: 0; width: 358px; grid-template-columns: repeat(12, minmax(0, 1fr)); row-gap: 22px; column-gap: 6px; top: 130px; }
 .wsp .wsp-patch.is-compact .wsp-cell { height: 44px; }
 .wsp .wsp-patch.is-compact .wsp-layer { font-size: 12px; }
-.wsp .wsp-patch.is-compact .wsp-patch-status { left: 12px; width: 334px; top: 398px; font-size: 15px; line-height: 1.45; }
-.wsp .wsp-patch.is-compact .wsp-patch-legend { left: 12px; top: 456px; width: 334px; font-size: 13px; }
+.wsp .wsp-patch.is-compact .wsp-patch-status { left: 0; width: 358px; top: 398px; font-size: 15px; line-height: 1.45; }
+.wsp .wsp-patch.is-compact .wsp-patch-legend { left: 0; top: 456px; width: 358px; font-size: 13px; }
 .wsp .wsp-patch.is-compact .wsp-patch-rows { margin-left: 0; flex-basis: 100%; }
 
 /* 4. Seeds axis */
 .wsp .wsp-seeds { position: absolute; inset: 0; }
-.wsp .wsp-seeds-axis { position: absolute; top: 0; height: 100%; left: 50px; width: var(--axis-w); }
-.wsp .wsp-seeds.is-compact .wsp-seeds-axis { left: 20px; }
+.wsp .wsp-seeds-axis { position: absolute; top: 0; height: 100%; left: 24px; width: var(--axis-w); }
+.wsp .wsp-seeds.is-compact .wsp-seeds-axis { left: 0; }
+/* The end ticks sit inside the axis, so the axis can run the full width of the text column. */
+.wsp .wsp-seeds-tick[data-edge='start'] { transform: none; }
+.wsp .wsp-seeds-tick[data-edge='start'] i { left: 0; }
+.wsp .wsp-seeds-tick[data-edge='end'] { transform: translateX(-100%); }
+.wsp .wsp-seeds-tick[data-edge='end'] i { left: auto; right: 0; }
 .wsp .wsp-seeds-line { position: absolute; left: 0; right: 0; top: var(--axis-y); height: 1px; background: var(--muted); }
 .wsp .wsp-seeds-tick { position: absolute; top: calc(var(--axis-y) + 16px); transform: translateX(-50%); font: 14px 'DM Mono', monospace; color: var(--muted); white-space: nowrap; }
 .wsp .wsp-seeds-tick i { position: absolute; left: 50%; top: -16px; width: 1px; height: 6px; background: var(--muted); }
@@ -315,10 +325,14 @@
 }
 .wsp .wsp-controls [data-slot='button']:hover { background: var(--accent); color: var(--paper); }
 
-/* Small screens */
+/* Smaller screens */
+@media (max-width: 960px) {
+  .wsp { font-size: 18px; line-height: 1.7; }
+}
 @media (max-width: 600px) {
   .wsp { font-size: 17px; line-height: 1.68; }
   .wsp .mast { padding-inline: var(--gutter); }
-  .wsp .wsp-caption { font-size: 14px; padding-inline: 12px; }
-  .wsp .wsp-toolbar { padding-inline: 8px; }
+  .wsp .wsp-caption { font-size: 14px; }
+  /* The phone designs run edge to edge, so the figure is exactly as wide as the text. */
+  .wsp .wsp-scene { --inset: 0; }
 }

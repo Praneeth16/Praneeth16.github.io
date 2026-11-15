@@ -39,7 +39,7 @@ const toneOf = (v: number) => (v < LOW ? 'low' : v > HIGH ? 'high' : 'mid');
 
 function Composition({ group, s, compact }: { group: GroupId; s: S; compact: boolean }) {
   const runs = RUNS.filter((r) => r.group === group);
-  const width = compact ? 318 : 860;
+  const width = compact ? 358 : 912;
   const x = (v: number) => (v / AXIS_MAX) * width;
   const ticks = Array.from({ length: AXIS_MAX / 10 + 1 }, (_, i) => i * 10);
   const axisY = compact ? 176 : 186;
@@ -58,7 +58,7 @@ function Composition({ group, s, compact }: { group: GroupId; s: S; compact: boo
       <div className="wsp-seeds-axis">
         <div className="wsp-seeds-line" />
         {ticks.map((t) => (
-          <span key={t} className="wsp-seeds-tick" style={{ left: x(t) }}><i />{t}%</span>
+          <span key={t} className="wsp-seeds-tick" data-edge={t === 0 ? 'start' : t === AXIS_MAX ? 'end' : undefined} style={{ left: x(t) }}><i />{t}%</span>
         ))}
         <span className="wsp-ref wsp-ref-low" style={{ left: x(LOW) }}>
           <b>{compact ? 'Thinking off' : 'Thinking off, no edit'}</b><b>{LOW}%</b>
