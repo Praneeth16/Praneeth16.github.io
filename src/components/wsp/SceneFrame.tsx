@@ -12,8 +12,8 @@ import type { LookTokens } from '../stageshow/kit/stage';
 type Size = { width: number; height: number };
 
 export const TOKENS: LookTokens = {
-  '--ss-font': "'Inclusive Sans', sans-serif",
-  '--ss-mono': "'DM Mono', monospace",
+  '--ss-font': 'var(--ui)',
+  '--ss-mono': 'var(--mono)',
   '--ss-canvas': '#ffffff',
   '--ss-surface': '#fbfbf7',
   '--ss-chrome': '#eff2e8',

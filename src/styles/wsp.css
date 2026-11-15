@@ -1,5 +1,8 @@
 @import url('/fonts/fonts.css');
 
+@font-face { font-family: 'Geist'; src: url('/fonts/geist-variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Geist Mono'; src: url('/fonts/geistmono-variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+
 body:has(.wsp) { margin: 0; }
 
 .wsp {
@@ -16,7 +19,13 @@ body:has(.wsp) { margin: 0; }
   --measure: 880px;
   background: var(--paper);
   color: var(--ink);
-  font: 20px/1.65 'Inclusive Sans', sans-serif;
+  /* Four type roles. Change the faces here and nowhere else. Fraunces and Spectral are the faces of the site's
+     other essays. Geist is for labels inside scenes, where its plain zeros read better next to numbers. */
+  --display: 'Fraunces', Georgia, serif;
+  --text: 'Spectral', Georgia, serif;
+  --ui: 'Geist', system-ui, sans-serif;
+  --mono: 'Geist Mono', ui-monospace, monospace;
+  font: 21px/1.6 var(--text);
   min-height: 100vh;
   -webkit-text-size-adjust: 100%;
 }
@@ -40,14 +49,16 @@ body:has(.wsp) { margin: 0; }
   background: var(--paper);
   border-bottom: 1px solid var(--rule);
 }
-.wsp .mast .brand { font: 400 22px/1.2 'Karrik', sans-serif; text-decoration: none; white-space: nowrap; }
+.wsp .mast .brand { font: 550 22px/1.2 var(--display); text-decoration: none; white-space: nowrap; }
 .wsp .mast nav { font-size: 15px; }
 .wsp .mast nav a { text-decoration: none; }
 
 .wsp .lead { width: min(var(--measure), calc(100% - 2 * var(--gutter))); margin: 0 auto; padding-top: clamp(40px, 7vw, 84px); }
 .wsp .lead h1 {
-  font: 400 clamp(38px, 5.4vw, 60px)/1.04 'Karrik', sans-serif;
-  letter-spacing: -0.025em;
+  font: 500 clamp(38px, 5.4vw, 60px)/1.06 var(--display);
+  font-variation-settings: 'opsz' 144, 'SOFT' 30;
+  letter-spacing: -0.012em;
+  word-spacing: 0.06em;
   text-wrap: balance;
 }
 .wsp .deck { margin-top: 18px; font-style: italic; font-size: clamp(19px, 2vw, 22px); line-height: 1.5; color: var(--muted); }
@@ -60,13 +71,13 @@ body:has(.wsp) { margin: 0; }
   padding-top: 40px;
 }
 .wsp .prose > p { margin-top: 1.1em; }
-.wsp .prose h2 { margin-top: 2.2em; font: 400 clamp(28px, 3.2vw, 34px)/1.15 'Karrik', sans-serif; letter-spacing: -0.02em; }
+.wsp .prose h2 { margin-top: 2.2em; font: 500 clamp(28px, 3.2vw, 34px)/1.15 var(--display); font-variation-settings: 'opsz' 72, 'SOFT' 30; letter-spacing: -0.015em; }
 .wsp .prose ul { margin-top: 1em; padding-left: 1.3em; }
 .wsp .prose li { margin-top: 0.5em; }
 .wsp .prose li::marker { color: var(--muted); }
 .wsp .prose strong { font-weight: 600; }
 .wsp .prose em { font-style: italic; }
-.wsp .prose code { font: 0.86em 'DM Mono', monospace; overflow-wrap: anywhere; }
+.wsp .prose code { font: 0.86em var(--mono); overflow-wrap: anywhere; }
 .wsp .prose pre {
   margin-top: 1.4em;
   padding: 16px 18px;
@@ -74,7 +85,7 @@ body:has(.wsp) { margin: 0; }
   background: var(--panel);
   border: 1px solid var(--rule);
   border-radius: 6px;
-  font: 14px/1.6 'DM Mono', monospace;
+  font: 14px/1.6 var(--mono);
 }
 .wsp .prose pre code { font: inherit; }
 .wsp .prose .code-note { margin-top: 8px; font-size: 14px; color: var(--muted); }
@@ -90,6 +101,8 @@ body:has(.wsp) { margin: 0; }
   margin: 2.2em 0 2.4em;
 }
 .wsp .wsp-scene[data-inset='0'] { --inset: 0; }
+/* Scenes, captions and page furniture use the interface face. The article text uses the text face. */
+.wsp .wsp-scene, .wsp .mast, .wsp .byline, .wsp .foot, .wsp .prose .code-note { font-family: var(--ui); }
 .wsp .wsp-toolbar { margin-bottom: 14px; padding-inline: calc(100% * var(--inset) / 960); }
 .wsp .wsp-figure { position: relative; container-type: inline-size; width: 100%; }
 /* Until a scene's script has loaded, and with JavaScript off, the kit draws a stage at its design size. These rules
@@ -134,14 +147,14 @@ body:has(.wsp) { margin: 0; }
 .wsp .ss-stage { background: var(--paper); }
 .wsp .wsp-fade { opacity: 0; transition: opacity 0.35s ease; }
 .wsp .wsp-fade[data-on] { opacity: 1; }
-.wsp .wsp-kicker { font: 13px/1.4 'DM Mono', monospace; color: var(--muted); }
-.wsp .wsp-tag { font: 13px/1.4 'DM Mono', monospace; color: var(--muted); border: 1px solid var(--rule); border-radius: 4px; padding: 1px 7px; }
+.wsp .wsp-kicker { font: 13px/1.4 var(--mono); color: var(--muted); }
+.wsp .wsp-tag { font: 13px/1.4 var(--mono); color: var(--muted); border: 1px solid var(--rule); border-radius: 4px; padding: 1px 7px; }
 
 /* Page-style panel for the phone layouts */
 /* The edge is an outline, so the content reaches the panel's own edge. */
 .wsp .wsp-panel { display: flex; flex-direction: column; background: var(--paper); outline: 1px solid var(--rule); outline-offset: -1px; border-radius: 8px; overflow: hidden; }
 .wsp .wsp-panel-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 14px; background: var(--wash); border-bottom: 1px solid var(--rule); }
-.wsp .wsp-panel-title { font: 600 14px/1.3 'Inclusive Sans', sans-serif; color: var(--ink); }
+.wsp .wsp-panel-title { font: 600 14px/1.3 var(--ui); color: var(--ink); }
 .wsp .wsp-panel-body { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 
 /* 1. Loop */
@@ -152,19 +165,19 @@ body:has(.wsp) { margin: 0; }
 .wsp .wsp-loop-panes { display: grid; grid-template-columns: 1fr 1fr; }
 .wsp .wsp-loop-pane { display: flex; flex-direction: column; gap: 12px; min-width: 0; padding: 16px 20px 18px; }
 .wsp .wsp-loop-pane + .wsp-loop-pane { border-left: 1px solid var(--rule); }
-.wsp .wsp-loop-head { margin: 0; font: 600 14px/1.3 'Inclusive Sans', sans-serif; color: var(--ink); }
-.wsp .wsp-loop-lines { height: 142px; display: flex; flex-direction: column; gap: 4px; font: 14px/1.4 'DM Mono', monospace; color: var(--ink); }
+.wsp .wsp-loop-head { margin: 0; font: 600 14px/1.3 var(--ui); color: var(--ink); }
+.wsp .wsp-loop-lines { height: 142px; display: flex; flex-direction: column; gap: 4px; font: 14px/1.4 var(--mono); color: var(--ink); }
 .wsp .wsp-loop-line { opacity: 0; transition: opacity 0.2s ease; }
 .wsp .wsp-loop-line[data-on] { opacity: 1; }
 .wsp .wsp-loop-work { height: 18px; display: flex; align-items: center; opacity: 0; transition: opacity 0.3s ease; }
 .wsp .wsp-loop-work[data-on] { opacity: 1; }
 .wsp .wsp-bar { display: block; height: 8px; border-radius: 4px; background: var(--rule); }
-.wsp .wsp-loop-final { margin-top: 6px; font: 15px/1.5 'Inclusive Sans', sans-serif; opacity: 0; transition: opacity 0.4s ease; }
+.wsp .wsp-loop-final { margin-top: 6px; font: 15px/1.5 var(--ui); opacity: 0; transition: opacity 0.4s ease; }
 .wsp .wsp-loop-final[data-on] { opacity: 1; }
 .wsp .wsp-loop-meta { display: grid; gap: 8px; margin-top: auto; }
 .wsp .wsp-stat { display: flex; align-items: baseline; gap: 10px; font-size: 15px; }
 .wsp .wsp-stat .wsp-kicker { min-width: 62px; }
-.wsp .wsp-num { min-width: 6ch; font: 500 17px/1.2 'DM Mono', monospace; color: var(--ink); font-variant-numeric: tabular-nums; }
+.wsp .wsp-num { min-width: 6ch; font: 500 17px/1.2 var(--mono); color: var(--ink); font-variant-numeric: tabular-nums; }
 .wsp .wsp-of { color: var(--muted); font-size: 14px; }
 .wsp .wsp-meter { height: 8px; }
 .wsp .wsp-meter .ss-meter__fill { transition: none; }
@@ -184,7 +197,7 @@ body:has(.wsp) { margin: 0; }
 .wsp .wsp-search { position: absolute; left: 24px; top: 24px; width: 912px; height: 324px; }
 .wsp .wsp-search-win { height: 100%; }
 .wsp .wsp-search-body { height: 100%; padding: 16px 22px; display: flex; flex-direction: column; gap: 14px; }
-.wsp .wsp-search-file { display: flex; justify-content: space-between; align-items: center; font: 14px 'DM Mono', monospace; color: var(--ink); }
+.wsp .wsp-search-file { display: flex; justify-content: space-between; align-items: center; font: 14px var(--mono); color: var(--ink); }
 .wsp .wsp-search-code { font-size: 14px; }
 .wsp .wsp-search-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
 .wsp .wsp-search-status { font-size: 15px; color: var(--muted); }
@@ -203,14 +216,14 @@ body:has(.wsp) { margin: 0; }
 /* 3. Patch layers */
 .wsp .wsp-patch { position: absolute; inset: 0; }
 .wsp .wsp-patch-stat { position: absolute; left: 24px; top: 14px; width: 912px; }
-.wsp .wsp-patch-big { font: 400 40px/1.1 'Karrik', sans-serif; letter-spacing: -0.02em; color: var(--ink); }
+.wsp .wsp-patch-big { font: 500 40px/1.1 var(--display); font-variation-settings: 'opsz' 72, 'SOFT' 30; letter-spacing: -0.02em; color: var(--ink); }
 .wsp .wsp-patch-small { margin-top: 6px; font-size: 17px; color: var(--muted); }
 .wsp .wsp-patch-cols { position: absolute; left: 24px; top: 122px; width: 912px; display: grid; grid-template-columns: repeat(24, minmax(0, 1fr)); gap: 8px; }
 .wsp .wsp-col { position: relative; display: flex; flex-direction: column; gap: 6px; }
 .wsp .wsp-col[data-active]::before { content: ''; position: absolute; top: -14px; left: 50%; width: 6px; height: 6px; margin-left: -3px; border-radius: 50%; background: var(--ink); }
 .wsp .wsp-cell { display: block; height: 62px; border-radius: 6px; background: var(--wash); border: 1px solid var(--rule); transition: background 0.25s ease, border-color 0.25s ease; }
 .wsp .wsp-cell[data-on] { background: var(--accent); border-color: var(--accent); }
-.wsp .wsp-layer { text-align: center; font: 14px/1.2 'DM Mono', monospace; color: var(--muted); }
+.wsp .wsp-layer { text-align: center; font: 14px/1.2 var(--mono); color: var(--muted); }
 .wsp .wsp-patch-status { position: absolute; left: 24px; top: 290px; width: 912px; font-size: 17px; color: var(--ink); min-height: 26px; }
 .wsp .wsp-patch-legend { position: absolute; left: 24px; top: 332px; width: 912px; font-size: 14px; color: var(--muted); display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
 .wsp .wsp-patch-rows { margin-left: 16px; }
@@ -237,11 +250,11 @@ body:has(.wsp) { margin: 0; }
 .wsp .wsp-seeds-tick[data-edge='end'] { transform: translateX(-100%); }
 .wsp .wsp-seeds-tick[data-edge='end'] i { left: auto; right: 0; }
 .wsp .wsp-seeds-line { position: absolute; left: 0; right: 0; top: var(--axis-y); height: 1px; background: var(--muted); }
-.wsp .wsp-seeds-tick { position: absolute; top: calc(var(--axis-y) + 16px); transform: translateX(-50%); font: 14px 'DM Mono', monospace; color: var(--muted); white-space: nowrap; }
+.wsp .wsp-seeds-tick { position: absolute; top: calc(var(--axis-y) + 16px); transform: translateX(-50%); font: 14px var(--mono); color: var(--muted); white-space: nowrap; }
 .wsp .wsp-seeds-tick i { position: absolute; left: 50%; top: -16px; width: 1px; height: 6px; background: var(--muted); }
 .wsp .wsp-ref { position: absolute; top: 24px; z-index: 1; padding: 1px 4px; background: var(--paper); font-size: 15px; line-height: 1.35; color: var(--ink); white-space: nowrap; }
 .wsp .wsp-ref b { display: block; font-weight: 400; }
-.wsp .wsp-ref b + b { font: 500 16px 'DM Mono', monospace; }
+.wsp .wsp-ref b + b { font: 500 16px var(--mono); }
 .wsp .wsp-ref-low { transform: translateX(calc(-100% - 10px)); text-align: right; }
 .wsp .wsp-ref-high { transform: translateX(10px); }
 .wsp .wsp-ref-rule { position: absolute; top: 76px; height: calc(var(--axis-y) - 76px); width: 0; border-left: 1px solid var(--muted); }
@@ -254,7 +267,7 @@ body:has(.wsp) { margin: 0; }
 .wsp .wsp-run[data-tone='low'] .wsp-run-dot { background: var(--red); }
 .wsp .wsp-run[data-tone='high'] .wsp-run-dot { background: var(--accent); }
 .wsp .wsp-run { z-index: 2; }
-.wsp .wsp-run-value { position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%); padding: 0 4px; background: var(--paper); font: 500 17px/1.3 'DM Mono', monospace; white-space: nowrap; color: var(--ink); }
+.wsp .wsp-run-value { position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%); padding: 0 4px; background: var(--paper); font: 500 17px/1.3 var(--mono); white-space: nowrap; color: var(--ink); }
 .wsp .wsp-run[data-row='1'] .wsp-run-value { bottom: 42px; }
 .wsp .wsp-run[data-row='2'] .wsp-run-value { bottom: 68px; }
 .wsp .wsp-run[data-tone='low'] .wsp-run-value { color: var(--red); }
@@ -288,8 +301,8 @@ body:has(.wsp) { margin: 0; }
 .wsp .wsp-split-node { position: absolute; width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px; border-radius: 50%; border: 2px solid var(--paper); background: var(--ink); }
 .wsp .wsp-split-node[data-tone='low'] { background: var(--red); }
 .wsp .wsp-split-node[data-tone='high'] { background: var(--accent); }
-.wsp .wsp-split-name { position: absolute; transform: translate(-100%, -50%); font: 14px 'DM Mono', monospace; color: var(--muted); white-space: nowrap; }
-.wsp .wsp-split-value { position: absolute; transform: translateY(-50%); font: 14px 'DM Mono', monospace; color: var(--ink); white-space: nowrap; }
+.wsp .wsp-split-name { position: absolute; transform: translate(-100%, -50%); font: 14px var(--mono); color: var(--muted); white-space: nowrap; }
+.wsp .wsp-split-value { position: absolute; transform: translateY(-50%); font: 14px var(--mono); color: var(--ink); white-space: nowrap; }
 .wsp .wsp-split-stat { position: absolute; left: 0; right: 0; margin: 0; text-align: center; font-size: 16px; color: var(--ink); }
 .wsp .wsp-split.is-compact .wsp-split-block { width: 358px; height: 138px; padding: 14px 16px; }
 .wsp .wsp-split.is-compact .wsp-split-head-left { min-width: 190px; }
@@ -312,7 +325,7 @@ body:has(.wsp) { margin: 0; }
   border-radius: 7px;
   background: transparent;
   color: var(--muted);
-  font: 15px/1.2 'Inclusive Sans', sans-serif;
+  font: 15px/1.2 var(--ui);
   cursor: pointer;
 }
 .wsp [data-slot='segmented-control-item']:hover { color: var(--ink); }
@@ -324,7 +337,7 @@ body:has(.wsp) { margin: 0; }
   border-radius: 999px;
   background: var(--paper);
   color: var(--accent);
-  font: 500 15px/1.2 'Inclusive Sans', sans-serif;
+  font: 500 15px/1.2 var(--ui);
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
 }
@@ -332,10 +345,10 @@ body:has(.wsp) { margin: 0; }
 
 /* Smaller screens */
 @media (max-width: 960px) {
-  .wsp { font-size: 18px; line-height: 1.7; }
+  .wsp { font-size: 19px; line-height: 1.62; }
 }
 @media (max-width: 600px) {
-  .wsp { font-size: 17px; line-height: 1.68; }
+  .wsp { font-size: 18px; line-height: 1.6; }
   .wsp .mast { padding-inline: var(--gutter); }
   .wsp .wsp-caption { font-size: 14px; }
   /* The phone designs run edge to edge, so the figure is exactly as wide as the text. */
