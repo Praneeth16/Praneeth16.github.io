@@ -5,6 +5,7 @@ import SearchStepScene from '../../../components/wsp/SearchStepScene';
 import PatchScene from '../../../components/wsp/PatchScene';
 import SeedsScene from '../../../components/wsp/SeedsScene';
 import SplitScene from '../../../components/wsp/SplitScene';
+import ResultChart from '../../../components/wsp/ResultChart';
 const description = 'A 7-line script took a small model from 7% to 61% on a math test, with no training. Twelve searches show how often that happens.';
 const title = 'Can one model fix another by editing its weights?';
 const url = 'https://praneeth16.github.io/blog/gepa-edits-weights/';
@@ -51,6 +52,19 @@ const url = 'https://praneeth16.github.io/blog/gepa-edits-weights/';
 
     <p>This article is about fixing that without training. A larger model looks inside the small model and writes a short script that changes its weights. The best script I found is seven lines long. With it, the small model scores 60.6%.</p>
 
+    <ResultChart />
+
+    <aside class="wsp-short" aria-label="In short">
+      <p class="wsp-short-title">In short</p>
+      <dl>
+        <dt>Problem</dt><dd>Qwen3.5-0.8B keeps checking its work and scores 7% on MATH-500.</dd>
+        <dt>Fix</dt><dd>A larger model writes a short script that edits the small model's weights. Nothing is trained.</dd>
+        <dt>Best result</dt><dd>60.6%, from a 7-line script. The published edit scores 53.3%.</dd>
+        <dt>Catch</dt><dd>The same search scored 32% to 61% with different seeds. Six of twelve searches scored below 45.6%, the score with thinking switched off.</dd>
+        <dt>Rule</dt><dd>Run the search several times, and pick the winner on problems the search never saw.</dd>
+      </dl>
+    </aside>
+
     <h2>The edit is a piece of text</h2>
 
     <p>A model's weights are the numbers that decide what it writes next. Qwen3.5-0.8B has about 800 million of them. The usual way to change them is training, which needs many examples and many small updates.</p>
@@ -63,14 +77,14 @@ const url = 'https://praneeth16.github.io/blog/gepa-edits-weights/';
 
     <h2>One step of the search</h2>
 
-    <p>Each step has four parts.</p>
+    <p>Each step has four parts, in this order.</p>
 
-    <ul>
+    <ol>
       <li>A strong model reads problems that the small model got wrong. In my runs the strong model was Claude Opus 5.5.</li>
       <li>The strong model can run a few tests on the small model. A typical test compares the small model's internal state while it loops with its state while it makes progress.</li>
       <li>The strong model writes a script that edits the weights. The script runs in a sandbox, which refuses edits to the layers that read words in and write words out.</li>
       <li>The edited model answers 32 practice problems. If it scores better than before, the script is kept, and the next step starts from it.</li>
-    </ul>
+    </ol>
 
     <SearchStepScene client:visible />
 
@@ -80,14 +94,20 @@ const url = 'https://praneeth16.github.io/blog/gepa-edits-weights/';
 
     <p>The model has 24 layers, and each layer adds something to the state. The winning script goes through layers 10 to 22 and removes the looping direction from what each one adds. After the edit, those layers cannot push the state toward looping.</p>
 
-    <pre><code>for layer in range(10, 23):
+    <pre><code># Layers 10 to 22, thirteen in all.
+for layer in range(10, 23):
+    # This layer's looping direction.
     d = load_artifact(repetition_dir(layer))
+    # Scale it to length 1.
     d = d / d.norm()
-    P = torch.eye(1024) - torch.outer(d, d)   # removes direction d
+    # P removes d from any state.
+    P = torch.eye(1024) - torch.outer(d, d)
     for part in ["mlp", "attention"]:
+        # This part's original weights.
         W = load_original(output_of(layer, part))
+        # Remove d from what it writes.
         save_edit(output_of(layer, part), P @ W)</code></pre>
-    <p class="code-note">Simplified. The full script is in the repo.</p>
+    <p class="code-note">Simplified, with comments added. The full script is in the repo.</p>
 
     <PatchScene client:visible />
 
@@ -97,11 +117,11 @@ const url = 'https://praneeth16.github.io/blog/gepa-edits-weights/';
 
     <p>What changed inside the model? I looked at what each edited model wants to write at the end of a sentence. Every edit makes "Wait" a little less likely. The edits that work also make a closing word, e.g., "So", 4 to 7.5 times more likely. The weak edits barely change it. So the gain comes from stopping. The model learned no new math.</p>
 
-    <h2>Then I ran it again</h2>
+    <h2>The same search scored 32% to 61%</h2>
 
     <p>A search like this makes random choices, e.g., which practice problems the strong model is shown at each step. A seed is the number that fixes those choices. I ran the same search with two more seeds and changed nothing else.</p>
 
-    <p>The three seeds scored 60.6%, 40.6% and 32.0%.</p>
+    <p><strong>The three seeds scored 60.6%, 40.6% and 32.0%.</strong></p>
 
     <SeedsScene client:visible />
 
@@ -133,11 +153,11 @@ const url = 'https://praneeth16.github.io/blog/gepa-edits-weights/';
 
     <p>Weight editing of this kind fits a narrow case. You need an open model whose weights you can change, and a failure you can measure, e.g., thinking loops. If you have both, these are the rules I would follow.</p>
 
-    <ul>
-      <li>Run the search several times. One run landed anywhere from 32% to 61%.</li>
-      <li>Keep three sets of problems. The strong model learns from the first. The search keeps edits by the second. You choose between runs on the third.</li>
-      <li>Compare with the simplest fix. Here that is switching thinking off, which scores 45.6%. Six of my twelve runs scored below it.</li>
-      <li>Check what the edit gives up. An edit that makes a model stop sooner can make it stop too soon.</li>
+    <ul class="wsp-checklist">
+      <li><p class="name">Run the search several times.</p><p>One run landed anywhere from 32% to 61%.</p></li>
+      <li><p class="name">Keep three sets of problems.</p><p>The strong model learns from the first. The search keeps edits by the second. You choose between runs on the third.</p></li>
+      <li><p class="name">Compare with the simplest fix.</p><p>Here that is switching thinking off, which scores 45.6%. Six of my twelve runs scored below it.</p></li>
+      <li><p class="name">Check what the edit gives up.</p><p>An edit that makes a model stop sooner can make it stop too soon.</p></li>
     </ul>
 
     <p>The results have limits. I tested one model on one benchmark, with three seeds per setup, and the only failure I studied was thinking loops.</p>
@@ -146,9 +166,11 @@ const url = 'https://praneeth16.github.io/blog/gepa-edits-weights/';
 
     <p>With one of the edits from these searches, the model works through the garden problem and stops after 4,636 tokens. Its last line is the answer.</p>
 
-    <blockquote class="wsp-output"><p>Therefore, the ratio of the original area to the enlarged area is 1/4</p></blockquote>
+    <blockquote class="wsp-output"><p>Therefore, the ratio of the original area to the enlarged area is 1/4.</p></blockquote>
 
     <p>One short script made that difference. Whether a search finds that script depends on the seed, so run it more than once.</p>
+
+    <p>Small models fail in other ways too, e.g., they answer in the wrong format. The next question is how many of those failures come from one direction inside the model that a short script can remove.</p>
 
     <h2>Code and related work</h2>
 
