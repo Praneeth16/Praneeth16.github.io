@@ -54,10 +54,11 @@ export class Geometry {
     this.face(rings.at(-1),color,false);
   }
 }
-export function camera(width,height,angle,zoom=1) {
-  const c=Math.cos(angle),s=Math.sin(angle),slant=.52,up=Math.sqrt(1-slant**2);
+export function camera(width,height,angle,zoom=1,slant=.52,center=[0,0,0]) {
+  const c=Math.cos(angle),s=Math.sin(angle),up=Math.sqrt(1-slant**2);
   const scale = Math.min(width/192,height/123)*zoom;
   return ([x,y,z])=>{
+    x-=center[0]; y-=center[1]; z-=center[2];
     const forward=x*s+y*c;
     return [width/2+(x*c-y*s)*scale,height*.52+(forward*slant-z*up)*scale,forward*up+z*slant];
   };

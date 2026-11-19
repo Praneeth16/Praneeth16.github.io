@@ -9,13 +9,13 @@ export const places = [
   {id:'bandstand',x:33,y:-34,z:12},
 ];
 export const startAngle=.55;
-export function makeWorld(){
+export function makeWorld(season='blossom'){
   const ground=new Geometry(), landscape=new Geometry();
   // Cutaway plinth, with the thin soil layer visible around the edge.
   ground.box(0,0,-5,144,112,3.7,'#9b7961');
   ground.box(0,0,-1.3,144,112,1.3,'#adc28d');
   const object=(x,y,build)=>build(landscape);
-  buildPark({ground,object});
+  buildPark({ground,object,season});
   const buildings=places.map(p=>{
     const mesh=new Geometry();
     buildLandmark(mesh,p.id,p.x,p.y);
@@ -23,8 +23,8 @@ export function makeWorld(){
   });
   return {ground,landscape,buildings};
 }
-export function drawCity(world,w,h,angle,zoom=1){
-  const project=camera(w,h,angle,zoom), base=surface(w,h);
+export function drawCity(world,w,h,angle,zoom=1,slant=.52,center=[0,0,0]){
+  const project=camera(w,h,angle,zoom,slant,center), base=surface(w,h);
   draw(base,world.ground,project);
   for(const mesh of [world.landscape,...world.buildings])draw(base,mesh,project,true);
   base.owners=new Uint8Array(w*h);

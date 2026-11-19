@@ -3,7 +3,7 @@ import { makeWorld,drawCity,drawLife,startAngle,places } from './world.js';
 const view=document.querySelector('#viewport'), canvas=view.querySelector('canvas');
 const pins=[...view.querySelectorAll('.pin')], links=[...document.querySelectorAll('.places a')];
 const root=document.documentElement, reduced=matchMedia('(prefers-reduced-motion: reduce)');
-let selection, angle=startAngle, zoom=1, frame, world, time=0, last=0, raf=0, pointer=null;
+let selection, angle=startAngle, zoom=1, slant=.52, center=[0,0,0], season="blossom", frame, world, time=0, last=0, raf=0, pointer=null;
 let running=!reduced.matches, visible=true, redraw=true;
 const context=canvas.getContext('2d');
 function select(id,remember=true) {
@@ -15,7 +15,12 @@ function select(id,remember=true) {
   }
   for(const note of document.querySelectorAll('.note'))note.hidden=note.id!==id;
   for(const pin of pins)pin.setAttribute('aria-pressed',String(pin.dataset.place===id));
-  if(remember)history.replaceState(null,'','#'+id);
+  if(remember){
+    history.replaceState(null,'','#'+id);
+    const p=places.find(place=>place.id===id);
+    center=[p.x*.78,p.y*.78,p.z*.25];
+    changeZoom(1.32);
+  }
 }
 for(const el of [...links,...pins])el.addEventListener('click',event=>{
   event.preventDefault();
@@ -42,18 +47,29 @@ function paint(now) {
     const density=Math.min(devicePixelRatio||1,1.5,1200/Math.max(1,rect.width));
     canvas.width=Math.max(1,Math.round(rect.width*density));
     canvas.height=Math.max(1,Math.round(rect.height*density));
-    frame=drawCity(world,canvas.width,canvas.height,angle,zoom);
+    frame=drawCity(world,canvas.width,canvas.height,angle,zoom,slant,center);
     for(let i=0;i<places.length;i++){
       const p=places[i], [x,y]=frame.project([p.x,p.y,p.z]);
       pins[i].style.left=x/canvas.width*100+'%'; pins[i].style.top=y/canvas.height*100+'%';
       pins[i].hidden=x<5||x>canvas.width-5||y<26*density||y>canvas.height;
     }
-    document.querySelector('.compass i').style.transform='rotate('+Math.atan2(Math.sin(angle),.52*Math.cos(angle))+'rad)';
+    document.querySelector('.compass i').style.transform='rotate('+Math.atan2(Math.sin(angle),slant*Math.cos(angle))+'rad)';
     redraw=false;
   }
   const target=drawLife(frame,time);
   const img=new ImageData(new Uint8ClampedArray(target.pixels.buffer),target.w,target.h);
   context.putImageData(img,0,0);
+  if(season==='rain'){
+    context.strokeStyle='rgba(80,108,122,.32)';
+    context.lineWidth=Math.max(1,canvas.width/1000);
+    context.beginPath();
+    for(let i=0;i<80;i++){
+      const x=((i*91.7-time*44)%(canvas.width+22)+canvas.width+22)%(canvas.width+22);
+      const y=(i*67.9+time*180)%(canvas.height+16);
+      context.moveTo(x,y);context.lineTo(x-3,y+9);
+    }
+    context.stroke();
+  }
   root.classList.add('ready');
   if(running)schedule();
 }
@@ -69,7 +85,23 @@ document.querySelector('#left').onclick=()=>rotate(-Math.PI/8);
 document.querySelector('#right').onclick=()=>rotate(Math.PI/8);
 document.querySelector('#in').onclick=()=>changeZoom(zoom+.15);
 document.querySelector('#out').onclick=()=>changeZoom(zoom-.15);
-document.querySelector('#reset').onclick=()=>{angle=startAngle;changeZoom(1);};
+function resetView(){
+  angle=startAngle;center=[0,0,0];slant=.52;
+  document.querySelector('#camera').value='iso';changeZoom(1);
+}
+document.querySelector('#reset').onclick=resetView;
+document.querySelector('#camera').onchange=e=>{
+  slant=({iso:.52,bird:.89,street:.31})[e.target.value];
+  center=[0,0,0];changeZoom(slant>.8?.83:1);
+};
+document.querySelector('#season').onchange=e=>{
+  season=e.target.value;root.dataset.season=season;
+  world=makeWorld(season);updateView();
+};
+canvas.addEventListener('wheel',e=>{
+  if(e.ctrlKey||Math.abs(e.deltaY)<1)return;
+  e.preventDefault();changeZoom(zoom-Math.sign(e.deltaY)*.06);
+},{passive:false});
 document.querySelector('#motion').onclick=()=>{running=!running;last=0;motionLabel();schedule();};
 reduced.addEventListener('change',e=>{running=!e.matches;last=0;motionLabel();schedule();});
 canvas.addEventListener('keydown',e=>{
@@ -77,7 +109,7 @@ canvas.addEventListener('keydown',e=>{
   else if(e.key==='ArrowRight')rotate(Math.PI/12);
   else if(e.key==='+'||e.key==='=')changeZoom(zoom+.15);
   else if(e.key==='-')changeZoom(zoom-.15);
-  else if(e.key==='Home'){angle=startAngle;changeZoom(1);}
+  else if(e.key==='Home')resetView();
   else return;
   e.preventDefault();
 });

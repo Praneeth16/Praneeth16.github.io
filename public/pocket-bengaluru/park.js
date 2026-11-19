@@ -83,9 +83,11 @@ function drawGround(scene) {
     oval(scene,cx,cy,r,r*.69,.03,'#9cae7a',12);
 }
 
-function tree(scene,x,y,h,variant,flowering) {
+function tree(scene,x,y,h,variant,flowering,season) {
   const bark='#776447';
-  const shades = flowering ? ['#b36e90','#d99ab4','#e4b0c9'] :
+  const shades = season==='rain' ? ['#3d7357','#5a8968','#7e9e71'] :
+    season==='dry' && variant%3===0 ? ['#ac9155','#c2a368','#cfb579'] :
+    flowering && season==='blossom' ? ['#b36e90','#d99ab4','#e4b0c9'] :
     [['#477550','#6a9462','#91a970'],['#46745e','#699378','#89a97f'],['#78905a','#90a66c','#a8b87b']][variant%3];
   scene.frustum(x,y,0,h*.075,h*.047,h*.63,bark,6);
   const spin=variant*.91;
@@ -123,7 +125,7 @@ function kiosk(scene,x,y) {
   for(let i=0;i<6;i++) scene.box(x-1.55+i*.62,y,2.56,.62,2.4,.21,colors[i%2]);
 }
 
-export function buildPark({ground, object}) {
+export function buildPark({ground, object, season}) {
   drawGround(ground);
   // Deliberate gaps in the canopy preserve views of all four buildings from the opening angle.
   const trees=[
@@ -138,7 +140,7 @@ export function buildPark({ground, object}) {
   ];
   trees.forEach(([x,y,h],i)=>{
     oval(ground,x+h*.15,y+h*.12,h*.36,h*.22,.18,'#889b70',12);
-    object(x,y,scene=>tree(scene,x,y,h*(i%4===0?1.32:1.12),i,[3,10,16,22,30,35].includes(i)));
+    object(x,y,scene=>tree(scene,x,y,h*(i%4===0?1.32:1.12),i,[3,10,16,22,30,35].includes(i),season));
   });
   for (const [x,y,reverse] of [[-44,32,true],[-13,36,false],[27,47,true],[47,46,true],[49,5,false],[15,18,false],[46,-32,false],[-57,19,true]])
     object(x,y,s=>bench(s,x,y,reverse));
