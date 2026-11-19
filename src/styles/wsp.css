@@ -89,6 +89,20 @@ body:has(.wsp) { margin: 0; }
 }
 .wsp .prose pre code { font: inherit; }
 .wsp .prose .code-note { margin-top: 8px; font-size: 14px; color: var(--muted); }
+.wsp .prose .wsp-output {
+  margin: 1.2em 0 0;
+  padding: 14px 18px;
+  background: var(--panel);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 6px 6px 0;
+  font: 15px/1.6 var(--mono);
+  overflow-wrap: anywhere;
+}
+.wsp .prose .wsp-related { margin-top: 1.2em; padding: 0; list-style: none; border-top: 1px solid var(--rule); }
+.wsp .prose .wsp-related li { margin: 0; padding: 16px 0; border-bottom: 1px solid var(--rule); }
+.wsp .prose .wsp-related .name { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; font: 600 16px/1.4 var(--ui); }
+.wsp .prose .wsp-related .name span { font-weight: 400; color: var(--muted); }
+.wsp .prose .wsp-related .name + p { margin-top: 4px; }
 
 .wsp .wsp-scene {
   position: relative;

@@ -142,9 +142,36 @@ const url = 'https://praneeth16.github.io/blog/gepa-edits-weights/';
 
     <p>The results have limits. I tested one model on one benchmark, with three seeds per setup, and the only failure I studied was thinking loops.</p>
 
-    <p>The code is at <a href="https://github.com/Praneeth16/dspy-weightspace">github.com/Praneeth16/dspy-weightspace</a>. Four other projects are worth reading next to it. <a href="https://pypi.org/project/dspy-wsp/">Drew Breunig's dspy-wsp</a> is another DSPy package for weight edits. <a href="https://github.com/MatinKhajavi/Weight-Space-Programming">Matin Khajavi's replication</a> of the Sparks experiments also found an edit by Claude Opus that beats the published one, 54.4% against 50.8% in his setup. The <a href="https://github.com/areu01or00/qwen0.8B-wsp">qwen0.8B-wsp repo</a> by areu01or00 edits the same model for a different purpose, which is to write new facts into it. Nandakishor's Kaggle notebook <a href="https://www.kaggle.com/code/nandakishorconvai/engine-transfer">engine_transfer</a> copies the answers of a separate classifier into the same model. Its edit is solved directly with no training loop, it changes about one million weights, and it checks that the tasks it did not target stay level.</p>
+    <h2>Back to the garden problem</h2>
 
-    <p>Go back to the garden problem. With one of the edits from these searches, the model works through it, writes "Therefore, the ratio of the original area to the enlarged area is 1/4", and stops after 4,636 tokens. One short script made that difference. Whether a search finds that script depends on the seed, so run it more than once.</p>
+    <p>With one of the edits from these searches, the model works through the garden problem and stops after 4,636 tokens. Its last line is the answer.</p>
+
+    <blockquote class="wsp-output"><p>Therefore, the ratio of the original area to the enlarged area is 1/4</p></blockquote>
+
+    <p>One short script made that difference. Whether a search finds that script depends on the seed, so run it more than once.</p>
+
+    <h2>Code and related work</h2>
+
+    <p>The code is at <a href="https://github.com/Praneeth16/dspy-weightspace">github.com/Praneeth16/dspy-weightspace</a>. Four other projects are worth reading next to it.</p>
+
+    <ul class="wsp-related">
+      <li>
+        <p class="name"><a href="https://pypi.org/project/dspy-wsp/">dspy-wsp</a><span>Drew Breunig</span></p>
+        <p>Another DSPy package for weight edits.</p>
+      </li>
+      <li>
+        <p class="name"><a href="https://github.com/MatinKhajavi/Weight-Space-Programming">Weight-Space-Programming</a><span>Matin Khajavi</span></p>
+        <p>A replication of the Sparks experiments. It also found an edit by Claude Opus that beats the published one, 54.4% against 50.8% in his setup.</p>
+      </li>
+      <li>
+        <p class="name"><a href="https://github.com/areu01or00/qwen0.8B-wsp">qwen0.8B-wsp</a><span>areu01or00</span></p>
+        <p>It edits the same model for a different purpose, which is to write new facts into it.</p>
+      </li>
+      <li>
+        <p class="name"><a href="https://www.kaggle.com/code/nandakishorconvai/engine-transfer">engine_transfer</a><span>Nandakishor, Kaggle notebook</span></p>
+        <p>It copies the answers of a separate classifier into the same model. The edit is solved directly, with no training loop, and it changes about one million weights. The notebook also checks that the tasks it did not target stay level.</p>
+      </li>
+    </ul>
   </main>
 
   <footer class="foot"><a href="/">← More from Praneeth</a><a href="/#writing-title">Browse the essays</a><a href="https://github.com/Praneeth16">GitHub</a></footer>
