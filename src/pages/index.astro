@@ -30,6 +30,13 @@ const essays = [
     <div class="hs-writing-head"><div><p class="hs-eyebrow">The notebook</p><h2 id="writing-title">Ideas, put to the test.</h2></div><p>Essays you can explore.<br/>Experiments you can inspect.</p></div>
     <WritingIndex essays={essays} client:visible />
   </section>
+  <section class="hs-pocket hs-width" aria-label="Pocket Bengaluru">
+    <a href="/pocket-bengaluru/"><img src="/pocket-bengaluru/cubbon.png" alt="" loading="lazy" width="500" height="300"/><div><p class="hs-eyebrow">An interactive city miniature</p><h2>Pocket Bengaluru.</h2><p>Take a turn around Cubbon Park, from the domes of Vidhana Soudha to the shade of the bandstand.</p><span class="hs-text-link">Explore the miniature</span></div></a>
+  </section>
   <section class="hs-about hs-width" aria-labelledby="about-title"><div><p class="hs-eyebrow">Behind the notebook</p><h2 id="about-title">Built in the field.<br/>Shared in the open.</h2></div><div><p>I’m Praneeth, an AI Solutions Architect at Databricks in Bengaluru. My work sits around agents, evaluation, and the systems that make them useful.</p><p>This is where I share the questions, experiments, and explanations along the way.</p><div class="hs-about-links"><a href="https://github.com/Praneeth16">GitHub ↗</a><a href="https://www.linkedin.com/in/praneeth-paikray/">LinkedIn ↗</a><a href="/rss.xml">RSS ↗</a></div></div></section>
 </div>
 </BaseLayout>
+
+<style>
+.hs-pocket{margin-block:38px}.hs-pocket>a{background:#edf1e7;color:#20392c;display:grid;grid-template-columns:minmax(180px,35%) 1fr;align-items:center;text-decoration:none;border:1px solid #c9d1be;border-radius:5px;gap:clamp(16px,4vw,56px);padding:16px clamp(16px,4vw,48px)}.hs-pocket img{width:100%;height:auto}.hs-pocket h2{font:400 clamp(1.9rem,4vw,3.5rem)/1.05 Karrik,sans-serif;letter-spacing:-.05em;margin:8px 0}.hs-pocket div>p:not(.hs-eyebrow){max-width:48ch;margin:8px 0 12px}.hs-pocket a:hover .hs-text-link{text-decoration:underline}@media(max-width:580px){.hs-pocket>a{grid-template-columns:1fr;gap:0;padding:16px}.hs-pocket img{max-width:300px;justify-self:center}}
+</style>
