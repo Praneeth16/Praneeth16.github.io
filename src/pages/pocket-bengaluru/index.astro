@@ -1,35 +1,34 @@
 ---
 import '../../styles/home-type.css';
 import '../../styles/pocket-bengaluru.css';
-const places = [
-  {id:'soudha',letter:'A',title:'Vidhana Soudha',kind:'State legislature',note:'Look for the great central dome rising above the corner pavilions. Across Dr B. R. Ambedkar Veedhi, the pale stone façade faces the red High Court.',source:'https://bengaluruurban.nic.in/en/tourism/'},
-  {id:'court',letter:'B',title:'Attara Kacheri',kind:'Karnataka High Court',note:'The red building opposite Vidhana Soudha houses the Karnataka High Court. Its long wings frame a central portico. Across the boulevard, its terracotta palette gives way to the pale stone of the legislature.',source:'https://bengaluruurban.nic.in/en/tourism/'},
-  {id:'library',letter:'C',title:'Seshadri Iyer Memorial Hall',kind:'State Central Library',note:'Follow the garden path to the red hall inside Cubbon Park. The State Central Library sits behind that curved central gable, looking out across the flower beds.',source:'https://old.karnatakatourism.org/tour-item/cubbon-park/'},
-  {id:'bandstand',letter:'D',title:'Cubbon Park Bandstand',kind:'Park pavilion',note:'Tucked among the trees, the open-sided bandstand once hosted military bands. Look between its slender posts and you can see straight through to the park beyond.',source:'https://cubbonpark.in/history/'},
-];
+import districts from '../../../public/pocket-bengaluru/guide.json';
+const base='/pocket-bengaluru/';
+const description='Explore three illustrated Bengaluru neighbourhoods, from the flower lanes of KR Market to Cubbon Park and the Purple Line.';
 ---
-<!doctype html>
-<html lang="en"><head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Pocket Bengaluru | Praneeth Paikray</title>
-<meta name="description" content="Turn a miniature Cubbon Park, follow a Bengaluru auto and explore four landmarks in Praneeth Paikray’s illustrated city."/>
-<link rel="canonical" href={new URL('/pocket-bengaluru/',Astro.site)}/>
-<link rel="icon" href="/favicon.svg"/><meta name="theme-color" content="#fafaf5"/>
-<meta property="og:title" content="Pocket Bengaluru"/><meta property="og:description" content="A miniature city walk around Cubbon Park."/><meta property="og:image" content={new URL('/pocket-bengaluru/cubbon.png',Astro.site)}/>
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Pocket Bengaluru | Praneeth Paikray</title><meta name="description" content={description}/>
+<link rel="canonical" href={new URL(base,Astro.site)}/><link rel="icon" href="/favicon.svg"/>
+<meta name="theme-color" content="#f9f8f2"/><meta property="og:title" content="Pocket Bengaluru"/><meta property="og:description" content={description}/><meta property="og:image" content={new URL(base+'market.webp',Astro.site)}/>
 </head><body>
-<header class="mast"><a href="/" class="brand">Praneeth<span>16</span></a><span class="mast-rule"></span><span class="mast-label">Field notes</span><a class="back" href="/">Back to home</a></header>
-<main><header class="intro"><div><p class="kicker">An interactive city miniature</p><h1>Pocket <em>Bengaluru.</em></h1></div><div class="local"><span lang="kn">ಬೆಂಗಳೂರು</span><span>Karnataka, India</span></div></header>
-<div class="atlas"><div class="map-column"><section class="map" aria-label="Rotatable miniature of central Bengaluru">
-<div class="map-caption"><span class="swatch"></span>Cubbon Park &amp; surroundings</div>
-<div class="compass" aria-label="View orientation"><span>N</span><i></i></div>
-<div id="viewport"><img class="poster" src="/pocket-bengaluru/cubbon.png" alt="Illustrated miniature of Cubbon Park with its red civic buildings, domed legislature and tree-lined boulevard."/>
-<canvas aria-label="Interactive Bengaluru model. Drag to rotate, or use the rotate buttons." tabindex="0"></canvas>
-<div class="pins">{places.map(p=><button class="pin" data-place={p.id} aria-label={p.title} hidden>{p.letter}</button>)}</div></div>
-<div class="map-foot"><span>Illustrated geography · distances compressed</span></div></section>
-<div class="scene-options"><label>Scene <select id="season"><option value="blossom">Flowering season</option><option value="rain">Monsoon shower</option><option value="dry">Dry morning</option></select></label><label>Camera <select id="camera"><option value="iso">Isometric</option><option value="bird">Bird’s-eye</option><option value="street">Low angle</option></select></label></div>
-<div class="tools" aria-label="Map controls"><div class="toolgroup"><button id="left" title="Rotate left" aria-label="Rotate left">↶</button><button id="right" title="Rotate right" aria-label="Rotate right">↷</button><i></i><button id="out" title="Zoom out" aria-label="Zoom out">−</button><button id="in" title="Zoom in" aria-label="Zoom in">+</button><i></i><button id="reset" class="word">Reset view</button></div><button id="motion" class="motion"><b aria-hidden="true">Ⅱ</b><span>Pause city</span></button></div>
-</div><aside><p class="kicker">Field guide</p><h2>Places to explore</h2><p class="guide-hint">Choose a landmark on the map or below.</p>
-<nav class="places" aria-label="Explore landmarks">{places.map((p,i)=><a href={'#'+p.id} data-place={p.id} aria-current={i===0?'location':undefined}><b>{p.letter}</b><span>{p.title}</span></a>)}</nav>
-<div id="notes" aria-live="polite">{places.map((p,i)=><article id={p.id} class:list={['note',{initial:i===0}]}><p class="kicker">{p.kind}</p><h3>{p.title}</h3><p>{p.note}</p><a href={p.source}>Local history</a></article>)}</div></aside></div>
+<header class="mast"><a class="brand" href="/">Praneeth<span>16</span></a><i></i><span>Field notes</span><a class="home" href="/">Back to home</a></header>
+<main>
+<header class="intro"><div><p class="kicker">An illustrated city atlas</p><h1>Pocket <em>Bengaluru.</em></h1></div><p class="deck">Follow the flowers through the old Pete, read under the trees in Cubbon Park, or catch the Purple Line above MG Road.</p></header>
+<nav class="districts" aria-label="Choose a neighbourhood">{districts.map((d,i)=><a data-district={d.id} href={'#'+d.id} aria-current={i===0?'location':undefined}><img src={base+d.id+'-thumb.webp'} width="136" height="94" alt="" /><span><strong>{d.name}</strong><small>{d.sub}</small></span></a>)}</nav>
+<div class="atlas"><div class="mapcol"><section class="map" aria-label="City miniature">
+<div class="maphead"><strong id="map-name">KR Market</strong><span id="kannada" lang="kn">{districts[0].kannada}</span></div>
+<div class="compass" aria-label="View orientation"><b>N</b><i></i></div>
+<div id="viewport"><img class="poster" src={base+'market.webp'} alt="A miniature market with a clock above its red arcade, flower stalls, shopfronts and a produce yard."/><canvas tabindex="0" aria-label="Interactive city miniature. Use left and right arrows to turn, plus and minus to zoom, and Home to reset."></canvas><div class="pins"></div></div>
+<div class="mapfoot"><span>Illustrated geography · distances compressed</span><button id="labels" class="enhanced" aria-pressed="true">Hide pins</button></div></section>
+<div class="bar enhanced"><div class="viewbuttons"><button id="left" aria-label="Rotate left" title="Rotate left">↶</button><button id="right" aria-label="Rotate right" title="Rotate right">↷</button><i></i><button id="out" aria-label="Zoom out">−</button><output id="zoom">100%</output><button id="in" aria-label="Zoom in">+</button><i></i><button id="reset" class="word">Reset</button></div><button id="motion" class="word">Pause city</button></div>
+<div class="settings enhanced"><label>Weather <select id="season"><option value="blossom">Flowering season</option><option value="rain">Monsoon shower</option><option value="dry">Dry morning</option></select></label><label>View <select id="camera"><option value="iso">Isometric</option><option value="bird">Bird’s-eye</option><option value="street">Low angle</option></select></label><label>Drag to <select id="gesture"><option value="turn">Rotate</option><option value="pan">Pan</option></select></label></div>
+</div><aside class="guide"><p class="kicker">Neighbourhood field guide</p>
+{districts.map(d=><section id={d.id} class="district-guide" data-guide={d.id}><h2>{d.name}</h2><p class="summary">{d.intro}</p>
+<nav class="stops" aria-label={d.name+' stops'}>{d.stops.map((p,i)=><a href={'#'+p.id} data-stop={p.id}><b>{String.fromCharCode(65+i)}</b>{p.name}</a>)}</nav>
+<noscript><img class="still" alt={d.name+' illustrated district'} src={base+d.id+'.webp'} /></noscript><div class="start enhanced"><button data-walk={d.id}>Start the walk</button><span>{d.stops.length} stops</span></div>
+<div class="notes" aria-live="polite">{d.stops.map((p,i)=><article id={p.id} data-note={p.id}><div class="notetop"><p class="kicker">{p.type}</p><span>{i+1} / {d.stops.length}</span></div><h3>{p.name}</h3><p>{p.note}</p><p class="look"><strong>Look closely</strong>{p.look}</p>{p.source&&<a class="src" href={p.source}>Further reading</a>}
+<div class="steps enhanced"><button data-prev={d.id} disabled={i===0}>Previous</button><button data-next={d.id}>{i+1===d.stops.length?'Back to overview':'Next stop'}</button></div></article>)}</div>
+</section>)}</aside></div>
 </main><footer><span>A city study by <a href="/">Praneeth Paikray</a></span><span>Inspired by <a href="https://april-zhu.com/pocketcity?city=amsterdam">April Zhu’s Pocket City</a></span></footer>
-<script is:inline type="module" src="/pocket-bengaluru/explore.js"></script></body></html>
+<script is:inline id="guide-data" type="application/json" set:html={JSON.stringify(districts).replace(/</g,'\\u003c')}></script>
+<script>import '../../../public/pocket-bengaluru/explore.js';</script></body></html>
