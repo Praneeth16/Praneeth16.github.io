@@ -6,6 +6,7 @@ import PatchScene from '../../../components/wsp/PatchScene';
 import SeedsScene from '../../../components/wsp/SeedsScene';
 import SplitScene from '../../../components/wsp/SplitScene';
 import ResultChart from '../../../components/wsp/ResultChart';
+import RunsChart from '../../../components/wsp/RunsChart';
 const description = 'A 7-line script took a small model from 7% to 61% on a math test, with no training. Twelve searches show how often that happens.';
 const title = 'Can one model fix another by editing its weights?';
 const url = 'https://praneeth16.github.io/blog/gepa-edits-weights/';
@@ -53,20 +54,9 @@ const url = 'https://praneeth16.github.io/blog/gepa-edits-weights/';
 
     <ResultChart />
 
-    <aside class="wsp-short" aria-label="In short">
-      <p class="wsp-short-title">In short</p>
-      <dl>
-        <dt>Problem</dt><dd>Qwen3.5-0.8B keeps checking its work and scores 7% on MATH-500.</dd>
-        <dt>Fix</dt><dd>A larger model writes a short script that edits the small model's weights. Nothing is trained.</dd>
-        <dt>Best result</dt><dd>60.6%, from a 7-line script. The published edit scores 53.3%.</dd>
-        <dt>Catch</dt><dd>The same search scored 32% to 61% with different seeds. Six of twelve searches scored below 45.6%, the score with thinking switched off.</dd>
-        <dt>Rule</dt><dd>Run the search several times, and pick the winner on problems the search never saw.</dd>
-      </dl>
-    </aside>
-
     <h2>The edit is a piece of text</h2>
 
-    <p>A model's weights are the numbers that decide what it writes next. Qwen3.5-0.8B has about 800 million of them. The usual way to change them is training, which needs many examples and many small updates.</p>
+    <p>Qwen3.5-0.8B has about 800 million weights. The usual way to change them is training, which needs many examples and many small updates.</p>
 
     <p>On November 2, a team at MIT CSAIL showed another way in a post called <a href="https://rikiyat.github.io/blog/weight-space-programming/">"Sparks of Weight-Space Programming"</a>. A frontier model studied the small model, found the part that drives the repeated checking, and changed 131,072 weights directly. That is 0.016% of the model. The MATH-500 score went from 7.9% to 48.1%, and nothing was trained. In my setup, with strict grading and two samples per problem, that published edit scores 53.3%.</p>
 
@@ -87,7 +77,7 @@ const url = 'https://praneeth16.github.io/blog/gepa-edits-weights/';
 
     <SearchStepScene client:visible />
 
-    <h2>The edit that won</h2>
+    <h2>One idea in 13 layers beats the published edit</h2>
 
     <p>The test in the second part gives the strong model a direction. Here is what that means. At each point in its thinking, the small model's internal state is a list of 1,024 numbers. When the model loops, those numbers shift in a consistent way. That shift is the direction.</p>
 
@@ -108,17 +98,25 @@ for layer in range(10, 23):
         save_edit(output_of(layer, part), P @ W)</code></pre>
     <p class="code-note">Simplified, with comments added. The full script is in the repo.</p>
 
+    <p>The strong model gets each direction from its test tool. The tool runs the small model on texts that the strong model picks, e.g., a looping passage and a productive one, and saves the average internal state at each layer. The difference between the two averages points along the loop.</p>
+
+    <p>P keeps every part of a state except its part along d, which it sets to zero. This is called an orthogonal projection. So each edited part of the model writes what it wrote before, minus its part along d.</p>
+
     <PatchScene client:visible />
 
     <p>The published edit changes 131,072 weights in two layers. This one changes about 61 million in thirteen layers. It is still one idea, applied in many places.</p>
 
     <p><strong>It scores 60.6% on MATH-500. The published edit scores 53.3% on the same problems with the same grading.</strong> The gap is 7.3 points, and the 95% interval for it is 4.6 to 10.0. The edited model also uses 23% fewer tokens for each correct answer.</p>
 
-    <p>What changed inside the model? I looked at what each edited model wants to write at the end of a sentence. Every edit makes "Wait" a little less likely. The edits that work also make a closing word, e.g., "So", 4 to 7.5 times more likely. The weak edits barely change it. So the gain comes from stopping. The model learned no new math.</p>
+    <aside class="wsp-finding" aria-label="What changed inside the model">
+      <p class="wsp-finding-title">What changed inside the model</p>
+      <p>I looked at what each edited model wants to write at the end of a sentence. Every edit makes "Wait" less likely. The edits that score well also make closing words, e.g., "So", much more likely. The winning edit makes them 3.98 times as likely, and the published edit 6.38 times.</p>
+      <p>Across the twelve searches, this factor is a good guide to the final MATH-500 rank, with a rank correlation of 0.69. So the gain comes from stopping. The model learned no new math.</p>
+    </aside>
 
     <h2>The same search scored 32% to 61%</h2>
 
-    <p>A search like this makes random choices, e.g., which practice problems the strong model is shown at each step. A seed is the number that fixes those choices. I ran the same search with two more seeds and changed nothing else.</p>
+    <p>I ran the same search with two more random seeds and changed nothing else. The seed decides which practice problems the strong model sees at each step.</p>
 
     <p><strong>The three seeds scored 60.6%, 40.6% and 32.0%.</strong></p>
 
@@ -126,17 +124,21 @@ for layer in range(10, 23):
 
     <p>Two of the three are below 45.6%, which is what the model scores with thinking switched off and no edit at all. Yet all three searches reported a clear gain on their own practice problems.</p>
 
+    <p>The worst run used the same kind of edit. Its script also removed a looping direction from each layer, in layers 14 to 22 and with a different strength. But it made closing words only 1.18 times as likely, against 3.98 times for the winner. So it cut down the checking without making the model finish, and 60.7% of its answers still ran out of room. For the winner that figure is 31.1%.</p>
+
     <p>I also ran three seeds that start from the published edit. They scored 59.9%, 54.3% and 32.5%.</p>
 
-    <h2>Was the search loop needed?</h2>
+    <h2>The search loop did no better than one-shot scripts</h2>
 
     <p>Those results raise two questions. Did GEPA's loop find the good edit, or did the strong model? And can the search be told what a good edit looks like?</p>
 
     <p>For the first question, I removed the loop. The strong model wrote four separate scripts. Each one started from the unedited model, and no script built on another. I kept the one that did best on the practice problems. Three seeds scored 59.4%, 43.3% and 36.6%. That is level with the GEPA runs, in both the average and the spread. In this experiment the loop added little. The strong model's idea was either good on the first try or it was not.</p>
 
-    <p>For the second question, I gave the strong model a new tool. The tool measures how much an edit raises the chance of a closing word, because that is what the good edits share. Three seeds scored 54.1%, 50.3% and 43.4%. The worst seed is about 11 points better than before, and the best seed is about 6 points worse. One seed also went too far. Its edit made the model stop so readily that 33% of its answers were finished and wrong. For the published edit that figure is 18%. Three seeds are too few to say that the tool helps.</p>
+    <p>For the second question, I gave the strong model a new tool. The tool measures how much an edit raises the chance of a closing word, because that is what the good edits share. Three seeds scored 54.1%, 50.3% and 43.4%. The worst seed is about 11 points better than before, and the best seed is about 6 points worse. One seed also went too far. Its edit made the model stop so readily that 33% of its answers were finished and wrong. For the published edit that figure is 18%. The same edit also changed the model's predictions on productive text about four times as much as the winning edit. Three seeds are too few to say that the tool helps.</p>
 
-    <h2>How to pick a run</h2>
+    <RunsChart />
+
+    <h2>The search's own score did not predict the result</h2>
 
     <p>One run tells you little, so you need several runs and a fair way to choose between them.</p>
 
@@ -154,7 +156,7 @@ for layer in range(10, 23):
 
     <ul class="wsp-checklist">
       <li><p class="name">Run the search several times.</p><p>One run landed anywhere from 32% to 61%.</p></li>
-      <li><p class="name">Keep three sets of problems.</p><p>The strong model learns from the first. The search keeps edits by the second. You choose between runs on the third.</p></li>
+      <li><p class="name">Keep three sets of problems.</p><p>The strong model learns from the first. The search keeps edits by the second. You choose between runs on the third. It is the same idea as a train, validation and test split.</p></li>
       <li><p class="name">Compare with the simplest fix.</p><p>Here that is switching thinking off, which scores 45.6%. Six of my twelve runs scored below it.</p></li>
       <li><p class="name">Check what the edit gives up.</p><p>An edit that makes a model stop sooner can make it stop too soon.</p></li>
     </ul>
@@ -166,6 +168,8 @@ for layer in range(10, 23):
     <p>With one of the edits from these searches, the model works through the garden problem and stops after 4,636 tokens. Its last line is the answer.</p>
 
     <blockquote class="wsp-output"><p>Therefore, the ratio of the original area to the enlarged area is 1/4.</p></blockquote>
+
+    <p>That is still long for a one-line ratio. It is under a third of the 16,384 tokens the unedited model used, and this time there is an answer.</p>
 
     <p>One short script made that difference. Whether a search finds that script depends on the seed, so run it more than once.</p>
 
